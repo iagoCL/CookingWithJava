@@ -17,7 +17,7 @@ Nombre | Apellidos | Grado | Correo | Cuenta de GitHub
 -- | -- | -- | -- | --
 Iago | Calvo Lista | Videojuegos + Ing. de Computadores | [i.calvol@alumnos.urjc.es](mailto:i.calvol@alumnos.urjc.es) | [iagoCL](https://github.com/iagoCL)
 Javier | Mártinez Pablo | Videojuegos + Ing. de Computadores | [j.martinezpa@alumnos.urjc.es](mailto:j.martinezpa@alumnos.urjc.es) | [JaviBJ99](https://github.com/JaviBJ99)
-Juan | Jimenez Galvez | Videojuegos + Ing. de Computadores | [undef@alumnos.urjc.es](mailto:undef@alumnos.urjc.es) | [undef](https://github.com/undef)
+Juan | Jimenez Galvez | Videojuegos + Ing. de Computadores | [j.jimenezgal@alumnos.urjc.es](mailto:undef@alumnos.urjc.es) | [undef](https://github.com/undef)
 
 ## FASE 1 - Equipo de desarrollo y temática de la web
 ### Descripción de la temática de la web
