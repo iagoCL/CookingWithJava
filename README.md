@@ -55,9 +55,9 @@ Las principales entidades que se planea implementar en nuestra aplicación son:
   * **Nombre del ingrediente**: Es una variable requerida. 
   * **Cantidad del ingrediente**: Cantidad usada en la receta. Es una variable requerida. 
   * **Identificador de la receta**: Identificador de la receta donde se usa el ingrediente. Es una variable requerida. 
-* **Favorito**: Contiene una receta marcada como favorita por un usuario.
-  * **Identificador de usuario**: Identificación interna del usuario que ha marcado la receta marcada como favorita. Es una variable requerida.
-  * **Identificador de receta**: Identificación interna de la receta marcada como favorita. Es una variable requerida.
+* **Utensilio de cocina**: Contiene los diferentes utensilios para crear una receta, como ollas, planchas y demás.
+  * **Nombre del utensilio**: Es una variable requerida.
+  * **Identificador de receta**: Identificación de la receta que usa los utensilios marcados. Es una variable requerida.
 * **Comentario**: Contiene un comentario hecho por un usuario a una receta.
   * **Identificador de usuario**: Identificación interna del usuario que ha hecho el comentario. Es una variable requerida.
   * **Identificador de receta**: Identificación interna de la receta donde se ha hecho el comentario. Es una variable requerida.
