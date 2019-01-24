@@ -1,0 +1,30 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+CookingWithJava/.apt_generated
+CookingWithJava/.classpath
+CookingWithJava/.factorypath
+CookingWithJava/.project
+CookingWithJava/.settings
+CookingWithJava/.springBeans
+CookingWithJava/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*/.idea
+CookingWithJava/.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+*/nbproject/private/
+*/build/
+*/nbbuild/
+*/dist/
+*/nbdist/
+*/.nb-gradle/
+
+*metadata
+CookingWithJava/target/
