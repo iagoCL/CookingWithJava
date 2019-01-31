@@ -1,21 +1,39 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"nombreUsuario"}, name = Usuario.constraintNombreUsuario),
+        @UniqueConstraint(columnNames = {"correoElectronico"}, name = Usuario.constraintCorreoElectronico)
+})
 public class Usuario {
+    public static final String constraintNombreUsuario = "CONSTRAINT_NOMBRE_USUARIO_UNICO";
+    public static final String constraintCorreoElectronico = "CONSTRAINT_CORREO_ELECTRONICO_UNICO";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(unique=true, nullable=false)
+    @Column(nullable = false)
     private String nombreUsuario;
-    @Column(unique=false, nullable=false)
+    @Column(nullable = false)
     private String contrasena;
-    @Column(unique=true, nullable=true)
+    @Column(nullable = false)
     private String correoElectronico;
+    @Column(nullable = false)
+    private String nombreApellidos;
 
     public long getId() {
         return id;
+    }
+
+    public String getNombreApellidos() {
+        return nombreApellidos;
+    }
+
+    public void setNombreApellidos(String nombreApellidos_) {
+        this.nombreApellidos = nombreApellidos_;
     }
 
     public String getNombreUsuario() {
@@ -30,6 +48,35 @@ public class Usuario {
         return correoElectronico;
     }
 
+    public void setNombreUsuario(String nombreUsuario_) {
+        this.nombreUsuario = nombreUsuario_;
+    }
+
+    public void setContrasena(String contrasena_) {
+        this.contrasena = contrasena_;
+    }
+
+    public void setCorreoElectronico(String correoElectronico_) {
+        this.correoElectronico = correoElectronico_;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id == usuario.id &&
+                Objects.equals(nombreUsuario, usuario.nombreUsuario) &&
+                Objects.equals(contrasena, usuario.contrasena) &&
+                Objects.equals(nombreApellidos, usuario.nombreApellidos) &&
+                Objects.equals(correoElectronico, usuario.correoElectronico);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nombreUsuario, contrasena, correoElectronico);
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -37,16 +84,18 @@ public class Usuario {
                 ", nombreUsuario='" + nombreUsuario + '\'' +
                 ", contrasena='" + contrasena + '\'' +
                 ", correoElectronico='" + correoElectronico + '\'' +
+                ", nombreApellidos='" + nombreApellidos + '\'' +
                 '}';
     }
 
     protected Usuario() {
     }
 
-    public Usuario(String nombreUsuario_, String contrasena_, String correoElectronico_) {
-        nombreUsuario = nombreUsuario_;
-        contrasena = contrasena_;
-        correoElectronico = correoElectronico_;
+    public Usuario(String nombreUsuario_, String contrasena_, String correoElectronico_, String nombreApellidos_) {
+        this.nombreUsuario = nombreUsuario_;
+        this.contrasena = contrasena_;
+        this.correoElectronico = correoElectronico_;
+        this.nombreApellidos = nombreApellidos_;
     }
 
 }

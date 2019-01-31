@@ -1,7 +1,6 @@
 package com.TheJavaCooker.CookingWithJava;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.DatabaseManager;
-import com.TheJavaCooker.CookingWithJava.DataBase.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,9 +18,8 @@ public class CookingWithJavaApplication {
 
 	@PostConstruct
 	public void init() {
-		databaseManager.crearUsuariosEjemplo(15);
-		Usuario u = databaseManager.getUsuarioRepository().buscarPorCorreoElectronico("correo1@example.com");
-		System.out.println(u);
+		PersonalDebug.setDebug(true);
+		databaseManager.testUsuarios();
 	}
 
 }
