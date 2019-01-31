@@ -59,7 +59,7 @@ p {
 }
 
 img {
-	max-width: 100%;
+	max-width: 75%;
 }
 
 input:focus,
@@ -981,11 +981,14 @@ ol {
 }
 
 .about-text h2 {
-	font-weight: 600;
-	margin-bottom: 65px;
+	font-weight: 300;
+    font-size: 30px;
+	margin-bottom: 25px;
 }
 
 .about-text p {
+    font-weight: 200;
+    font-size: 20px;
 	margin-bottom: 50px;
 }
 
