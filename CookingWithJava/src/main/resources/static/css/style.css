@@ -249,18 +249,22 @@ ol {
 
 
 
-.subir-recetas {
-    float: right;
-    color: #fff;
-
-}
-
-
 .user-panel {
 	float: right;
 	color: #fff;
+	margin-right: 35px;
 	font-size: 14px;
 	font-weight: 600;
+}
+
+
+.subir-recetas {
+	float: right;
+	color: #fff;
+	margin-right: 35px;
+	font-size: 14px;
+	font-weight: 600;
+
 }
 
 .user-panel a {
