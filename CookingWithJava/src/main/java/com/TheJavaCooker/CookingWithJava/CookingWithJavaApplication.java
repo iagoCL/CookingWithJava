@@ -9,18 +9,19 @@ import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 public class CookingWithJavaApplication {
-	@Autowired
-	private  DatabaseManager databaseManager;
+    @Autowired
+    private DatabaseManager databaseManager;
 
-	public static void main(String[] args) {
-		SpringApplication.run(CookingWithJavaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CookingWithJavaApplication.class, args);
+    }
 
-	@PostConstruct
-	public void init() {
-		PersonalDebug.setDebug(true);
-		databaseManager.testUsuarios();
-	}
+    @PostConstruct
+    public void init() {
+        PersonalDebug.setDebug(true);
+        DatabaseTests databaseTests = new DatabaseTests(databaseManager);
+        databaseTests.testCompleto();
+    }
 
 }
 

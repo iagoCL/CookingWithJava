@@ -1,13 +1,20 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"nombreUsuario"}, name = Usuario.constraintNombreUsuario),
-        @UniqueConstraint(columnNames = {"correoElectronico"}, name = Usuario.constraintCorreoElectronico)
-})
+@Entity(name = "Usuario")
+@Table(name = "usuario",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"nombreUsuario"}, name = Usuario.constraintNombreUsuario),
+                @UniqueConstraint(columnNames = {"correoElectronico"}, name = Usuario.constraintCorreoElectronico)
+        }
+)
 public class Usuario {
     public static final String constraintNombreUsuario = "CONSTRAINT_NOMBRE_USUARIO_UNICO";
     public static final String constraintCorreoElectronico = "CONSTRAINT_CORREO_ELECTRONICO_UNICO";
@@ -23,6 +30,17 @@ public class Usuario {
     private String correoElectronico;
     @Column(nullable = false)
     private String nombreApellidos;
+
+    @OneToMany(
+            mappedBy = "creadorDeLaReceta",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private List<Receta> recetasCreadas = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoritos")
+    private List<Receta> recetasFavoritas = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -65,6 +83,13 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
+        return id == usuario.id;
+    }
+
+    public boolean completeEquals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
         return id == usuario.id &&
                 Objects.equals(nombreUsuario, usuario.nombreUsuario) &&
                 Objects.equals(contrasena, usuario.contrasena) &&
@@ -86,6 +111,26 @@ public class Usuario {
                 ", correoElectronico='" + correoElectronico + '\'' +
                 ", nombreApellidos='" + nombreApellidos + '\'' +
                 '}';
+    }
+
+    @Transactional
+    public List<Receta> getRecetasCreadas() {
+        return recetasCreadas;
+    }
+
+    @Transactional
+    public int getNumRecetasFavoritas() {
+        return recetasFavoritas.size();
+    }
+
+    @Transactional
+    public List<Receta> getRecetasFavoritas() {
+        return recetasFavoritas;
+    }
+
+    @Transactional
+    public int getNumRecetasCreadas() {
+        return recetasCreadas.size();
     }
 
     protected Usuario() {
