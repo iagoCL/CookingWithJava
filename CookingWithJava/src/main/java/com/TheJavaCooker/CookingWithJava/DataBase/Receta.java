@@ -1,10 +1,11 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
+import com.TheJavaCooker.CookingWithJava.PersonalDebug;
+import org.hibernate.annotations.SortNatural;
+
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "Receta")
 @Table(name = "receta",
@@ -38,7 +39,33 @@ public class Receta {
             fetch = FetchType.EAGER,
             orphanRemoval = true
     )
-    private List<Ingrediente> ingredientes = new ArrayList<>();
+    private Set<Ingrediente> ingredientes = new HashSet<>();
+
+    @SortNatural
+    @OneToMany(
+            mappedBy = "recetaId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private Set<Paso> pasos = new TreeSet<>();
+
+    @OneToMany(
+            mappedBy = "recetaId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private Set<Utensilio> utensilios = new HashSet<>();
+
+    @SortNatural
+    @OneToMany(
+            mappedBy = "recetaId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private Set<Comentario> comentarios = new TreeSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
@@ -51,8 +78,8 @@ public class Receta {
     private List<Usuario> favoritos = new ArrayList<>();
 
 
-    //todo utensilios
-    //todo pasos
+    //todo duracion total
+
     //todo comentarios
 
     //todo busqueda
@@ -132,8 +159,38 @@ public class Receta {
         }
     }
 
-    public List<Ingrediente> getIngredientes() {
+    public String mostrarMultilinea()
+    {
+        String string = toString();
+        string+="\nIngredientes de la receta: "+ingredientes.size();
+        for( Ingrediente i : ingredientes){
+            string+="\nIngrediente: "+i;
+        }
+        PersonalDebug.imprimir("\n\nUtensilios de la receta: "+utensilios.size());
+        for( Utensilio i : utensilios){
+            string+="\nUtensilio: "+i;
+        }
+        string+="\n\nPasos de la receta: "+pasos.size();
+        for( Paso i : pasos){
+            string+="\nPaso: "+i;
+        }
+        return string;
+    }
+
+    public Set<Ingrediente> getIngredientes() {
         return ingredientes;
+    }
+
+    public Set<Paso> getPasos() {
+        return pasos;
+    }
+
+    public Set<Utensilio> getUtensilios() {
+        return utensilios;
+    }
+
+    public Set<Comentario> getComentarios() {
+        return comentarios;
     }
 
     public boolean marcadaComoFavorita(Usuario usuario_) {
@@ -164,7 +221,7 @@ public class Receta {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tipoPlato, nombreReceta);
+        return Objects.hash(id);
     }
 
     @Override

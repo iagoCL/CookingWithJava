@@ -51,6 +51,13 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 
+		<!-- lorem ipsum -->
+		<dependency>
+			<groupId>com.thedeanda</groupId>
+			<artifactId>lorem</artifactId>
+			<version>2.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

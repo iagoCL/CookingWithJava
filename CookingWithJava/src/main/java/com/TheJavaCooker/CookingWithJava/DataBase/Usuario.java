@@ -5,9 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "Usuario")
 @Table(name = "usuario",
@@ -41,7 +39,7 @@ public class Usuario {
             fetch = FetchType.EAGER,
             orphanRemoval = true
     )
-    private List<Receta> recetasCreadas = new ArrayList<>();
+    private Set<Receta> recetasCreadas = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoritos")
     private List<Receta> recetasFavoritas = new ArrayList<>();
@@ -117,7 +115,7 @@ public class Usuario {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombreUsuario, contrasena, correoElectronico, fechaCreacion);
+        return Objects.hash(id);
     }
 
     @Override
@@ -133,7 +131,7 @@ public class Usuario {
     }
 
     @Transactional
-    public List<Receta> getRecetasCreadas() {
+    public Set<Receta> getRecetasCreadas() {
         return recetasCreadas;
     }
 

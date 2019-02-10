@@ -1,6 +1,8 @@
 package com.TheJavaCooker.CookingWithJava;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.*;
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
 import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
@@ -11,6 +13,17 @@ public class DatabaseRandomData {
     private DatabaseManager database;
     private UsuarioRepository usuarioRepository;
     private RecetaRepository recetaRepository;
+
+    private final static String[] nombresUtensiliosAleatorios = {
+            "centrifugadora",
+            "cuchillo",
+            "horno",
+            "batidora",
+            "cuchara",
+            "olla",
+            "rayo laser",
+            "lanzallamas"
+    };
     private final static String[] nombresIngredientesAleatorios = {
             "chocolate",
             "harina",
@@ -44,6 +57,7 @@ public class DatabaseRandomData {
     };
 
     private static Random random = new Random();
+    private static Lorem lorem = LoremIpsum.getInstance();
 
     public DatabaseRandomData(DatabaseManager database_) {
         this.database = database_;
@@ -101,14 +115,46 @@ public class DatabaseRandomData {
         }
     }
 
+    public static String getNombreUtensilioAleatorio() {
+        return getNombreUtensilioAleatorio(random.nextInt(nombresUtensiliosAleatorios.length));
+    }
+
+    public static String getNombreUtensilioAleatorio(int index) {
+        try {
+            return nombresUtensiliosAleatorios[index];
+        } catch (Exception e) {
+            return "undefined";
+        }
+    }
+
+    public static String getDescripcionDePasoAleatoria() {
+        return lorem.getWords(15, 40);
+    }
+
     public static List<Pair<String, String>> getListaDeUtensiliosAleatorios(){
-        //todo
-        return new ArrayList<Pair<String, String>>(1);
+        List<Pair<String, String>> listaDeUtensiliosAleatorios;
+        int[] randomInts = random.ints(0,nombresUtensiliosAleatorios.length).distinct()
+                .limit(random.nextInt(nombresUtensiliosAleatorios.length)).toArray();
+        if (randomInts.length == 0) {
+            listaDeUtensiliosAleatorios = new ArrayList<Pair<String, String>>(1);
+            listaDeUtensiliosAleatorios.add(Pair.of(getNombreUtensilioAleatorio(), getNivelDeDificultadAleatorio()));
+        } else {
+            listaDeUtensiliosAleatorios = new ArrayList<Pair<String, String>>(randomInts.length);
+            for (int randomIndex : randomInts) {
+                listaDeUtensiliosAleatorios.add(Pair.of(getNombreUtensilioAleatorio(randomIndex), getNivelDeDificultadAleatorio()));
+            }
+        }
+        return listaDeUtensiliosAleatorios;
     }
 
     public static List<Pair<Integer,String>> getListaDePasosAleatorios(){
-        //todo
-        return new ArrayList<Pair<Integer,String>>(1);
+        int numPasos = random.nextInt(12);
+        List<Pair<Integer,String>> listaPasos = new ArrayList<>(numPasos);
+        for(int i = 0;i<numPasos;++i)
+        {
+            listaPasos.add(Pair.of(1+random.nextInt(240),getDescripcionDePasoAleatoria()));
+        }
+        return listaPasos;
     }
 
 
@@ -148,10 +194,10 @@ public class DatabaseRandomData {
 
     public void crearUsuariosEjemplo(int numUsuarios_) {
         for (int i = 1; i < numUsuarios_; ++i) {
-            database.crearUsuario("Usuario" + i,
+            database.crearUsuario(lorem.getFirstName() + i,
                     "contasena" + i,
                     "correo" + i + "@example.com",
-                    "Nombre" + i + " Apellidos" + i);
+                    lorem.getFirstName() + " "+lorem.getLastName()+" "+lorem.getLastName());
         }
     }
 

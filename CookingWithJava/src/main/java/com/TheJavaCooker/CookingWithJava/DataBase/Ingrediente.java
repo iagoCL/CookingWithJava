@@ -1,6 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "Ingrediente")
 @Table(name = "ingrediente",
@@ -29,5 +30,36 @@ public class Ingrediente {
         this.recetaId = recetaId;
     }
 
+    @Override
+    public String toString() {
+        return "Ingrediente{" +
+                "id=" + id +
+                ", nombreIngrediente='" + nombreIngrediente + '\'' +
+                ", cantidadIngrediente='" + cantidadIngrediente + '\'' +
+                ", recetaId=" + recetaId.getId() +
+                '}';
+    }
+
     protected Ingrediente(){}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ingrediente that = (Ingrediente) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public String getNombreIngrediente() {
+        return nombreIngrediente;
+    }
+
+    public String getCantidadIngrediente() {
+        return cantidadIngrediente;
+    }
 }
