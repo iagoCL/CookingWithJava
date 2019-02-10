@@ -3,13 +3,15 @@ package com.TheJavaCooker.CookingWithJava;
 import com.TheJavaCooker.CookingWithJava.DataBase.*;
 import org.springframework.data.util.Pair;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseTests {
     private DatabaseManager database;
+    private DatabaseRandomData databaseRandomData;
     private UsuarioRepository usuarioRepository;
     private RecetaRepository recetaRepository;
+    private IngredienteRepository ingredienteRepository;
 
     private static final String nombreUsuario = "nombreUsuarioEjemplo";
     private static final String correoElectronico = "correoDeEjemplo@example.com";
@@ -23,9 +25,11 @@ public class DatabaseTests {
 
     private static final String nombreReceta = "nombre de Receta de Ejemplo";
     private String tipoDePlato;
+    private String nivelDeDificultad;
 
     private static final String nuevoNombreReceta = "nuevo Nombre de Receta de Ejemplo";
     private String nuevoTipoDePlato;
+    private String nuevoNivelDeDificultad;
 
     private Usuario usuarioEjemploA;
     private Usuario usuarioEjemploB;
@@ -37,15 +41,20 @@ public class DatabaseTests {
         this.database = database_;
         usuarioRepository = database.getUsuarioRepository();
         recetaRepository = database.getRecetaRepository();
+        ingredienteRepository = database.getIngredienteRepository();
+        databaseRandomData = new DatabaseRandomData(database);
     }
 
     public boolean testCompleto() {
-        nuevoTipoDePlato = database.getTipoDePlatoAleatorio();
-        tipoDePlato = database.getTipoDePlatoAleatorio();
-        database.crearUsuariosEjemplo(15);
-        usuarioEjemploA = database.getUsuarioAletorio();
-        database.crearRecetasEjemplo(25);
-        recetaEjemploA = database.getRecetaAletoria();
+
+        nuevoTipoDePlato = DatabaseRandomData.getTipoDePlatoAleatorio();
+        tipoDePlato = DatabaseRandomData.getTipoDePlatoAleatorio();
+        nivelDeDificultad = DatabaseRandomData.getNivelDeDificultadAleatorio();
+        nuevoNivelDeDificultad = DatabaseRandomData.getNivelDeDificultadAleatorio();
+        databaseRandomData.crearUsuariosEjemplo(15);
+        usuarioEjemploA = databaseRandomData.getUsuarioAletorio();
+        databaseRandomData.crearRecetasEjemplo(25);
+        recetaEjemploA = databaseRandomData.getRecetaAletoria();
 
         if (!testUsuarios()) {
             return false;
@@ -57,29 +66,75 @@ public class DatabaseTests {
             PersonalDebug.imprimir("TODOS LOS TEST SUPERADOS.");
             return true;
         }
-
     }
 
     private boolean testRecetas() {
-        Pair<DatabaseManager.Errores, Receta> p = database.crearReceta(nombreReceta, tipoDePlato, usuarioEjemploB);
+        List<Pair<String, String>> listaIngredientes = DatabaseRandomData.getListaDeIngredientesAleatorios();
+        List<Pair<String, String>> listaUtensilios = DatabaseRandomData.getListaDeUtensiliosAleatorios();
+        List<Pair<Integer, String>> listaPasos = DatabaseRandomData.getListaDePasosAleatorios();
+        List<Pair<String, String>> listaIngredientesErronea = new ArrayList<>(1);
+        List<Pair<String, String>> listaUtensiliosErronea = new ArrayList<>(1);
+        List<Pair<Integer, String>> listaPasosErronea = new ArrayList<>(1);
+        //Comprobando Ingredientes
+        listaIngredientesErronea.add(Pair.of("", "XXX"));
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
+            PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE NULO");
+            return true;
+        } else {
+            PersonalDebug.imprimir("Detectado nombre de ingrediente nulo");
+        }
+        listaIngredientesErronea.clear();
+        listaIngredientesErronea.add(Pair.of("XXX", ""));
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.CANTIDAD_DE_INGREDIENTE_NULA) {
+            PersonalDebug.imprimir("ERROR: NO SE DETECTA LA CANTIDAD DE INGREDIENTE NULA");
+            return true;
+        } else {
+            PersonalDebug.imprimir("Detectado cantidad de ingrediente nula");
+        }
+        listaIngredientesErronea.clear();
+        listaIngredientesErronea.add(Pair.of("XXX", "XXX"));
+        listaIngredientesErronea.add(Pair.of("XXX", "XXX"));
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_REPETIDO) {
+            PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE REPETIDO");
+            return true;
+        } else {
+            PersonalDebug.imprimir("Detectado nombre de ingrediente repetido");
+        }
+        List<String> ingredientesUsados = ingredienteRepository.todosLosIngredientes();
+        if (ingredientesUsados.isEmpty() && !ingredientesUsados.isEmpty()) {
+            PersonalDebug.imprimir("ERROR: DEBERÍA HABER AL MENOS UN INGREDIENTE");
+            return false;
+        } else {
+            PersonalDebug.imprimir("tipos de ingrediente usados: " + ingredientesUsados);
+        }
+
+        PersonalDebug.imprimir("PRUEBA DE INGREDIENTES SUPERADA");
+        //Comprobando Utensilios
+        //todo
+
+        //Comprobando Pasos
+        //todo
+
+        //Comprobando Recetas
+        Pair<DatabaseManager.Errores, Receta> p = database.crearReceta(nombreReceta, tipoDePlato, nivelDeDificultad, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERIA PODER INSERTAR");
             return false;
         }
         Receta recetaDeEjemplo = p.getSecond();
-        if (database.crearReceta(nombreReceta, "XXX", usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_REPETIDO) {
+        if (database.crearReceta(nombreReceta, "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE REPETIDO");
             return true;
         } else {
             PersonalDebug.imprimir("Detectado nombre de receta repetido");
         }
-        if (database.crearReceta("", "XXX", usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_NULO) {
+        if (database.crearReceta("", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE RECETA NULO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de receta nulo");
         }
-        if (database.crearReceta("XXX", "", usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIPO_PLATO_RECETA_NULO) {
+        if (database.crearReceta("XXX", "", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIPO_PLATO_RECETA_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL TIPO DE PLATO DE LA RECETA NULO");
             return false;
         } else {
@@ -97,6 +152,7 @@ public class DatabaseTests {
         long numRecetas = recetaRepository.count();
         recetaEjemploB.setNombreReceta(nuevoNombreReceta);
         recetaEjemploB.setTipoPlato(nuevoTipoDePlato);
+        recetaEjemploB.setNivelDificultad(NivelDeDificultad.fromString(nuevoNivelDeDificultad));
         p = database.actualizarOCrearReceta(recetaEjemploB);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERÍA PODER ACTUALIZAR");
@@ -136,40 +192,45 @@ public class DatabaseTests {
                 PersonalDebug.imprimir("Recetas por tipo: " + receta.toString());
             }
         }
+        List<String> tiposDePlato = recetaRepository.tiposDePlato();
+        if (tiposDePlato.isEmpty()) {
+            PersonalDebug.imprimir("ERROR: DEBERÍA HABER AL MENOS UN TIPO DE PLATO");
+            return false;
+        } else {
+            PersonalDebug.imprimir("tipos de receta: " + tiposDePlato);
+        }
+
         PersonalDebug.imprimir("TEST DE RECETAS SUPERADO");
         return true;
 
     }
 
     private boolean testFavoritos() {
-        if (recetaEjemploA.marcarFavorito(usuarioEjemploA)) {
+        long numRecetas = recetaRepository.count();
+        if (database.marcarFavorito(usuarioEjemploA, recetaEjemploA)) {
             PersonalDebug.imprimir("Receta A marcada favorita por usuario A.");
         } else {
             PersonalDebug.imprimir("ERROR: DEBERÍA PODER MARCARSE COMO FAVORITO.");
             return false;
         }
-        if (recetaEjemploA.marcarFavorito(usuarioEjemploA)) {
+        if (database.marcarFavorito(usuarioEjemploA, recetaEjemploA)) {
             PersonalDebug.imprimir("ERROR: RECETA A  NO DETECTADA COMO FAVORITA POR USUARIO B.");
             return false;
         } else {
             PersonalDebug.imprimir("Receta A ya marcada favorita por usuario A.");
         }
-        if (recetaEjemploA.marcarFavorito(usuarioEjemploB)) {
+        if (database.marcarFavorito(usuarioEjemploB, recetaEjemploA)) {
             PersonalDebug.imprimir("Receta A marcada favorita por usuario B.");
         } else {
             PersonalDebug.imprimir("ERROR: DEBERÍA PODER MARCARSE COMO FAVORITA.");
             return false;
         }
-        if (recetaEjemploB.marcarFavorito(usuarioEjemploA)) {
+        if (database.marcarFavorito(usuarioEjemploA, recetaEjemploB)) {
             PersonalDebug.imprimir("Receta B marcada favorita por usuario A.");
         } else {
             PersonalDebug.imprimir("ERROR: DEBERÍA PODER MARCARSE COMO FAVORITA.");
             return false;
         }
-
-        long numRecetas = recetaRepository.count();
-        recetaRepository.save(recetaEjemploA);
-        recetaRepository.save(recetaEjemploB);
         if (numRecetas == recetaRepository.count()) {
             PersonalDebug.imprimir("Se han actualizado las recetas.");
         } else {
@@ -209,7 +270,7 @@ public class DatabaseTests {
         }
 
 
-        database.crearFavoritosAleatorios(25);
+        databaseRandomData.crearFavoritosAleatorios(25);
         PersonalDebug.imprimir("TEST DE FAVORITOS CORRECTO");
         return true;
     }

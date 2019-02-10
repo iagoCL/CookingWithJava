@@ -1,6 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +22,23 @@ public class Receta {
     private String tipoPlato;
     @Column(nullable = false)
     private String nombreReceta;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NivelDeDificultad nivelDificultad;
+    @Column(nullable = false)
+    private LocalDate fechaCreacion;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     private Usuario creadorDeLaReceta;
+
+    @OneToMany(
+            mappedBy = "recetaId",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    private List<Ingrediente> ingredientes = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
@@ -36,18 +50,16 @@ public class Receta {
     )
     private List<Usuario> favoritos = new ArrayList<>();
 
-    //todo comentarios
-    //todo ingredientes
-    //todo pasos
+
     //todo utensilios
+    //todo pasos
+    //todo comentarios
 
     //todo busqueda
     //todo fotos
     //todo formularios
 
     //todo paso a mysql
-
-    //todo ejemplos inicio
 
     protected Receta() {
     }
@@ -76,6 +88,26 @@ public class Receta {
         this.nombreReceta = nombreReceta.toLowerCase();
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public String getStringFechaCreacion() {
+        return fechaCreacion.format(Usuario.formatoFecha);
+    }
+
+    public void resetFechaCreacion() {
+        this.fechaCreacion = LocalDate.now();
+    }
+
+    public NivelDeDificultad getNivelDificultad() {
+        return nivelDificultad;
+    }
+
+    public void setNivelDificultad(NivelDeDificultad nivelDificultad_) {
+        this.nivelDificultad = nivelDificultad_;
+    }
+
     public Usuario getCreadorDeLaReceta() {
         return creadorDeLaReceta;
     }
@@ -100,6 +132,10 @@ public class Receta {
         }
     }
 
+    public List<Ingrediente> getIngredientes() {
+        return ingredientes;
+    }
+
     public boolean marcadaComoFavorita(Usuario usuario_) {
         return favoritos.contains(usuario_);
     }
@@ -122,6 +158,7 @@ public class Receta {
         Receta receta = (Receta) o;
         return id == receta.id &&
                 Objects.equals(tipoPlato, receta.tipoPlato) &&
+                Objects.equals(fechaCreacion, receta.fechaCreacion) &&
                 Objects.equals(nombreReceta, receta.nombreReceta);
     }
 
@@ -137,12 +174,15 @@ public class Receta {
                 ", tipoPlato='" + tipoPlato + '\'' +
                 ", nombreReceta='" + nombreReceta + '\'' +
                 ", creadorDeLaReceta=" + creadorDeLaReceta +
+                ", fechaDeCreacion='" + fechaCreacion.format(Usuario.formatoFecha) + '\'' +
                 '}';
     }
 
-    public Receta(String nombreReceta_, String tipoPlato_, Usuario creadorDeLaReceta_) {
+    public Receta(String nombreReceta_, String tipoPlato_, NivelDeDificultad nivelDeDificultad_, Usuario creadorDeLaReceta_) {
         this.tipoPlato = tipoPlato_.toLowerCase();
         this.nombreReceta = nombreReceta_;
         this.creadorDeLaReceta = creadorDeLaReceta_;
+        this.nivelDificultad = nivelDeDificultad_;
+        resetFechaCreacion();
     }
 }

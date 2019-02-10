@@ -3,8 +3,9 @@ package com.TheJavaCooker.CookingWithJava.DataBase;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 public class Usuario {
     public static final String constraintNombreUsuario = "CONSTRAINT_NOMBRE_USUARIO_UNICO";
     public static final String constraintCorreoElectronico = "CONSTRAINT_CORREO_ELECTRONICO_UNICO";
+    public static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd LLL yy");
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +32,8 @@ public class Usuario {
     private String correoElectronico;
     @Column(nullable = false)
     private String nombreApellidos;
+    @Column(nullable = false)
+    private LocalDate fechaCreacion;
 
     @OneToMany(
             mappedBy = "creadorDeLaReceta",
@@ -66,6 +70,19 @@ public class Usuario {
         return correoElectronico;
     }
 
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public String getStringFechaCreacion() {
+        return fechaCreacion.format(Usuario.formatoFecha);
+    }
+
+
+    public void resetFechaCreacion() {
+        this.fechaCreacion = LocalDate.now();
+    }
+
     public void setNombreUsuario(String nombreUsuario_) {
         this.nombreUsuario = nombreUsuario_;
     }
@@ -94,12 +111,13 @@ public class Usuario {
                 Objects.equals(nombreUsuario, usuario.nombreUsuario) &&
                 Objects.equals(contrasena, usuario.contrasena) &&
                 Objects.equals(nombreApellidos, usuario.nombreApellidos) &&
+                Objects.equals(fechaCreacion, usuario.fechaCreacion) &&
                 Objects.equals(correoElectronico, usuario.correoElectronico);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombreUsuario, contrasena, correoElectronico);
+        return Objects.hash(id, nombreUsuario, contrasena, correoElectronico, fechaCreacion);
     }
 
     @Override
@@ -110,6 +128,7 @@ public class Usuario {
                 ", contrasena='" + contrasena + '\'' +
                 ", correoElectronico='" + correoElectronico + '\'' +
                 ", nombreApellidos='" + nombreApellidos + '\'' +
+                ", fechaDeCreacion='" + fechaCreacion.format(formatoFecha) + '\'' +
                 '}';
     }
 
@@ -141,6 +160,7 @@ public class Usuario {
         this.contrasena = contrasena_;
         this.correoElectronico = correoElectronico_;
         this.nombreApellidos = nombreApellidos_;
+        resetFechaCreacion();
     }
 
 }
