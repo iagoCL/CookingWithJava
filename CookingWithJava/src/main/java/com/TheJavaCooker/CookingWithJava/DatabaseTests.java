@@ -1,8 +1,10 @@
 package com.TheJavaCooker.CookingWithJava;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.*;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +28,9 @@ public class DatabaseTests {
     private static final String nuevoCorreoElectronico = "nuevoCorreoDeEjemplo@example.com";
     private static final String nuevaContrasena = "nuevaContraseñaDeEjemplo";
     private static final String nuevosNombreApellidos = "NuevoNombreDeEjemplo nuevosApellidosDeEjemplo";
+
+    private static final String tituloDeComentario = "titulo de Comentario de Ejemplo";
+    private static final String descripcionDeComentario = "Descripcion de comentario de ejemplo.";
 
     private static final String nombreReceta = "nombre de Receta de Ejemplo";
     private String tipoDePlato;
@@ -67,7 +72,7 @@ public class DatabaseTests {
         nuevoNivelDeDificultad = DatabaseRandomData.getNivelDeDificultadAleatorio();
         databaseRandomData.crearUsuariosEjemplo(15);
         usuarioEjemploA = databaseRandomData.getUsuarioAletorio();
-        databaseRandomData.crearRecetasEjemplo(25);
+        databaseRandomData.crearRecetasEjemplo(75);
         recetaEjemploA = databaseRandomData.getRecetaAletoria();
 
         if (!testUsuarios()) {
@@ -82,26 +87,67 @@ public class DatabaseTests {
             return false;
         } else if (!testFavoritos()) {
             return false;
+        } else if (!testComentarios()) {
+            return false;
         } else {
+            PersonalDebug.imprimir(recetaEjemploB.mostrarMultilinea());
+            Iterable<Receta> it = database.buscarReceta(1,
+                    2,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "nombre r",
+                    null,
+                    null,
+                    null);
+            PersonalDebug.imprimir("PRIMERA QUERY");
+            it.forEach((r) -> {
+                PersonalDebug.imprimir(r.toString());
+            });
+            it = database.buscarReceta(1,
+                    4,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "PesCado",
+                    null,
+                    null,
+                    null,
+                    null);
+            PersonalDebug.imprimir("SEGUNDA QUERY");
+            it.forEach((r) -> {
+                PersonalDebug.imprimir(r.toString());
+            });
+            PersonalDebug.imprimir("ULTIMAS RECETAS");
+            recetaRepository.ultimasRecentas(PageRequest.of(1, 10)).forEach((r) -> {
+                PersonalDebug.imprimir(r.toString());
+            });
             PersonalDebug.imprimir("TODOS LOS TEST SUPERADOS.");
             return true;
         }
     }
 
-    private boolean testDePasos(){
+    private boolean testDePasos() {
         List<Pair<Integer, String>> listaPasosErronea = new ArrayList<>(1);
         listaPasosErronea.add(Pair.of(0, "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIEMPO_DE_PASO_INCORRECTO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA DURACION DE PASO NULA");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado duracion de paso nula");
         }
         listaPasosErronea.clear();
         listaPasosErronea.add(Pair.of(77, ""));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.DESCRIPCION_DE_PASO_NULA) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA DESCRIPCION DEL PASO NULA");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado descripcion de paso nulo");
         }
@@ -110,12 +156,12 @@ public class DatabaseTests {
         return true;
     }
 
-    private boolean testIngredientes(){
+    private boolean testIngredientes() {
         List<Pair<String, String>> listaIngredientesErronea = new ArrayList<>(1);
         listaIngredientesErronea.add(Pair.of("", "XXX"));
         if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE NULO");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de ingrediente nulo");
         }
@@ -123,7 +169,7 @@ public class DatabaseTests {
         listaIngredientesErronea.add(Pair.of("XXX", ""));
         if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.CANTIDAD_DE_INGREDIENTE_NULA) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA CANTIDAD DE INGREDIENTE NULA");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado cantidad de ingrediente nula");
         }
@@ -132,7 +178,7 @@ public class DatabaseTests {
         listaIngredientesErronea.add(Pair.of("XXX", "XXX"));
         if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE REPETIDO");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de ingrediente repetido");
         }
@@ -148,23 +194,23 @@ public class DatabaseTests {
         return true;
     }
 
-    private boolean testUtensilios(){
+    private boolean testUtensilios() {
         List<Pair<String, String>> listaUtensiliosErronea = new ArrayList<>(1);
         listaUtensiliosErronea.add(Pair.of("", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE UTENSILO NULO");
-            return true;
+            return false;
         } else {
-            PersonalDebug.imprimir("Detectado nombre de ingrediente nulo");
+            PersonalDebug.imprimir("Detectado nombre de utensilio nulo");
         }
         listaUtensiliosErronea.clear();
         listaUtensiliosErronea.add(Pair.of("XXX", "XXX"));
         listaUtensiliosErronea.add(Pair.of("XXX", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes,listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_REPETIDO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE utensilios REPETIDO");
-            return true;
+            return false;
         } else {
-            PersonalDebug.imprimir("Detectado nombre de ingrediente repetido");
+            PersonalDebug.imprimir("Detectado nombre de utensilio repetido");
         }
         List<String> untensiliosUsados = utensilioRepository.todosLosUtensilios();
         if (untensiliosUsados.isEmpty() && !untensiliosUsados.isEmpty()) {
@@ -186,10 +232,10 @@ public class DatabaseTests {
             return false;
         }
         Receta recetaDeEjemplo = p.getSecond();
-        PersonalDebug.imprimir("Creada la receta:\n "+recetaDeEjemplo.mostrarMultilinea());
+        PersonalDebug.imprimir("Creada la receta:\n " + recetaDeEjemplo.mostrarMultilinea());
         if (database.crearReceta(nombreReceta, "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE REPETIDO");
-            return true;
+            return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de receta repetido");
         }
@@ -218,7 +264,7 @@ public class DatabaseTests {
         recetaEjemploB.setNombreReceta(nuevoNombreReceta);
         recetaEjemploB.setTipoPlato(nuevoTipoDePlato);
         recetaEjemploB.setNivelDificultad(NivelDeDificultad.fromString(nuevoNivelDeDificultad));
-        p = database.actualizarOCrearReceta(recetaEjemploB);
+        p = database.actualizarReceta(recetaEjemploB);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERÍA PODER ACTUALIZAR");
             return false;
@@ -228,7 +274,7 @@ public class DatabaseTests {
             return false;
         } else {
             PersonalDebug.imprimir("Actualización correcta.");
-            PersonalDebug.imprimir("Creada la receta:\n "+recetaDeEjemplo.mostrarMultilinea());
+            PersonalDebug.imprimir("Creada la receta:\n " + recetaDeEjemplo.mostrarMultilinea());
         }
 
         if (recetaEjemploB.getCreadorDeLaReceta().completeEquals(usuarioEjemploB)) {
@@ -272,8 +318,6 @@ public class DatabaseTests {
     }
 
     private boolean testFavoritos() {
-        usuarioEjemploB = databaseRandomData.getUsuarioAletorio();
-        usuarioEjemploA = databaseRandomData.getUsuarioAletorio();
         long numRecetas = recetaRepository.count();
         if (database.marcarFavorito(usuarioEjemploB, recetaEjemploA)) {
             PersonalDebug.imprimir("Receta A marcada favorita por usuario B.");
@@ -337,8 +381,75 @@ public class DatabaseTests {
             return false;
         }
 
-        databaseRandomData.crearFavoritosAleatorios(35);
+        databaseRandomData.crearFavoritosAleatorios(15);
         PersonalDebug.imprimir("TEST DE FAVORITOS CORRECTO");
+        return true;
+    }
+
+    private boolean testComentarios() {
+        LocalDateTime randomTime = DatabaseRandomData.getRandomDateTime();
+        LocalDateTime randomTime2 = randomTime.plusDays(5);
+        if (database.crearComentarioConFecha("", "XXX", randomTime, recetaEjemploB, usuarioEjemploB).getFirst() == DatabaseManager.Errores.DESCRIPCION_DE_COMENTARIO_NULA) {
+            PersonalDebug.imprimir("Detectada descripción de comentario nula.");
+        } else {
+            PersonalDebug.imprimir("ERROR: DESCRIPCION DE COMENTARIO NULA NO DETECTADA.");
+            return false;
+        }
+        if (database.crearComentarioConFecha("XXX", "", randomTime, recetaEjemploB, usuarioEjemploB).getFirst() == DatabaseManager.Errores.TITULO_DE_COMENTARIO_NULO) {
+            PersonalDebug.imprimir("Detectada titulo de comentario nulo.");
+        } else {
+            PersonalDebug.imprimir("ERROR: TITULO DE COMENTARIO NULO NO DETECTADA.");
+            return false;
+        }
+        if (database.crearComentarioConFecha(descripcionDeComentario + 1, tituloDeComentario + 1, randomTime, recetaEjemploB, usuarioEjemploB).getFirst() == DatabaseManager.Errores.SIN_ERRORES) {
+            PersonalDebug.imprimir("Creado nuevo comentario.");
+        } else {
+            PersonalDebug.imprimir("ERROR: SE DEBERIA PODER COMENTAR.");
+            return false;
+        }
+        if (database.crearComentarioConFecha(descripcionDeComentario + 2, tituloDeComentario + 2, randomTime, recetaEjemploB, usuarioEjemploB).getFirst() == DatabaseManager.Errores.COMENTARIO_REPETIDO) {
+            PersonalDebug.imprimir("Detectado comentario repetido.");
+        } else {
+            PersonalDebug.imprimir("ERROR: SE DEBERIA DETECTAR COMENTARIO REPETIDO.");
+            return false;
+        }
+        if (database.crearComentarioConFecha(descripcionDeComentario + 3, tituloDeComentario + 3, randomTime, recetaEjemploB, usuarioEjemploA).getFirst() == DatabaseManager.Errores.SIN_ERRORES) {
+            PersonalDebug.imprimir("Creado nuevo comentario.");
+        } else {
+            PersonalDebug.imprimir("ERROR: SE DEBERIA PODER COMENTAR.");
+            return false;
+        }
+        if (database.crearComentarioConFecha(descripcionDeComentario + 4, tituloDeComentario + 4, randomTime2, recetaEjemploB, usuarioEjemploA).getFirst() == DatabaseManager.Errores.SIN_ERRORES) {
+            PersonalDebug.imprimir("Creado nuevo comentario.");
+        } else {
+            PersonalDebug.imprimir("ERROR: SE DEBERIA PODER COMENTAR.");
+            return false;
+        }
+        if (database.crearComentarioConFecha(descripcionDeComentario + 5, tituloDeComentario + 5, randomTime, recetaEjemploA, usuarioEjemploB).getFirst() == DatabaseManager.Errores.SIN_ERRORES) {
+            PersonalDebug.imprimir("Creado nuevo comentario.");
+        } else {
+            PersonalDebug.imprimir("ERROR: SE DEBERIA PODER COMENTAR.");
+            return false;
+        }
+        if (recetaEjemploA.getComentarios().size() == 1) {
+            PersonalDebug.imprimir("Correcto numero de favoritos.");
+        } else {
+            PersonalDebug.imprimir("ERROR: DEBERÍA HABER 1 COMENTARIO.");
+            return false;
+        }
+        if (recetaEjemploB.getComentarios().size() == 3) {
+            PersonalDebug.imprimir("Correcto numero de favoritos.");
+        } else {
+            PersonalDebug.imprimir("ERROR: DEBERÍA HABER 2 FAVORITO.");
+            return false;
+        }
+
+        databaseRandomData.crearComentariosEjemplo(25);
+        Set<Comentario> comentarios = recetaEjemploB.getComentarios();
+        for (Comentario comentario : comentarios) {
+            PersonalDebug.imprimir("comentario: " + comentario);
+        }
+        PersonalDebug.imprimir("TEST DE COMENTARIOS CORRECTO");
         return true;
     }
 
@@ -406,7 +517,7 @@ public class DatabaseTests {
         usuarioEjemploB.setCorreoElectronico(nuevoCorreoElectronico);
         usuarioEjemploB.setNombreUsuario(nuevoNombreUsuario);
         usuarioEjemploB.setNombreApellidos(nuevosNombreApellidos);
-        p = database.actualizarOCrearUsuario(usuarioEjemploB);
+        p = database.actualizarUsuario(usuarioEjemploB);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERÍA PODER INSERTAR EL USUARIO");
             return false;

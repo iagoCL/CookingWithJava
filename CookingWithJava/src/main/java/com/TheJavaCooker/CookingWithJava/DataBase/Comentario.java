@@ -11,13 +11,14 @@ import java.util.Objects;
                 @UniqueConstraint(columnNames = {"fechaComentario", "usuario_id", "receta_id"}, name = Comentario.constraintComentarioUnico)
         }
 )
-public class Comentario implements Comparable<Comentario>{
+public class Comentario implements Comparable<Comentario> {
     public static final String constraintComentarioUnico = "CONSTRAINT_COMENTARIO_UNICO";
     public static DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd LLL yy - HH:MM");
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Lob
     @Column(nullable = false)
     private String descripcionComentario;
     @Column(nullable = false)
@@ -31,7 +32,7 @@ public class Comentario implements Comparable<Comentario>{
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
-    private Receta usuarioId;
+    private Usuario usuarioId;
 
     protected Comentario() {
     }
@@ -41,7 +42,13 @@ public class Comentario implements Comparable<Comentario>{
     }
 
     public void resetFechaComentario() {
-        this.fechaComentario = LocalDateTime.now();
+        setFechaComentario(LocalDateTime.now());
+    }
+
+    public void setFechaComentario(LocalDateTime fechaComentario_) {
+        this.fechaComentario =
+                fechaComentario_.minusNanos(fechaComentario_.getNano())
+                        .minusSeconds(fechaComentario_.getSecond() % 20);
     }
 
     public String getDescripcionComentario() {
@@ -52,18 +59,14 @@ public class Comentario implements Comparable<Comentario>{
         return tituloComentario;
     }
 
-    public Comentario(String descripcionComentario, String tituloComentario, LocalDateTime fechaComentario, Receta recetaId, Receta usuarioId) {
+    public Comentario(String descripcionComentario,
+                      String tituloComentario,
+                      LocalDateTime fechaComentario,
+                      Receta recetaId,
+                      Usuario usuarioId) {
         this.descripcionComentario = descripcionComentario;
         this.tituloComentario = tituloComentario;
-        this.fechaComentario = fechaComentario;
-        this.recetaId = recetaId;
-        this.usuarioId = usuarioId;
-    }
-
-    public Comentario(String descripcionComentario, String tituloComentario, Receta recetaId, Receta usuarioId) {
-        this.descripcionComentario = descripcionComentario;
-        this.tituloComentario = tituloComentario;
-        resetFechaComentario();
+        setFechaComentario(fechaComentario);
         this.recetaId = recetaId;
         this.usuarioId = usuarioId;
     }
@@ -95,6 +98,11 @@ public class Comentario implements Comparable<Comentario>{
 
     @Override
     public int compareTo(Comentario other_) {
-        return other_.fechaComentario.compareTo(this.fechaComentario);
+        int fecha = other_.fechaComentario.compareTo(this.fechaComentario);
+        if (fecha == 0) {
+            return (int) (this.id - other_.id);
+        } else {
+            return fecha;
+        }
     }
 }

@@ -1,10 +1,15 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
+
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +28,7 @@ public class DatabaseManager {
     private UtensilioRepository utensilioRepository;
     @Autowired
     private ComentarioRepository comentarioRepository;
+    private static final Sort sortOrder = new Sort(Sort.Direction.ASC, "numFavoritos");
 
 
     public enum Errores {
@@ -43,6 +49,9 @@ public class DatabaseManager {
         NOMBRE_DE_UTENSILIO_REPETIDO,
         DESCRIPCION_DE_PASO_NULA,
         TIEMPO_DE_PASO_INCORRECTO,
+        DESCRIPCION_DE_COMENTARIO_NULA,
+        TITULO_DE_COMENTARIO_NULO,
+        COMENTARIO_REPETIDO,
         NUMERO_DE_PASO_INCORRECTO,
         NUMERO_DE_PASO_REPETIDO,
         ERRROR_DESCONOCIDO
@@ -50,6 +59,7 @@ public class DatabaseManager {
 
     public boolean marcarFavorito(Usuario usuario_, Receta receta_) {
         if (receta_.marcarFavorito(usuario_)) {
+            receta_.recalcNumFavoritos();
             recetaRepository.save(receta_);
             return true;
         } else {
@@ -59,6 +69,7 @@ public class DatabaseManager {
 
     public boolean quitarFavorito(Usuario usuario_, Receta receta_) {
         if (receta_.quitarFavorito(usuario_)) {
+            receta_.recalcNumFavoritos();
             recetaRepository.save(receta_);
             return true;
         } else {
@@ -104,10 +115,10 @@ public class DatabaseManager {
     }
 
     private Errores comprobarPasos(List<Pair<Integer, String>> listaPasos_) {
-        for(int i = 0, l = listaPasos_.size(); i<l;++i){
+        for (int i = 0, l = listaPasos_.size(); i < l; ++i) {
             Pair<Integer, String> paso = listaPasos_.get(i);
             if (paso.getSecond().isEmpty()) {
-                PersonalDebug.imprimir("Descripcion de paso nula en :"+i);
+                PersonalDebug.imprimir("Descripcion de paso nula en :" + i);
                 return Errores.DESCRIPCION_DE_PASO_NULA;
             } else if (paso.getFirst() < 0) {
                 PersonalDebug.imprimir("Tiempo de paso nulo o negativo: " + paso.getFirst());
@@ -152,8 +163,8 @@ public class DatabaseManager {
     }
 
     private Pair<Errores, Utensilio> crearUtensilio(String nombreUtensilio_,
-                                                        String nivelDeDificultad_,
-                                                        Receta receta_) {
+                                                    String nivelDeDificultad_,
+                                                    Receta receta_) {
         Utensilio utensilio = new Utensilio(nombreUtensilio_, NivelDeDificultad.fromString(nivelDeDificultad_), receta_);
         if (nombreUtensilio_.isEmpty()) {
             PersonalDebug.imprimir("Nombre de utensilio nulo: " + nombreUtensilio_);
@@ -183,14 +194,14 @@ public class DatabaseManager {
     }
 
     private Pair<Errores, Paso> crearPaso(int numeroPaso_,
-                                                 int tiempoEnMinutos_,
-                                                 String descripcionPaso_,
-                                                Receta receta_) {
-        Paso paso = new Paso(numeroPaso_, tiempoEnMinutos_,descripcionPaso_, receta_);
-        if (numeroPaso_<1) {
+                                          int tiempoEnMinutos_,
+                                          String descripcionPaso_,
+                                          Receta receta_) {
+        Paso paso = new Paso(numeroPaso_, tiempoEnMinutos_, descripcionPaso_, receta_);
+        if (numeroPaso_ < 1) {
             PersonalDebug.imprimir("Numero de paso nulo o negativo: " + numeroPaso_);
             return Pair.of(Errores.NUMERO_DE_PASO_INCORRECTO, paso);
-        } else if (tiempoEnMinutos_<1) {
+        } else if (tiempoEnMinutos_ < 1) {
             PersonalDebug.imprimir("tiempo de paso nulo o negativo: " + tiempoEnMinutos_);
             return Pair.of(Errores.TIEMPO_DE_PASO_INCORRECTO, paso);
         } else if (descripcionPaso_.isEmpty()) {
@@ -220,14 +231,68 @@ public class DatabaseManager {
         }
     }
 
+    public Pair<Errores, Comentario> crearComentario(String descripcionComentario_,
+                                                     String tituloComentario_,
+                                                     Receta recetaId_,
+                                                     Usuario usuarioId_) {
+        return crearComentarioConFecha(descripcionComentario_, tituloComentario_,
+                LocalDateTime.now(), recetaId_, usuarioId_);
+    }
+
+    public Pair<Errores, Comentario> crearComentarioConFecha(String descripcionComentario_,
+                                                             String tituloComentario_,
+                                                             LocalDateTime fechaComentario_,
+                                                             Receta recetaId_,
+                                                             Usuario usuarioId_) {
+        Comentario comentario = new Comentario(descripcionComentario_,
+                tituloComentario_, fechaComentario_, recetaId_, usuarioId_);
+        if (descripcionComentario_.isEmpty()) {
+            PersonalDebug.imprimir("Descripcion de comentario nula: " + descripcionComentario_);
+            return Pair.of(Errores.DESCRIPCION_DE_COMENTARIO_NULA, comentario);
+        } else if (tituloComentario_.isEmpty()) {
+            PersonalDebug.imprimir("Titulo de comentario nulo: " + descripcionComentario_);
+            return Pair.of(Errores.TITULO_DE_COMENTARIO_NULO, comentario);
+        } else if (recetaId_ == null) {
+            PersonalDebug.imprimir("Receta nula");
+            return Pair.of(Errores.ERRROR_DESCONOCIDO, comentario);
+        } else if (usuarioId_ == null) {
+            PersonalDebug.imprimir("Usuario nulo");
+            return Pair.of(Errores.ERRROR_DESCONOCIDO, comentario);
+        } else {
+            if (fechaComentario_ == null) {
+                PersonalDebug.imprimir("WARNING: Fecha nula, poniendo la actual");
+                comentario.resetFechaComentario();
+            }
+            try {
+                comentarioRepository.save(comentario);
+            } catch (org.springframework.dao.DataIntegrityViolationException e) {
+                if (e.toString().contains(Comentario.constraintComentarioUnico)) {
+                    PersonalDebug.imprimir("Comentario Repetido: " + e.toString());
+                    return Pair.of(Errores.COMENTARIO_REPETIDO, comentario);
+                } else {
+                    PersonalDebug.imprimir("ConstraintViolationException desconocida: " + e.toString());
+                    return Pair.of(Errores.ERRROR_DESCONOCIDO, comentario);
+                }
+            } catch (Exception e) {
+                PersonalDebug.imprimir("Excepcion desconocida: " + e.toString());
+                return Pair.of(Errores.ERRROR_DESCONOCIDO, comentario);
+            }
+            recetaId_.getComentarios().add(comentario);
+            recetaId_.recalcNumComentarios();
+            recetaRepository.save(recetaId_);
+            return Pair.of(Errores.SIN_ERRORES, comentario);
+        }
+    }
+
+
     public Pair<Errores, Usuario> crearUsuario(String nombreUsuario_,
                                                String contrasena_,
                                                String correo_,
                                                String nombreApellidos_) {
-        return actualizarOCrearUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_));
+        return actualizarUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_));
     }
 
-    public Pair<Errores, Usuario> actualizarOCrearUsuario(Usuario usuario_) {
+    public Pair<Errores, Usuario> actualizarUsuario(Usuario usuario_) {
         if (usuario_.getNombreUsuario().isEmpty()) {
             PersonalDebug.imprimir("Nombre de usuario nulo: " + usuario_.getNombreUsuario());
             return Pair.of(Errores.NOMBRE_USUARIO_NULO, usuario_);
@@ -288,7 +353,7 @@ public class DatabaseManager {
                 return Pair.of(errorIngredientes, nuevaReceta);
             }
         }
-        if (listaDeUtensilios_.isEmpty()) {
+        if ( listaDeUtensilios_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin utensilios.");
         } else {
             Errores errorUtensilios = comprobarUtensilios(listaDeUtensilios_);
@@ -297,7 +362,7 @@ public class DatabaseManager {
                 return Pair.of(errorUtensilios, nuevaReceta);
             }
         }
-        if (listaDePasos_.isEmpty()) {
+        if ( listaDePasos_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin pasos.");
         } else {
             Errores errorPasos = comprobarPasos(listaDePasos_);
@@ -307,7 +372,7 @@ public class DatabaseManager {
             }
         }
 
-        Pair<Errores, Receta> nuevoPairReceta = actualizarOCrearReceta(nuevaReceta);
+        Pair<Errores, Receta> nuevoPairReceta = actualizarReceta(nuevaReceta);
         if (nuevoPairReceta.getFirst() == Errores.SIN_ERRORES) {
             for (Pair<String, String> ingredienteString : listaDeIngredientes_) {
                 Errores errorIngredientes =
@@ -325,22 +390,23 @@ public class DatabaseManager {
                     return Pair.of(errorUtensilios, nuevaReceta);
                 }
             }
-            for(int i = 0, l = listaDePasos_.size(); i<l;){
+            for (int i = 0, l = listaDePasos_.size(); i < l; ) {
                 Pair<Integer, String> pasoPair = listaDePasos_.get(i);
                 Errores errorPasosos =
-                        crearPaso(++i,pasoPair.getFirst(), pasoPair.getSecond(), nuevaReceta).getFirst();
+                        crearPaso(++i, pasoPair.getFirst(), pasoPair.getSecond(), nuevaReceta).getFirst();
                 if (errorPasosos != Errores.SIN_ERRORES) {
                     PersonalDebug.imprimir("Fallo en los pasos de la receta.");
                     return Pair.of(errorPasosos, nuevaReceta);
                 }
             }
-            //todo Aqui ira lo de los utensilios y pasos
+            nuevaReceta.recalcNumPasos();
+            recetaRepository.save(nuevaReceta);
         }
         return nuevoPairReceta;
 
     }
 
-    public Pair<Errores, Receta> actualizarOCrearReceta(Receta receta_) {
+    public Pair<Errores, Receta> actualizarReceta(Receta receta_) {
         if (receta_.getNombreReceta().isEmpty()) {
             PersonalDebug.imprimir("Nombre de receta nulo: " + receta_.getNombreReceta());
             return Pair.of(Errores.NOMBRE_RECETA_NULO, receta_);
@@ -376,6 +442,65 @@ public class DatabaseManager {
             }
             return Pair.of(Errores.SIN_ERRORES, receta_);
         }
+    }
+
+    public Iterable<Receta> buscarReceta(int indicePagina_,
+                                         int elementosPagina_,
+                                         Integer duracionMaxima_,
+                                         Integer duracionMinima_,
+                                         Integer numFavoritosMin_,
+                                         Integer numComentariosMin_,
+                                         Integer numPasosMax_,
+                                         Integer numPasosMin_,
+                                         String tipoDePlato_,
+                                         String nombreDeReceta_,
+                                         NivelDeDificultad nivelDeDificultad_,
+                                         List<String> ingredientes_,
+                                         List<String> utensilios_) {
+        if(duracionMaxima_ == null) {
+            duracionMaxima_ = Integer.MAX_VALUE;
+        }
+        if(duracionMinima_ == null) {
+            duracionMinima_ = 0;
+        }
+        if(duracionMaxima_<duracionMinima_){
+            return new ArrayList<>();
+        }
+        QReceta recetaDsl = QReceta.receta;
+        BooleanExpression predicate =
+                recetaDsl.duracionTotal.between(duracionMinima_,duracionMaxima_);
+        if(numPasosMin_ != null && numPasosMax_ != null &&  numPasosMin_>numPasosMax_)
+        {
+            return new ArrayList<>();
+        }
+        if(numPasosMin_ != null && numPasosMin_>0) {
+             predicate=predicate.and(recetaDsl.numPasos.goe(numPasosMin_));
+        }
+        if(numPasosMax_ != null) {
+            predicate=predicate.and(recetaDsl.numPasos.loe(numPasosMax_));
+        }
+        if(numFavoritosMin_ != null && numFavoritosMin_>0) {
+            predicate= predicate.and(recetaDsl.numFavoritos.goe(numFavoritosMin_));
+        }
+        if(numComentariosMin_ != null && numComentariosMin_>0) {
+            predicate =predicate.and(recetaDsl.numComentarios.goe(numComentariosMin_));
+        }
+        if(tipoDePlato_ != null && !tipoDePlato_.isEmpty()) {
+            predicate =predicate.and(recetaDsl.tipoPlato.like(tipoDePlato_.toLowerCase()));
+        }
+        if(nombreDeReceta_ != null && !nombreDeReceta_.isEmpty()) {
+            predicate =predicate.and(recetaDsl.nombreReceta.likeIgnoreCase("%"+nombreDeReceta_+"%"));
+        }
+        if(nivelDeDificultad_ != null) {
+            predicate =predicate.and(recetaDsl.nivelDificultad.eq(nivelDeDificultad_));
+        }
+
+        //todo busqueda por ingrediente y utensilio
+        //todo fotos
+
+        //todo paso a mysql
+
+        return recetaRepository.findAll(predicate,PageRequest.of(indicePagina_, elementosPagina_,sortOrder));
     }
 
     public UsuarioRepository getUsuarioRepository() {

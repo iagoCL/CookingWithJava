@@ -9,7 +9,7 @@ import java.util.Objects;
                 @UniqueConstraint(columnNames = {"numPaso", "receta_id"}, name = Paso.constraintNombrePaso)
         }
 )
-public class Paso implements Comparable<Paso>{
+public class Paso implements Comparable<Paso> {
     public static final String constraintNombrePaso = "CONSTRAINT_NOMBRE_PASO_UNICO";
 
     @Id
@@ -34,7 +34,8 @@ public class Paso implements Comparable<Paso>{
         this.recetaId = recetaId_;
     }
 
-    protected Paso(){}
+    protected Paso() {
+    }
 
     @Override
     public String toString() {
@@ -55,26 +56,23 @@ public class Paso implements Comparable<Paso>{
         return numPaso;
     }
 
-    public Integer getDuracion() {
+    public int getDuracion() {
         return duracion;
     }
 
-    public String getDuracionString()
-    {
+    public String getDuracionString() {
         return formatearTiempo(duracion);
     }
 
-    public String formatearTiempo(int tiempo)
-    {
-        if(tiempo<60) {
-            return duracion + " min";
-        }
-        else{
-            int minutos = tiempo%60;
-            int horas = tiempo/60;
-            if(minutos==0){
+    public static String formatearTiempo(int tiempo) {
+        if (tiempo < 60) {
+            return tiempo + " min";
+        } else {
+            int minutos = tiempo % 60;
+            int horas = tiempo / 60;
+            if (minutos == 0) {
                 return horas + "h";
-            }else {
+            } else {
                 return horas + " h " + minutos + " min";
             }
         }
@@ -95,6 +93,6 @@ public class Paso implements Comparable<Paso>{
 
     @Override
     public int compareTo(Paso other_) {
-        return this.numPaso-other_.numPaso;
+        return this.numPaso - other_.numPaso;
     }
 }

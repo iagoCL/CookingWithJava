@@ -1,6 +1,9 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
+import com.TheJavaCooker.CookingWithJava.DatabaseRandomData;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
+import com.querydsl.core.annotations.QueryEntity;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
@@ -8,6 +11,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Entity(name = "Receta")
+@QueryEntity
 @Table(name = "receta",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"nombreReceta"}, name = Receta.constraintNombreReceta)
@@ -77,16 +81,15 @@ public class Receta {
     )
     private List<Usuario> favoritos = new ArrayList<>();
 
-
-    //todo duracion total
-
-    //todo comentarios
-
-    //todo busqueda
-    //todo fotos
-    //todo formularios
-
-    //todo paso a mysql
+    //@Formula(value = "select sum(p.duracion) from Paso p where p.receta_id = id")
+    @Column(nullable = false)
+    private int duracionTotal;
+    @Column(nullable = false)
+    private int numPasos;
+    @Column(nullable = false)
+    private int numComentarios;
+    @Column(nullable = false)
+    private int numFavoritos;
 
     protected Receta() {
     }
@@ -97,6 +100,39 @@ public class Receta {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getDuracionTotal() {
+        return duracionTotal;
+    }
+
+    public String getStringDuracionTotal() {
+        return Paso.formatearTiempo(duracionTotal);
+    }
+
+    public int getNumPasos() {
+        return numPasos;
+    }
+
+    public void recalcNumPasos() {
+        this.numPasos = pasos.size();
+        int suma = 0;
+        for (Paso paso : pasos) {
+            suma += paso.getDuracion();
+        }
+        this.duracionTotal = suma;
+    }
+
+    public int getNumComentarios() {
+        return numComentarios;
+    }
+
+    public void recalcNumComentarios() {
+        this.numComentarios = comentarios.size();
+    }
+
+    public void recalcNumFavoritos() {
+        this.numFavoritos = favoritos.size();
     }
 
     public String getTipoPlato() {
@@ -124,7 +160,7 @@ public class Receta {
     }
 
     public void resetFechaCreacion() {
-        this.fechaCreacion = LocalDate.now();
+        this.fechaCreacion = LocalDate.now();//DatabaseRandomData.getRandomDateTime().toLocalDate();//
     }
 
     public NivelDeDificultad getNivelDificultad() {
@@ -159,20 +195,19 @@ public class Receta {
         }
     }
 
-    public String mostrarMultilinea()
-    {
+    public String mostrarMultilinea() {
         String string = toString();
-        string+="\nIngredientes de la receta: "+ingredientes.size();
-        for( Ingrediente i : ingredientes){
-            string+="\nIngrediente: "+i;
+        string += "\nIngredientes de la receta: " + ingredientes.size();
+        for (Ingrediente i : ingredientes) {
+            string += "\n " + i;
         }
-        PersonalDebug.imprimir("\n\nUtensilios de la receta: "+utensilios.size());
-        for( Utensilio i : utensilios){
-            string+="\nUtensilio: "+i;
+        PersonalDebug.imprimir("\n\nUtensilios de la receta: " + utensilios.size());
+        for (Utensilio i : utensilios) {
+            string += "\n " + i;
         }
-        string+="\n\nPasos de la receta: "+pasos.size();
-        for( Paso i : pasos){
-            string+="\nPaso: "+i;
+        string += "\n\nPasos de la receta: " + pasos.size();
+        for (Paso i : pasos) {
+            string += "\n " + i;
         }
         return string;
     }
@@ -230,7 +265,12 @@ public class Receta {
                 "id=" + id +
                 ", tipoPlato='" + tipoPlato + '\'' +
                 ", nombreReceta='" + nombreReceta + '\'' +
-                ", creadorDeLaReceta=" + creadorDeLaReceta +
+                ", creadorDeLaReceta=" + creadorDeLaReceta.getId() +
+                ", duracionTotal=" + getStringDuracionTotal() +
+                ", numPasos=" + numPasos +
+                ", numFavoritos=" + numFavoritos +
+                ", nivelDeDificultad=" + nivelDificultad.toString() +
+                ", numComentarios=" + numComentarios +
                 ", fechaDeCreacion='" + fechaCreacion.format(Usuario.formatoFecha) + '\'' +
                 '}';
     }
@@ -240,6 +280,7 @@ public class Receta {
         this.nombreReceta = nombreReceta_;
         this.creadorDeLaReceta = creadorDeLaReceta_;
         this.nivelDificultad = nivelDeDificultad_;
+        this.numComentarios = this.numFavoritos = this.duracionTotal = this.numPasos = 0;
         resetFechaCreacion();
     }
 }

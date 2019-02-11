@@ -5,6 +5,7 @@ import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 import org.springframework.data.util.Pair;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -75,6 +76,17 @@ public class DatabaseRandomData {
         return usuarios.get(random.nextInt(usuarios.size()));
     }
 
+    public static LocalDateTime getRandomDateTime(){
+        return LocalDateTime.of(
+                2014+random.nextInt(5),
+                1+random.nextInt(11),
+                1+random.nextInt(26),
+                5+random.nextInt(18),
+                5+random.nextInt(48),
+                5+random.nextInt(48),
+                50+random.nextInt(488));
+    }
+
     public static String getNivelDeDificultadAleatorio() {
         NivelDeDificultad[] niveles = NivelDeDificultad.values();
         return (niveles[random.nextInt(niveles.length)]).toString();
@@ -127,7 +139,7 @@ public class DatabaseRandomData {
         }
     }
 
-    public static String getDescripcionDePasoAleatoria() {
+    public static String getDescripcionAleatoria() {
         return lorem.getWords(15, 40);
     }
 
@@ -152,11 +164,10 @@ public class DatabaseRandomData {
         List<Pair<Integer,String>> listaPasos = new ArrayList<>(numPasos);
         for(int i = 0;i<numPasos;++i)
         {
-            listaPasos.add(Pair.of(1+random.nextInt(240),getDescripcionDePasoAleatoria()));
+            listaPasos.add(Pair.of(1+random.nextInt(240), getDescripcionAleatoria()));
         }
         return listaPasos;
     }
-
 
     public static List<Pair<String, String>> getListaDeIngredientesAleatorios() {
         List<Pair<String, String>> listaDeIngredientesAleatorios;
@@ -210,9 +221,16 @@ public class DatabaseRandomData {
                     getListaDeUtensiliosAleatorios(),
                     getListaDePasosAleatorios(),
                     getUsuarioAletorio());
-            if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-                Receta receta = p.getSecond();
-            }
+        }
+    }
+
+    public void crearComentariosEjemplo(int numComentarios) {
+        for (int i = 1; i < numComentarios; ++i) {
+            Pair<DatabaseManager.Errores, Comentario> p = database.crearComentarioConFecha(getDescripcionAleatoria(),
+                    "Titulo de comentario "+i,
+                    getRandomDateTime(),
+                    getRecetaAletoria(),
+                    getUsuarioAletorio());
         }
     }
 }
