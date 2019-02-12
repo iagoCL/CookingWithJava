@@ -20,12 +20,18 @@ public class WebController {
     @GetMapping("/about")
     public String about(Model model) {
 
-        return "about.html";
+        return "perfil.mustache";
     }
 
     @GetMapping("/index")
     public String index(Model model) {
 
         return "index.html";
+    }
+
+    @GetMapping("/perfil")
+    public String contact(Model model) {
+        model.addAttribute("test", "Iago");
+        return "perfil";
     }
 }
