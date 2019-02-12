@@ -70,9 +70,9 @@ public class DatabaseTests {
         tipoDePlato = DatabaseRandomData.getTipoDePlatoAleatorio();
         nivelDeDificultad = DatabaseRandomData.getNivelDeDificultadAleatorio();
         nuevoNivelDeDificultad = DatabaseRandomData.getNivelDeDificultadAleatorio();
-        databaseRandomData.crearUsuariosEjemplo(15);
+        databaseRandomData.crearUsuariosEjemplo(3);
         usuarioEjemploA = databaseRandomData.getUsuarioAletorio();
-        databaseRandomData.crearRecetasEjemplo(75);
+        databaseRandomData.crearRecetasEjemplo(5);
         recetaEjemploA = databaseRandomData.getRecetaAletoria();
 
         if (!testUsuarios()) {
@@ -381,7 +381,7 @@ public class DatabaseTests {
             return false;
         }
 
-        databaseRandomData.crearFavoritosAleatorios(15);
+        databaseRandomData.crearFavoritosAleatorios(5);
         PersonalDebug.imprimir("TEST DE FAVORITOS CORRECTO");
         return true;
     }
@@ -444,7 +444,7 @@ public class DatabaseTests {
             return false;
         }
 
-        databaseRandomData.crearComentariosEjemplo(25);
+        databaseRandomData.crearComentariosEjemplo(5);
         Set<Comentario> comentarios = recetaEjemploB.getComentarios();
         for (Comentario comentario : comentarios) {
             PersonalDebug.imprimir("comentario: " + comentario);

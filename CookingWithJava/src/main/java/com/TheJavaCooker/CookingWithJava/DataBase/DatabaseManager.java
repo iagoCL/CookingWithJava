@@ -57,6 +57,10 @@ public class DatabaseManager {
         ERRROR_DESCONOCIDO
     }
 
+    public void clear(){
+        //todo
+    }
+
     public boolean marcarFavorito(Usuario usuario_, Receta receta_) {
         if (receta_.marcarFavorito(usuario_)) {
             receta_.recalcNumFavoritos();

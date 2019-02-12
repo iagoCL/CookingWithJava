@@ -204,7 +204,7 @@ public class DatabaseRandomData {
     }
 
     public void crearUsuariosEjemplo(int numUsuarios_) {
-        for (int i = 1; i < numUsuarios_; ++i) {
+        for (long i = 1+usuarioRepository.count(),l = i+numUsuarios_; i < l; ++i) {
             database.crearUsuario(lorem.getFirstName() + i,
                     "contasena" + i,
                     "correo" + i + "@example.com",
@@ -213,7 +213,7 @@ public class DatabaseRandomData {
     }
 
     public void crearRecetasEjemplo(int numRecetas) {
-        for (int i = 1; i < numRecetas; ++i) {
+        for (long i = 1+recetaRepository.count(),l = i+numRecetas; i < l; ++i) {
             Pair<DatabaseManager.Errores, Receta> p = database.crearReceta("Nombre Receta " + i,
                     getTipoDePlatoAleatorio(),
                     getNivelDeDificultadAleatorio(),
