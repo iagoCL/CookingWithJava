@@ -9,49 +9,48 @@
 'use strict';
 
 
-$(window).on('load', function() {
-	/*------------------
-		Preloder
-	--------------------*/
-	$(".loader").fadeOut(); 
-	$("#preloder").delay(400).fadeOut("slow");
+$(window).on('load', function () {
+    /*------------------
+        Preloder
+    --------------------*/
+    $(".loader").fadeOut();
+    $("#preloder").delay(400).fadeOut("slow");
 
 
-	/*------------------
-		Gallery item
-	--------------------*/
-	$('.gs-item').each(function() {
-		var item_w = $(this).width();
-		$(this).height(item_w);
-	});
+    /*------------------
+        Gallery item
+    --------------------*/
+    $('.gs-item').each(function () {
+        var item_w = $(this).width();
+        $(this).height(item_w);
+    });
 
 });
 
-(function($) {
+(function ($) {
 
-	/*------------------
-		Navigation
-	--------------------*/
-	$('.nav-switch').on('click', function(event) {
-		$('.main-menu').slideToggle(400);
-		event.preventDefault();
-	});
-
-
-	/*------------------
-		Background Set
-	--------------------*/
-	$('.set-bg').each(function() {
-		var bg = $(this).data('setbg');
-		$(this).css('background-image', 'url(' + bg + ')');
-	});
+    /*------------------
+        Navigation
+    --------------------*/
+    $('.nav-switch').on('click', function (event) {
+        $('.main-menu').slideToggle(400);
+        event.preventDefault();
+    });
 
 
+    /*------------------
+        Background Set
+    --------------------*/
+    $('.set-bg').each(function () {
+        var bg = $(this).data('setbg');
+        $(this).css('background-image', 'url(' + bg + ')');
+    });
 
-	/*------------------
-		Hero Slider
-	--------------------*/
-	$('.hero-slider').owlCarousel({
+
+    /*------------------
+        Hero Slider
+    --------------------*/
+    $('.hero-slider').owlCarousel({
         loop: true,
         margin: 0,
         nav: true,
@@ -60,14 +59,14 @@ $(window).on('load', function() {
         mouseDrag: false,
         autoplay: true,
         animateOut: 'fadeOut',
-    	animateIn: 'fadeIn',
-    	navText: [' ', '<i class="fa fa-angle-right"></i>'],
+        animateIn: 'fadeIn',
+        navText: [' ', '<i class="fa fa-angle-right"></i>'],
     });
 
-	
-	/*------------------
-		Add Carousel
-	--------------------*/
+
+    /*------------------
+        Add Carousel
+    --------------------*/
     $('.add-slider').owlCarousel({
         loop: true,
         margin: 0,
@@ -76,37 +75,36 @@ $(window).on('load', function() {
         dots: false,
         autoplay: true,
         animateOut: 'fadeOut',
-    	animateIn: 'fadeIn',
+        animateIn: 'fadeIn',
     });
 
 
-
-	/*------------------
-		Gallery Carousel
-	--------------------*/
+    /*------------------
+        Gallery Carousel
+    --------------------*/
     $('.gallery-slider').owlCarousel({
-		loop:true,
-		autoplay:true,
-		nav:false,
-		dots: true,
-		responsive:{
-			0:{
-				items:4
-			},
-			990:{
-				items:5
-			},
-			1200:{
-				items:6
-			}
-		}
-	});
+        loop: true,
+        autoplay: true,
+        nav: false,
+        dots: true,
+        responsive: {
+            0: {
+                items: 4
+            },
+            990: {
+                items: 5
+            },
+            1200: {
+                items: 6
+            }
+        }
+    });
 
 
-	/*------------------
-		Review Slider
-	--------------------*/
-	$('.review-slider').owlCarousel({
+    /*------------------
+        Review Slider
+    --------------------*/
+    $('.review-slider').owlCarousel({
         loop: true,
         margin: 0,
         nav: false,
@@ -114,7 +112,6 @@ $(window).on('load', function() {
         dots: false,
         autoplay: true,
     });
-
 
 
 })(jQuery);

@@ -59,6 +59,10 @@ public class DatabaseManager {
 
     public void clear(){
         //todo
+
+        //todo imagenes
+        //todo formulario de login/register
+        //pasar todo a mustache
     }
 
     public boolean marcarFavorito(Usuario usuario_, Receta receta_) {

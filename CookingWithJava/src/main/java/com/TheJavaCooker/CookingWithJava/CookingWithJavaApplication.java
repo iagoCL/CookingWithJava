@@ -89,7 +89,6 @@ public class CookingWithJavaApplication {
             databaseRandomData.crearFavoritosAleatorios(crearFavoritos);
         }
         PersonalDebug.imprimir("APLICACION INICIADA");
-        //*/
     }
 
 }
