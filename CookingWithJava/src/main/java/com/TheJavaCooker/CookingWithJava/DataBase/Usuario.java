@@ -1,8 +1,11 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
+import com.TheJavaCooker.CookingWithJava.DatabaseRandomData;
+import org.hibernate.annotations.Formula;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -32,6 +35,9 @@ public class Usuario {
     private String nombreApellidos;
     @Column(nullable = false)
     private LocalDate fechaCreacion;
+    @Lob
+    @Column(nullable = false)
+    private byte[] imagenUsuario;
 
     @OneToMany(
             mappedBy = "creadorDeLaReceta",
@@ -44,8 +50,23 @@ public class Usuario {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoritos")
     private List<Receta> recetasFavoritas = new ArrayList<>();
 
+    @Formula(value = "select count(p.id) from Comentario p where p.usuario_id = id")
+    private long numComentarios;
+
     public long getId() {
         return id;
+    }
+
+    public byte[] getImagenUsuario() {
+        return imagenUsuario;
+    }
+
+    public void setImagenUsuario(byte[] nuevaImageUsuario_) {
+        if (nuevaImageUsuario_ == null || nuevaImageUsuario_.length == 0) {
+            this.imagenUsuario = DatabaseManager.transformarAImagenDeUsuario(DatabaseRandomData.getRandomUserImage());
+        } else {
+            this.imagenUsuario = DatabaseManager.transformarAImagenDeUsuario(nuevaImageUsuario_);
+        }
     }
 
     public String getNombreApellidos() {
@@ -135,6 +156,10 @@ public class Usuario {
         return recetasCreadas;
     }
 
+    public long getNumComentarios() {
+        return numComentarios;
+    }
+
     @Transactional
     public int getNumRecetasFavoritas() {
         return recetasFavoritas.size();
@@ -153,12 +178,13 @@ public class Usuario {
     protected Usuario() {
     }
 
-    public Usuario(String nombreUsuario_, String contrasena_, String correoElectronico_, String nombreApellidos_) {
+    public Usuario(String nombreUsuario_, String contrasena_, String correoElectronico_, String nombreApellidos_, byte[] imagenUsuario_) {
         this.nombreUsuario = nombreUsuario_;
         this.contrasena = contrasena_;
         this.correoElectronico = correoElectronico_;
         this.nombreApellidos = nombreApellidos_;
         resetFechaCreacion();
+        setImagenUsuario(imagenUsuario_);
     }
 
 }

@@ -40,6 +40,10 @@ public class DatabaseTests {
     private String nuevoTipoDePlato;
     private String nuevoNivelDeDificultad;
 
+    private static byte[] randomRecipeImage = DatabaseRandomData.getRandomRecipeImage();
+    private static byte[] randomUserImage = DatabaseRandomData.getRandomUserImage();
+
+
     private Usuario usuarioEjemploA;
     private Usuario usuarioEjemploB;
 
@@ -126,7 +130,7 @@ public class DatabaseTests {
                 PersonalDebug.imprimir(r.toString());
             });
             PersonalDebug.imprimir("ULTIMAS RECETAS");
-            recetaRepository.ultimasRecentas(PageRequest.of(1, 10)).forEach((r) -> {
+            recetaRepository.ultimasRecetas(PageRequest.of(0, 10)).forEach((r) -> {
                 PersonalDebug.imprimir(r.toString());
             });
             PersonalDebug.imprimir("TODOS LOS TEST SUPERADOS.");
@@ -137,7 +141,7 @@ public class DatabaseTests {
     private boolean testDePasos() {
         List<Pair<Integer, String>> listaPasosErronea = new ArrayList<>(1);
         listaPasosErronea.add(Pair.of(0, "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIEMPO_DE_PASO_INCORRECTO) {
+        if (database.crearReceta("XXX", "XXX", "XXX",randomRecipeImage, listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIEMPO_DE_PASO_INCORRECTO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA DURACION DE PASO NULA");
             return false;
         } else {
@@ -145,7 +149,7 @@ public class DatabaseTests {
         }
         listaPasosErronea.clear();
         listaPasosErronea.add(Pair.of(77, ""));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.DESCRIPCION_DE_PASO_NULA) {
+        if (database.crearReceta("XXX", "XXX", "XXX",randomRecipeImage, listaIngredientes, listaUtensilios, listaPasosErronea, usuarioEjemploB).getFirst() != DatabaseManager.Errores.DESCRIPCION_DE_PASO_NULA) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA DESCRIPCION DEL PASO NULA");
             return false;
         } else {
@@ -159,7 +163,7 @@ public class DatabaseTests {
     private boolean testIngredientes() {
         List<Pair<String, String>> listaIngredientesErronea = new ArrayList<>(1);
         listaIngredientesErronea.add(Pair.of("", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", randomRecipeImage,listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE NULO");
             return false;
         } else {
@@ -167,7 +171,7 @@ public class DatabaseTests {
         }
         listaIngredientesErronea.clear();
         listaIngredientesErronea.add(Pair.of("XXX", ""));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.CANTIDAD_DE_INGREDIENTE_NULA) {
+        if (database.crearReceta("XXX", "XXX", "XXX", randomRecipeImage,listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.CANTIDAD_DE_INGREDIENTE_NULA) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA CANTIDAD DE INGREDIENTE NULA");
             return false;
         } else {
@@ -176,7 +180,7 @@ public class DatabaseTests {
         listaIngredientesErronea.clear();
         listaIngredientesErronea.add(Pair.of("XXX", "XXX"));
         listaIngredientesErronea.add(Pair.of("XXX", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_REPETIDO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", randomRecipeImage,listaIngredientesErronea, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_INGREDIENTE_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE INGREDIENTE REPETIDO");
             return false;
         } else {
@@ -197,7 +201,7 @@ public class DatabaseTests {
     private boolean testUtensilios() {
         List<Pair<String, String>> listaUtensiliosErronea = new ArrayList<>(1);
         listaUtensiliosErronea.add(Pair.of("", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_NULO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", randomRecipeImage,listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE UTENSILO NULO");
             return false;
         } else {
@@ -206,7 +210,7 @@ public class DatabaseTests {
         listaUtensiliosErronea.clear();
         listaUtensiliosErronea.add(Pair.of("XXX", "XXX"));
         listaUtensiliosErronea.add(Pair.of("XXX", "XXX"));
-        if (database.crearReceta("XXX", "XXX", "XXX", listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_REPETIDO) {
+        if (database.crearReceta("XXX", "XXX", "XXX", randomRecipeImage,listaIngredientes, listaUtensiliosErronea, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_DE_UTENSILIO_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE utensilios REPETIDO");
             return false;
         } else {
@@ -226,26 +230,26 @@ public class DatabaseTests {
 
     private boolean testRecetas() {
         //Comprobando Recetas
-        Pair<DatabaseManager.Errores, Receta> p = database.crearReceta(nombreReceta, tipoDePlato, nivelDeDificultad, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB);
+        Pair<DatabaseManager.Errores, Receta> p = database.crearReceta(nombreReceta, tipoDePlato, nivelDeDificultad,randomRecipeImage, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERIA PODER INSERTAR");
             return false;
         }
         Receta recetaDeEjemplo = p.getSecond();
         PersonalDebug.imprimir("Creada la receta:\n " + recetaDeEjemplo.mostrarMultilinea());
-        if (database.crearReceta(nombreReceta, "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_REPETIDO) {
+        if (database.crearReceta(nombreReceta, "XXX", "XXX",randomRecipeImage, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE REPETIDO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de receta repetido");
         }
-        if (database.crearReceta("", "XXX", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_NULO) {
+        if (database.crearReceta("", "XXX", "XXX",randomRecipeImage, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.NOMBRE_RECETA_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE RECETA NULO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de receta nulo");
         }
-        if (database.crearReceta("XXX", "", "XXX", listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIPO_PLATO_RECETA_NULO) {
+        if (database.crearReceta("XXX", "", "XXX",randomRecipeImage, listaIngredientes, listaUtensilios, listaPasos, usuarioEjemploB).getFirst() != DatabaseManager.Errores.TIPO_PLATO_RECETA_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL TIPO DE PLATO DE LA RECETA NULO");
             return false;
         } else {
@@ -454,43 +458,44 @@ public class DatabaseTests {
     }
 
     private boolean testUsuarios() {
-        Pair<DatabaseManager.Errores, Usuario> p = database.crearUsuario(nombreUsuario, contrasena, correoElectronico, nombreApellidos);
+        Pair<DatabaseManager.Errores, Usuario> p = database.crearUsuario(nombreUsuario, contrasena, correoElectronico, nombreApellidos, randomUserImage);
         if (p.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
             PersonalDebug.imprimir("ERROR: SE DEBERIA PODER INSERTAR");
             return false;
         }
         Usuario usuarioDeEjemplo = p.getSecond();
-        if (database.crearUsuario(nombreUsuario, "XXX", "XXX", "XXX").getFirst() != DatabaseManager.Errores.NOMBRE_USUARIO_REPETIDO) {
+        if (database.crearUsuario(nombreUsuario, "XXX", "XXX", "XXX", randomUserImage).getFirst() != DatabaseManager.Errores.NOMBRE_USUARIO_REPETIDO)
+        {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE REPETIDO");
             return false;
-        } else {
+        } else{
             PersonalDebug.imprimir("Detectado nombre de usuario repetido");
         }
-        if (database.crearUsuario("XXX", "XXX", correoElectronico, "XXX").getFirst() != DatabaseManager.Errores.CORREO_ELECTRONICO_REPETIDO) {
+        if (database.crearUsuario("XXX", "XXX", correoElectronico, "XXX", randomUserImage).getFirst() != DatabaseManager.Errores.CORREO_ELECTRONICO_REPETIDO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL CORREO ELECTRONICO REPETIDO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado correo electronico repetido");
         }
-        if (database.crearUsuario("", "XXX", "XXX", "XXX").getFirst() != DatabaseManager.Errores.NOMBRE_USUARIO_NULO) {
+        if (database.crearUsuario("", "XXX", "XXX", "XXX", randomUserImage).getFirst() != DatabaseManager.Errores.NOMBRE_USUARIO_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL NOMBRE DE USUARIO NULO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado nombre de usuario nulo");
         }
-        if (database.crearUsuario("XXX", "", "XXX", "XXX").getFirst() != DatabaseManager.Errores.CONTRASENA_NULA) {
+        if (database.crearUsuario("XXX", "", "XXX", "XXX", randomUserImage).getFirst() != DatabaseManager.Errores.CONTRASENA_NULA) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LA CONTRASEÑA NULA");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado contraseña  nula");
         }
-        if (database.crearUsuario("XXX", "XXX", "", "XXX").getFirst() != DatabaseManager.Errores.CORREO_ELECTRONICO_NULO) {
+        if (database.crearUsuario("XXX", "XXX", "", "XXX", randomUserImage).getFirst() != DatabaseManager.Errores.CORREO_ELECTRONICO_NULO) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA EL CORREO ELECTRONICO NULO");
             return false;
         } else {
             PersonalDebug.imprimir("Detectado correo electronico nulo");
         }
-        if (database.crearUsuario("XXX", "XXX", "XXX", "").getFirst() != DatabaseManager.Errores.NOMBRE_APELLIDOS_NULOS) {
+        if (database.crearUsuario("XXX", "XXX", "XXX", "", randomUserImage).getFirst() != DatabaseManager.Errores.NOMBRE_APELLIDOS_NULOS) {
             PersonalDebug.imprimir("ERROR: NO SE DETECTA LOS NOMBRES Y APELLIDOS NULOS");
             return false;
         } else {

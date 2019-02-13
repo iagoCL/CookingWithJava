@@ -1,11 +1,21 @@
 package com.TheJavaCooker.CookingWithJava;
 
+import com.TheJavaCooker.CookingWithJava.DataBase.DatabaseManager;
+import com.TheJavaCooker.CookingWithJava.DataBase.Receta;
+import com.TheJavaCooker.CookingWithJava.DataBase.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class WebController {
+    @Autowired
+    private DatabaseManager database;
+
     //todo session para almacenar usuario
 
     @GetMapping(value={"/busqueda","/buscarReceta","buscar-receta"})
@@ -55,5 +65,25 @@ public class WebController {
         //todo si no recibe parametros mostrar las ultimas recetas.
         //todo hacer un metodo auxiliar para gestionar las opciones
         return "recetas";
+    }
+
+    @RequestMapping(value = {"/userImage/{imageId}","/userImage/{imageId}.jpg"})
+    @ResponseBody
+    public byte[] getImageUsuario(@PathVariable long imageId)  {
+        Usuario u = database.getUsuarioRepository().findById(imageId).orElse(null);
+        if(u != null){
+            return u.getImagenUsuario();
+        }
+        else return DatabaseRandomData.getRandomUserImage();
+    }
+
+    @RequestMapping(value = {"/recetaImage/{imageId}","/recetaImage/{imageId}.jpg"})
+    @ResponseBody
+    public byte[] getImageReceta(@PathVariable long imageId)  {
+        Receta r = database.getRecetaRepository().findById(imageId).orElse(null);
+        if(r != null){
+            return r.getImagenReceta();
+        }
+        else return DatabaseRandomData.getRandomRecipeImage();
     }
 }

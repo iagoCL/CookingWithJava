@@ -24,7 +24,7 @@ public interface RecetaRepository extends JpaRepository<Receta, Long>
     List<String> tiposDePlato();
 
     @Query("select r from Receta r order by r.fechaCreacion desc")
-    Page<Receta> ultimasRecentas(PageRequest pageable);
+    Page<Receta> ultimasRecetas(PageRequest pageable);
 
     long count();//numero de usuarios
 }

@@ -32,6 +32,9 @@ public class Receta {
     private NivelDeDificultad nivelDificultad;
     @Column(nullable = false)
     private LocalDate fechaCreacion;
+    @Lob
+    @Column(nullable = false)
+    private byte[] imagenReceta;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
@@ -175,6 +178,21 @@ public class Receta {
         return creadorDeLaReceta;
     }
 
+    public void setImagenReceta(byte[] imagenReceta_)
+    {
+        if(imagenReceta_ == null || imagenReceta_.length == 0)
+        {
+            this.imagenReceta = DatabaseRandomData.getRandomUserImage();
+        }
+        else{
+            this.imagenReceta = DatabaseManager.transformarAImagenDeReceta(imagenReceta_);
+        }
+    }
+
+    public byte[] getImagenReceta() {
+        return imagenReceta;
+    }
+
     public boolean marcarFavorito(Usuario usuario_) {
         if (marcadaComoFavorita(usuario_)) {
             return false;
@@ -275,12 +293,18 @@ public class Receta {
                 '}';
     }
 
-    public Receta(String nombreReceta_, String tipoPlato_, NivelDeDificultad nivelDeDificultad_, Usuario creadorDeLaReceta_) {
+    public Receta(String nombreReceta_,
+                  String tipoPlato_,
+                  NivelDeDificultad nivelDeDificultad_,
+                  LocalDate fechaCreacion_,
+                  byte[] imagenReceta_,
+                  Usuario creadorDeLaReceta_) {
         this.tipoPlato = tipoPlato_.toLowerCase();
         this.nombreReceta = nombreReceta_;
         this.creadorDeLaReceta = creadorDeLaReceta_;
         this.nivelDificultad = nivelDeDificultad_;
         this.numComentarios = this.numFavoritos = this.duracionTotal = this.numPasos = 0;
-        resetFechaCreacion();
+        this.fechaCreacion =fechaCreacion_;
+        setImagenReceta(imagenReceta_);
     }
 }

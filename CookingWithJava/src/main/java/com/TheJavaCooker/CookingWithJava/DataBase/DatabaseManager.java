@@ -9,6 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +35,10 @@ public class DatabaseManager {
     @Autowired
     private ComentarioRepository comentarioRepository;
     private static final Sort sortOrder = new Sort(Sort.Direction.ASC, "numFavoritos");
+    private static final int userX = 500;
+    private static final int userY = 430;
+    private static final int recetaX = 577;
+    private static final int recetaY = 576;
 
 
     public enum Errores {
@@ -57,12 +67,40 @@ public class DatabaseManager {
         ERRROR_DESCONOCIDO
     }
 
-    public void clear(){
+    public void clear() {
         //todo
+        //todo pasar a mysql
+    }
 
-        //todo imagenes
-        //todo formulario de login/register
-        //pasar todo a mustache
+    public static byte[] transformarAImagenDeUsuario(byte[] bytes) {
+        return transformarAImagen(bytes, userX, userY);
+    }
+
+    public static byte[] transformarAImagenDeReceta(byte[] bytes) {
+        return transformarAImagen(bytes, recetaX, recetaY);
+    }
+
+    private static byte[] transformarAImagen(byte[] bytes_, int sizeX_, int sizeY_) {
+        try {
+            //Convertir bytes en una image y escalar
+            Image image = ImageIO.read(new ByteArrayInputStream(bytes_));
+            image = image.getScaledInstance(sizeX_, sizeY_, Image.SCALE_DEFAULT);
+
+            //Convertir imagen en un bufferImage
+            BufferedImage bufferedImage = new BufferedImage(sizeX_, sizeY_, BufferedImage.TYPE_INT_RGB);
+            Graphics2D bGr = bufferedImage.createGraphics();
+            bGr.drawImage(image, 0, 0, null);
+            bGr.dispose();
+
+            //Concertit de bufferImage a un byte array
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", outputStream);
+            bytes_ = outputStream.toByteArray();
+            return bytes_;
+        } catch (Exception e) {
+            PersonalDebug.imprimir("ERROR TRANSFORMANSO UNA IMAGEN: " + e.toString());
+            return null;
+        }
     }
 
     public boolean marcarFavorito(Usuario usuario_, Receta receta_) {
@@ -296,8 +334,10 @@ public class DatabaseManager {
     public Pair<Errores, Usuario> crearUsuario(String nombreUsuario_,
                                                String contrasena_,
                                                String correo_,
-                                               String nombreApellidos_) {
-        return actualizarUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_));
+                                               String nombreApellidos_,
+                                               byte[] imgUsuario_
+    ) {
+        return actualizarUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_, imgUsuario_));
     }
 
     public Pair<Errores, Usuario> actualizarUsuario(Usuario usuario_) {
@@ -341,8 +381,28 @@ public class DatabaseManager {
     }
 
     public Pair<Errores, Receta> crearReceta(String nombreReceta_,
+                String tipoDePlato,
+                String nivelDeDificultad,
+                byte[] imagenDeReceta_,
+                List<Pair<String, String>> listaDeIngredientes_,
+                List<Pair<String, String>> listaDeUtensilios_,
+                List<Pair<Integer, String>> listaDePasos_,
+                Usuario usuario_) {
+       return crearReceta(nombreReceta_,
+                tipoDePlato,
+                nivelDeDificultad, LocalDate.now(),
+                imagenDeReceta_,
+                listaDeIngredientes_,
+                listaDeUtensilios_,
+                listaDePasos_,
+                usuario_);
+    }
+
+    public Pair<Errores, Receta> crearReceta(String nombreReceta_,
                                              String tipoDePlato,
                                              String nivelDeDificultad,
+                                             LocalDate localDate_,
+                                             byte[] imagenDeReceta_,
                                              List<Pair<String, String>> listaDeIngredientes_,
                                              List<Pair<String, String>> listaDeUtensilios_,
                                              List<Pair<Integer, String>> listaDePasos_,
@@ -351,6 +411,8 @@ public class DatabaseManager {
                 nombreReceta_,
                 tipoDePlato,
                 NivelDeDificultad.fromString(nivelDeDificultad),
+                localDate_,
+                imagenDeReceta_,
                 usuario_);
         if (listaDeIngredientes_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin ingredientes.");
@@ -361,7 +423,7 @@ public class DatabaseManager {
                 return Pair.of(errorIngredientes, nuevaReceta);
             }
         }
-        if ( listaDeUtensilios_.isEmpty()) {
+        if (listaDeUtensilios_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin utensilios.");
         } else {
             Errores errorUtensilios = comprobarUtensilios(listaDeUtensilios_);
@@ -370,7 +432,7 @@ public class DatabaseManager {
                 return Pair.of(errorUtensilios, nuevaReceta);
             }
         }
-        if ( listaDePasos_.isEmpty()) {
+        if (listaDePasos_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin pasos.");
         } else {
             Errores errorPasos = comprobarPasos(listaDePasos_);
@@ -465,42 +527,41 @@ public class DatabaseManager {
                                          NivelDeDificultad nivelDeDificultad_,
                                          List<String> ingredientes_,
                                          List<String> utensilios_) {
-        if(duracionMaxima_ == null) {
+        if (duracionMaxima_ == null) {
             duracionMaxima_ = Integer.MAX_VALUE;
         }
-        if(duracionMinima_ == null) {
+        if (duracionMinima_ == null) {
             duracionMinima_ = 0;
         }
-        if(duracionMaxima_<duracionMinima_){
+        if (duracionMaxima_ < duracionMinima_) {
             return new ArrayList<>();
         }
         QReceta recetaDsl = QReceta.receta;
         BooleanExpression predicate =
-                recetaDsl.duracionTotal.between(duracionMinima_,duracionMaxima_);
-        if(numPasosMin_ != null && numPasosMax_ != null &&  numPasosMin_>numPasosMax_)
-        {
+                recetaDsl.duracionTotal.between(duracionMinima_, duracionMaxima_);
+        if (numPasosMin_ != null && numPasosMax_ != null && numPasosMin_ > numPasosMax_) {
             return new ArrayList<>();
         }
-        if(numPasosMin_ != null && numPasosMin_>0) {
-             predicate=predicate.and(recetaDsl.numPasos.goe(numPasosMin_));
+        if (numPasosMin_ != null && numPasosMin_ > 0) {
+            predicate = predicate.and(recetaDsl.numPasos.goe(numPasosMin_));
         }
-        if(numPasosMax_ != null) {
-            predicate=predicate.and(recetaDsl.numPasos.loe(numPasosMax_));
+        if (numPasosMax_ != null) {
+            predicate = predicate.and(recetaDsl.numPasos.loe(numPasosMax_));
         }
-        if(numFavoritosMin_ != null && numFavoritosMin_>0) {
-            predicate= predicate.and(recetaDsl.numFavoritos.goe(numFavoritosMin_));
+        if (numFavoritosMin_ != null && numFavoritosMin_ > 0) {
+            predicate = predicate.and(recetaDsl.numFavoritos.goe(numFavoritosMin_));
         }
-        if(numComentariosMin_ != null && numComentariosMin_>0) {
-            predicate =predicate.and(recetaDsl.numComentarios.goe(numComentariosMin_));
+        if (numComentariosMin_ != null && numComentariosMin_ > 0) {
+            predicate = predicate.and(recetaDsl.numComentarios.goe(numComentariosMin_));
         }
-        if(tipoDePlato_ != null && !tipoDePlato_.isEmpty()) {
-            predicate =predicate.and(recetaDsl.tipoPlato.like(tipoDePlato_.toLowerCase()));
+        if (tipoDePlato_ != null && !tipoDePlato_.isEmpty()) {
+            predicate = predicate.and(recetaDsl.tipoPlato.like(tipoDePlato_.toLowerCase()));
         }
-        if(nombreDeReceta_ != null && !nombreDeReceta_.isEmpty()) {
-            predicate =predicate.and(recetaDsl.nombreReceta.likeIgnoreCase("%"+nombreDeReceta_+"%"));
+        if (nombreDeReceta_ != null && !nombreDeReceta_.isEmpty()) {
+            predicate = predicate.and(recetaDsl.nombreReceta.likeIgnoreCase("%" + nombreDeReceta_ + "%"));
         }
-        if(nivelDeDificultad_ != null) {
-            predicate =predicate.and(recetaDsl.nivelDificultad.eq(nivelDeDificultad_));
+        if (nivelDeDificultad_ != null) {
+            predicate = predicate.and(recetaDsl.nivelDificultad.eq(nivelDeDificultad_));
         }
 
         //todo busqueda por ingrediente y utensilio
@@ -508,7 +569,7 @@ public class DatabaseManager {
 
         //todo paso a mysql
 
-        return recetaRepository.findAll(predicate,PageRequest.of(indicePagina_, elementosPagina_,sortOrder));
+        return recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_, sortOrder));
     }
 
     public UsuarioRepository getUsuarioRepository() {
