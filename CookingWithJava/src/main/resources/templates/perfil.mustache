@@ -76,20 +76,23 @@
         <div class="row">
             <div class="col-lg-6 about-text">
                 <h2>Usuario</h2>
-                <p>{{nick}}</p>
-
+                <p>{{usuario.nombre_usuario}}</p>
                 <h2>Nombre y apellidos</h2>
-                <p>{{nombre}}</p>
-
+                <p>{{usuario.nombre_apellidos}}</p>
                 <h2>Correo</h2>
-                <p>{{correo}}</p>
+                <p>{{usuario.correo_electronico}}</p>
 
                 <div class="site-btn">Mis recetas</div>
                 <div class="site-btn">Recetas favoritas</div>
             </div>
             <div class="col-lg-6">
-                <img src="/userImage/1.jpg" alt=""> <!-- id_usuario -->
+                <img src="/userImage/{{usuario.id}}.jpg" alt="">
             </div>
+
+            <h2>Debug</h2>
+            {{#recetas}}
+                <p> - {{id}}:{{nombre_receta}}</p>
+            {{/recetas}}
         </div>
     </div>
 </section>

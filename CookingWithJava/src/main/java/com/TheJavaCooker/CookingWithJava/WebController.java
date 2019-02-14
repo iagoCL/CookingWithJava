@@ -1,8 +1,7 @@
 package com.TheJavaCooker.CookingWithJava;
 
-import com.TheJavaCooker.CookingWithJava.DataBase.DatabaseManager;
-import com.TheJavaCooker.CookingWithJava.DataBase.Receta;
-import com.TheJavaCooker.CookingWithJava.DataBase.Usuario;
+import com.TheJavaCooker.CookingWithJava.DataBase.*;
+import net.bytebuddy.dynamic.loading.ClassInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +16,11 @@ import java.util.ArrayList;
 public class WebController {
     @Autowired
     private DatabaseManager database;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RecetaRepository recetaRepository;
 
     //todo session para almacenar usuario
 
@@ -44,12 +48,32 @@ public class WebController {
         return "login";
     }
 
-    @GetMapping(value={"/usuario","/perfil"})
-    public String perfil(Model model) {
-        //todo obtener perfil a mostrar por id obtenido por GET si no especifica mostar actual
-        model.addAttribute("nick","Jose56");
-        model.addAttribute("nombre","Jose García");
-        model.addAttribute("correo","josepoderoso@sample.com");
+    @GetMapping(value={"/error"})
+    public String error(Model model) {
+        //todo pagina de error
+        return "index";
+    }
+
+    @GetMapping(value={"/usuario-{usuarioId}","/perfil-{usuarioId}"})
+    public String perfilId(Model model,@PathVariable long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
+        return returnPerfil(model,usuario);
+    }
+
+    @GetMapping(value={"/usuario","/perfil","/miusuario","/miperfil","/miUsuario","/miPerfil"})
+    public String miPerfil(Model model) {
+        //todo obtener id usuario actual
+        Usuario usuario = usuarioRepository.findAll().get(0);
+        return returnPerfil(model,usuario);
+    }
+
+    public String returnPerfil(Model model, Usuario usuario){
+        if(usuario==null){
+            //todo usuario no encontrado
+            return "index";
+        }
+        model.addAttribute("usuario",usuario);
+        model.addAttribute("recetas",recetaRepository.findAll());
         return "perfil";
     }
 
@@ -80,7 +104,7 @@ public class WebController {
     @RequestMapping(value = {"/userImage/{imageId}","/userImage/{imageId}.jpg"})
     @ResponseBody
     public byte[] getImageUsuario(@PathVariable long imageId)  {
-        Usuario u = database.getUsuarioRepository().findById(imageId).orElse(null);
+        Usuario u = usuarioRepository.findById(imageId).orElse(null);
         if(u != null){
             return u.getImagenUsuario();
         }
@@ -91,7 +115,7 @@ public class WebController {
     @RequestMapping(value = {"/recetaImage/{imageId}","/recetaImage/{imageId}.jpg"})
     @ResponseBody
     public byte[] getImageReceta(@PathVariable long imageId)  {
-        Receta r = database.getRecetaRepository().findById(imageId).orElse(null);
+        Receta r = recetaRepository.findById(imageId).orElse(null);
         if(r != null){
             return r.getImagenReceta();
         }

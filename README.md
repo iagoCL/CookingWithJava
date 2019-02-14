@@ -80,13 +80,14 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
 #### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
+<img src="gddImages/database-export.svg">
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
 ### Instrucciones de despliegue
 Es necesario instalar mysql 8.0.15; para ello se puede usar el gestor de paquetes [chocolatey](https://chocolatey.org/). Una vez instalado chocolatey se puede simplemente instalar con ejecutar como administrador:
 
 ```
-choco install mysql --version 8.0.15
+choco install mysql --version 8.0.15 -y
 ```
 
 Despues se debe abrir una consola mysql con permisos necesarios, para ello en windows se puede ejecutar para que pregunte la contraseña del administrador de la base de datos (nula por defecta):

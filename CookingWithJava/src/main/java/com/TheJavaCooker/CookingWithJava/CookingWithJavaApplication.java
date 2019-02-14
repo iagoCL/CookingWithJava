@@ -89,6 +89,7 @@ public class CookingWithJavaApplication {
             databaseRandomData.crearFavoritosAleatorios(crearFavoritos);
             PersonalDebug.imprimir("NUEVOS FAVORITOS CREADOS");
         }
+        PersonalDebug.imprimir("APLICACION INICIADA.");
     }
 }
 
