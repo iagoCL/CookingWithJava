@@ -86,23 +86,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="recipe">
-                    <img src="img/recipes/1.jpg" alt="">
-                    <div class="recipe-info-warp">
-                        <div class="recipe-info">
-                            <h3>Traditional Pizza</h3>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star is-fade"></i>
+            {{#recetas}}
+                <div class="col-lg-4 col-md-6">
+                    <div class="recipe">
+                        <img src="img/recipes/{{-index}}.jpg" alt="">
+                        <div class="recipe-info-warp">
+                            <div class="recipe-info">
+                                <h3>{{.}}</h3>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star is-fade"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {{/recetas}}
             <div class="col-lg-4 col-md-6">
                 <div class="recipe">
                     <img src="img/recipes/2.jpg" alt="">

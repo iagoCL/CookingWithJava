@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+
 @Controller
 public class WebController {
     @Autowired
@@ -45,7 +47,9 @@ public class WebController {
     @GetMapping(value={"/usuario","/perfil"})
     public String perfil(Model model) {
         //todo obtener perfil a mostrar por id obtenido por GET si no especifica mostar actual
-        model.addAttribute("test","Juan");
+        model.addAttribute("nick","Jose56");
+        model.addAttribute("nombre","Jose García");
+        model.addAttribute("correo","josepoderoso@sample.com");
         return "perfil";
     }
 
@@ -64,6 +68,12 @@ public class WebController {
         //todo recibir por get parametros de busqueda ejecutar la busqueda
         //todo si no recibe parametros mostrar las ultimas recetas.
         //todo hacer un metodo auxiliar para gestionar las opciones
+        ArrayList<String> recetas = new ArrayList<>();
+        int nRecetas = 9;
+        for (int i=0; i<nRecetas; i++) {
+            recetas.add("Receta " + (i+1));
+        }
+        model.addAttribute("recetas", recetas);
         return "recetas";
     }
 
@@ -74,7 +84,8 @@ public class WebController {
         if(u != null){
             return u.getImagenUsuario();
         }
-        else return DatabaseRandomData.getRandomUserImage();
+        else
+            return DatabaseRandomData.getRandomUserImage();
     }
 
     @RequestMapping(value = {"/recetaImage/{imageId}","/recetaImage/{imageId}.jpg"})
