@@ -5,20 +5,14 @@ import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class DatabaseManager {
@@ -34,11 +28,8 @@ public class DatabaseManager {
     private UtensilioRepository utensilioRepository;
     @Autowired
     private ComentarioRepository comentarioRepository;
-
-    private static final int userX = 500;
-    private static final int userY = 430;
-    private static final int recetaX = 577;
-    private static final int recetaY = 576;
+    @Autowired
+    ImagendbRepository imagendbRepository;
 
 
     public enum Errores {
@@ -64,6 +55,7 @@ public class DatabaseManager {
         COMENTARIO_REPETIDO,
         NUMERO_DE_PASO_INCORRECTO,
         NUMERO_DE_PASO_REPETIDO,
+        IMAGEN_ERRONEA,
         ERRROR_DESCONOCIDO
     }
 
@@ -76,40 +68,8 @@ public class DatabaseManager {
         usuarioRepository.deleteAll();
     }
 
-    public static byte[] transformarAImagenDeUsuario(byte[] bytes) {
-        return transformarAImagen(bytes, userX, userY);
-    }
-
-    public static byte[] transformarAImagenDeReceta(byte[] bytes) {
-        return transformarAImagen(bytes, recetaX, recetaY);
-    }
-
-    private static byte[] transformarAImagen(byte[] bytes_, int sizeX_, int sizeY_) {
-        try {
-            //Convertir bytes en una image y escalar
-            Image image = ImageIO.read(new ByteArrayInputStream(bytes_));
-            image = image.getScaledInstance(sizeX_, sizeY_, Image.SCALE_DEFAULT);
-
-            //Convertir imagen en un bufferImage
-            BufferedImage bufferedImage = new BufferedImage(sizeX_, sizeY_, BufferedImage.TYPE_INT_RGB);
-            Graphics2D bGr = bufferedImage.createGraphics();
-            bGr.drawImage(image, 0, 0, null);
-            bGr.dispose();
-
-            //Concertit de bufferImage a un byte array
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", outputStream);
-            bytes_ = outputStream.toByteArray();
-            return bytes_;
-        } catch (Exception e) {
-            PersonalDebug.imprimir("ERROR TRANSFORMANSO UNA IMAGEN: " + e.toString());
-            return null;
-        }
-    }
-
     public boolean marcarFavorito(Usuario usuario_, Receta receta_) {
         if (receta_.marcarFavorito(usuario_)) {
-            receta_.recalcNumFavoritos();
             recetaRepository.save(receta_);
             return true;
         } else {
@@ -119,7 +79,6 @@ public class DatabaseManager {
 
     public boolean quitarFavorito(Usuario usuario_, Receta receta_) {
         if (receta_.quitarFavorito(usuario_)) {
-            receta_.recalcNumFavoritos();
             recetaRepository.save(receta_);
             return true;
         } else {
@@ -289,6 +248,7 @@ public class DatabaseManager {
                 LocalDateTime.now(), recetaId_, usuarioId_);
     }
 
+    @Transactional
     public Pair<Errores, Comentario> crearComentarioConFecha(String descripcionComentario_,
                                                              String tituloComentario_,
                                                              LocalDateTime fechaComentario_,
@@ -327,8 +287,7 @@ public class DatabaseManager {
                 PersonalDebug.imprimir("Excepcion desconocida: " + e.toString());
                 return Pair.of(Errores.ERRROR_DESCONOCIDO, comentario);
             }
-            recetaId_.getComentarios().add(comentario);
-            recetaId_.recalcNumComentarios();
+            recetaId_.nuevoComentario();
             usuarioId_.nuevoComentario();
             recetaRepository.save(recetaId_);
             usuarioRepository.save(usuarioId_);
@@ -336,6 +295,17 @@ public class DatabaseManager {
         }
     }
 
+    public Pair<Errores, Imagendb> crearImagenDB(byte[] imgUsuario_, TipoDeImagen tipoDeImagen) {
+
+        try {
+            Imagendb imagendb = new Imagendb(imgUsuario_, tipoDeImagen);
+            imagendbRepository.save(imagendb);
+            return Pair.of(Errores.SIN_ERRORES, imagendb);
+        } catch (Exception e) {
+            PersonalDebug.imprimir("Excepcion desconocida: " + e.toString());
+            return Pair.of(Errores.IMAGEN_ERRONEA, new Imagendb());
+        }
+    }
 
     public Pair<Errores, Usuario> crearUsuario(String nombreUsuario_,
                                                String contrasena_,
@@ -343,7 +313,12 @@ public class DatabaseManager {
                                                String nombreApellidos_,
                                                byte[] imgUsuario_
     ) {
-        return actualizarUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_, imgUsuario_));
+        Pair<Errores, Imagendb> p = crearImagenDB(imgUsuario_, TipoDeImagen.USUARIO);
+        if (p.getFirst() == Errores.SIN_ERRORES) {
+            return actualizarUsuario(new Usuario(nombreUsuario_, contrasena_, correo_, nombreApellidos_, p.getSecond()));
+        } else {
+            return Pair.of(p.getFirst(), new Usuario());
+        }
     }
 
     public Pair<Errores, Usuario> actualizarUsuario(Usuario usuario_) {
@@ -414,20 +389,14 @@ public class DatabaseManager {
                                              List<Pair<String, String>> listaDeUtensilios_,
                                              List<Pair<Integer, String>> listaDePasos_,
                                              Usuario usuario_) {
-        Receta nuevaReceta = new Receta(
-                nombreReceta_,
-                tipoDePlato,
-                NivelDeDificultad.fromString(nivelDeDificultad),
-                localDate_,
-                imagenDeReceta_,
-                usuario_);
+
         if (listaDeIngredientes_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin ingredientes.");
         } else {
             Errores errorIngredientes = comprobarIngredientes(listaDeIngredientes_);
             if (errorIngredientes != Errores.SIN_ERRORES) {
                 PersonalDebug.imprimir("Fallo en los ingredientes de la receta.");
-                return Pair.of(errorIngredientes, nuevaReceta);
+                return Pair.of(errorIngredientes, new Receta());
             }
         }
         if (listaDeUtensilios_.isEmpty()) {
@@ -436,7 +405,7 @@ public class DatabaseManager {
             Errores errorUtensilios = comprobarUtensilios(listaDeUtensilios_);
             if (errorUtensilios != Errores.SIN_ERRORES) {
                 PersonalDebug.imprimir("Fallo en los utensilios de la receta.");
-                return Pair.of(errorUtensilios, nuevaReceta);
+                return Pair.of(errorUtensilios, new Receta());
             }
         }
         if (listaDePasos_.isEmpty()) {
@@ -445,10 +414,20 @@ public class DatabaseManager {
             Errores errorPasos = comprobarPasos(listaDePasos_);
             if (errorPasos != Errores.SIN_ERRORES) {
                 PersonalDebug.imprimir("Fallo en los pasos de la receta.");
-                return Pair.of(errorPasos, nuevaReceta);
+                return Pair.of(errorPasos, new Receta());
             }
         }
-
+        Pair<Errores, Imagendb> pairReceta = crearImagenDB(imagenDeReceta_, TipoDeImagen.RECETA);
+        if (pairReceta.getFirst() != Errores.SIN_ERRORES) {
+            return Pair.of(pairReceta.getFirst(), new Receta());
+        }
+        Receta nuevaReceta = new Receta(
+                nombreReceta_,
+                tipoDePlato,
+                NivelDeDificultad.fromString(nivelDeDificultad),
+                localDate_,
+                pairReceta.getSecond(),
+                usuario_);
         Pair<Errores, Receta> nuevoPairReceta = actualizarReceta(nuevaReceta);
         if (nuevoPairReceta.getFirst() == Errores.SIN_ERRORES) {
             for (Pair<String, String> ingredienteString : listaDeIngredientes_) {
@@ -513,10 +492,10 @@ public class DatabaseManager {
                 PersonalDebug.imprimir("Excepcion desconocida: " + e.toString());
                 return Pair.of(Errores.ERRROR_DESCONOCIDO, receta_);
             }
-            Set<Receta> recetasCreador = receta_.getCreadorDeLaReceta().getRecetasCreadas();
+            /*Set<Receta> recetasCreador = receta_.getCreadorDeLaReceta().getRecetasCreadas();
             if (!recetasCreador.contains(receta_)) {
                 recetasCreador.add(receta_);
-            }
+            }*/
             return Pair.of(Errores.SIN_ERRORES, receta_);
         }
     }

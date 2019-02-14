@@ -1,9 +1,10 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
-import com.TheJavaCooker.CookingWithJava.DatabaseRandomData;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.querydsl.core.annotations.QueryEntity;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.SortNatural;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -31,18 +32,18 @@ public class Receta {
     private NivelDeDificultad nivel_de_dificultad;
     @Column(nullable = false, name = "fecha_creacion")
     private LocalDate fecha_creacion;
-    @Lob
-    @Column(nullable = false, name = "imagen_receta")
-    private byte[] imagen_receta;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imagendb_id")
+    private Imagendb imagendb_id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario creador_de_la_receta;
 
     @OneToMany(
             mappedBy = "receta_id",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private Set<Ingrediente> ingredientes = new HashSet<>();
@@ -51,7 +52,7 @@ public class Receta {
     @OneToMany(
             mappedBy = "receta_id",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private Set<Paso> pasos = new TreeSet<>();
@@ -59,7 +60,7 @@ public class Receta {
     @OneToMany(
             mappedBy = "receta_id",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private Set<Utensilio> utensilios = new HashSet<>();
@@ -68,7 +69,7 @@ public class Receta {
     @OneToMany(
             mappedBy = "receta_id",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private Set<Comentario> comentarios = new TreeSet<>();
@@ -93,7 +94,7 @@ public class Receta {
     @Column(nullable = false, name = "numero_favoritos")
     private int numero_favoritos;
 
-    protected Receta() {
+    public Receta() {
     }
 
     public long getId() {
@@ -119,7 +120,7 @@ public class Receta {
     public void recalcNumPasos() {
         this.numero_pasos = pasos.size();
         int suma = 0;
-        for (Paso paso : pasos) {
+        for (Paso paso : getPasos()) {
             suma += paso.getDuracion();
         }
         this.duracion_total = suma;
@@ -129,12 +130,8 @@ public class Receta {
         return numero_comentarios;
     }
 
-    public void recalcNumComentarios() {
-        this.numero_comentarios = comentarios.size();
-    }
-
-    public void recalcNumFavoritos() {
-        this.numero_favoritos = favoritos.size();
+    public void nuevoComentario() {
+        ++this.numero_comentarios;
     }
 
     public String getTipoPlato() {
@@ -162,7 +159,7 @@ public class Receta {
     }
 
     public void resetFechaCreacion() {
-        this.fecha_creacion = LocalDate.now();//DatabaseRandomData.getRandomDateTime().toLocalDate();//
+        this.fecha_creacion = LocalDate.now();
     }
 
     public NivelDeDificultad getNivelDificultad() {
@@ -173,20 +170,18 @@ public class Receta {
         this.nivel_de_dificultad = nivel_de_dificultad_;
     }
 
+    @Transactional
     public Usuario getCreadorDeLaReceta() {
+        Hibernate.initialize(this.creador_de_la_receta);
         return creador_de_la_receta;
     }
 
-    public void setImagenReceta(byte[] imagen_receta_) {
-        if (imagen_receta_ == null || imagen_receta_.length == 0) {
-            this.imagen_receta = DatabaseRandomData.getRandomUserImage();
-        } else {
-            this.imagen_receta = DatabaseManager.transformarAImagenDeReceta(imagen_receta_);
-        }
+    public long getCreadorDeLaRecetaId() {
+        return creador_de_la_receta.getId();
     }
 
-    public byte[] getImagenReceta() {
-        return imagen_receta;
+    public long getImagenReceta() {
+        return imagendb_id.getId();
     }
 
     public boolean marcarFavorito(Usuario usuario_) {
@@ -194,7 +189,7 @@ public class Receta {
             return false;
         } else {
             favoritos.add(usuario_);
-            usuario_.getRecetasFavoritas().add(this);
+            ++numero_favoritos;
             return true;
         }
     }
@@ -202,7 +197,7 @@ public class Receta {
     public boolean quitarFavorito(Usuario usuario_) {
         if (marcadaComoFavorita(usuario_)) {
             favoritos.remove(usuario_);
-            usuario_.getRecetasFavoritas().remove(this);
+            --numero_favoritos;
             return true;
         } else {
             return false;
@@ -212,33 +207,41 @@ public class Receta {
     public String mostrarMultilinea() {
         String string = toString();
         string += "\nIngredientes de la receta: " + ingredientes.size();
-        for (Ingrediente i : ingredientes) {
+        for (Ingrediente i : getIngredientes()) {
             string += "\n " + i;
         }
         PersonalDebug.imprimir("\n\nUtensilios de la receta: " + utensilios.size());
-        for (Utensilio i : utensilios) {
+        for (Utensilio i : getUtensilios()) {
             string += "\n " + i;
         }
         string += "\n\nPasos de la receta: " + pasos.size();
-        for (Paso i : pasos) {
+        for (Paso i : getPasos()) {
             string += "\n " + i;
         }
         return string;
     }
 
+    @Transactional
     public Set<Ingrediente> getIngredientes() {
+        Hibernate.initialize(this.ingredientes);
         return ingredientes;
     }
 
+    @Transactional
     public Set<Paso> getPasos() {
+        Hibernate.initialize(this.pasos);
         return pasos;
     }
 
+    @Transactional
     public Set<Utensilio> getUtensilios() {
+        Hibernate.initialize(this.utensilios);
         return utensilios;
     }
 
+    @Transactional
     public Set<Comentario> getComentarios() {
+        Hibernate.initialize(this.comentarios);
         return comentarios;
     }
 
@@ -292,7 +295,7 @@ public class Receta {
                   String tipo_plato_,
                   NivelDeDificultad nivel_de_dificultad_,
                   LocalDate fecha_creacion_,
-                  byte[] imagen_receta_,
+                  Imagendb imagen_receta_,
                   Usuario creador_de_la_receta_) {
         this.tipo_plato = tipo_plato_.toLowerCase();
         this.nombre_receta = nombre_receta_;
@@ -300,6 +303,6 @@ public class Receta {
         this.nivel_de_dificultad = nivel_de_dificultad_;
         this.numero_comentarios = this.numero_favoritos = this.duracion_total = this.numero_pasos = 0;
         this.fecha_creacion = fecha_creacion_;
-        setImagenReceta(imagen_receta_);
+        imagendb_id = imagen_receta_;
     }
 }

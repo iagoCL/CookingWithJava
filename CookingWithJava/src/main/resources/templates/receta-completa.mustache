@@ -32,15 +32,46 @@
     <div class="loader"></div>
 </div>
 
+
+<!-- Debug section -->
+<h3>debug</h3>
+<p>id: {{receta.id}}</p>
+<p>Nombre: {{receta.nombre_receta}}</p>
+<p>tipo_plato: {{receta.tipo_plato}}</p>
+<p>nivel_de_dificultad: {{receta.nivel_de_dificultad}}</p>
+<p>numero_comentarios: {{receta.numero_comentarios}}</p>
+<p>numero_pasos: {{receta.numero_pasos}}</p>
+<p>numero_favoritos: {{receta.numero_favoritos}}</p>
+<p>fechaDeCreacionfechaDeCreacion: {{fechaDeCreacion}}</p>
+<p>fechaDeCreacionfechaDeCreacion: {{duracionTotal}}</p>
+<p>Creador: {{creadorRecetaNombre}}</p>
+<h4>Pasos</h4>
+{{#pasos}}
+    <p> - {{id}}:{{descripcion_paso}} - {{numero_paso}} - {{duracion}}</p>
+{{/pasos}}
+<h4>ingredientes</h4>
+{{#ingredientes}}
+    <p> - {{id}}:{{nombre_ingrediente}} - {{cantidad_ingrediente}} </p>
+{{/ingredientes}}
+<h4>utensilios</h4>
+{{#utensilios}}
+    <p> - {{id}}:{{nombre_utensilio}} - {{nivel_de_dificultad}} </p>
+{{/utensilios}}
+<h4>comentarios</h4>
+{{#comentarios}}
+    <p> - {{id}}:{{descripcion_comentario}} - {{titulo_comentario}} - {{fecha_comentario}} - {{usuario_id.id}}</p>
+{{/comentarios}}
+<!-- end debug section -->
+
 <!-- Header section -->
 <header class="header-section">
     <div class="header-top">
         <div class="container">
             <div class="user-panel">
-                <a href="login"><i class="fa fa-lock"></i>  Acceso</a>
+                <a href="login"><i class="fa fa-lock"></i> Acceso</a>
             </div>
             <div class="user-panel">
-                <a href="crearReceta"><i class="fa fa-upload"></i>  Subir receta</a>
+                <a href="crearReceta"><i class="fa fa-upload"></i> Subir receta</a>
             </div>
 
         </div>
@@ -51,10 +82,10 @@
                 <img src="img/logo.png" alt="">
             </a>
             <ul class="main-menu">
-                <li><a href="buscarReceta"><i class="fa fa-search"></i>  Buscar</a></li>
-                <li><a href="index"><i class="fa fa-home"></i>  Inicio</a></li>
-                <li><a href="recetas"><i class="fa fa-book"></i>  Recetas</a></li>
-                <li><a href="perfil"><i class="fa fa-user"></i>  Tu perfil</a></li>
+                <li><a href="buscarReceta"><i class="fa fa-search"></i> Buscar</a></li>
+                <li><a href="index"><i class="fa fa-home"></i> Inicio</a></li>
+                <li><a href="recetas"><i class="fa fa-book"></i> Recetas</a></li>
+                <li><a href="perfil"><i class="fa fa-user"></i> Tu perfil</a></li>
             </ul>
         </div>
     </div>
@@ -88,7 +119,7 @@
 
 <!-- Recipe big view -->
 <div class="recipe-view-section">
-    <div class="rv-warp set-bg" data-setbg="img/recipes/4.jpg"></div>
+    <div class="rv-warp set-bg" data-setbg="/image/{{receta.imagendb_id.id}}.jpg"></div>
 </div>
 
 <!-- Recipe details section -->
@@ -119,21 +150,22 @@
                                 <input type="checkbox" id="three">
                                 <label for="three">Azucar - 2 cucharadas</label>
                             </div>
-                            <h2>Utensilios</h2>
-                            <form class="filter-form">
-                                <div class="check-warp">
-                                    <input type="checkbox" id="onef">
-                                    <label for="onef">Cuchillo - Experto</label>
-                                </div>
-                                <div class="check-warp">
-                                    <input type="checkbox" id="twof">
-                                    <label for="twof">Horno - Principiante</label>
-                                </div>
-                                <div class="check-warp">
-                                    <input type="checkbox" id="threef">
-                                    <label for="threef">Batidora - dificil</label>
-                                </div>
-                            </form>
+                        </form>
+                        <h2>Utensilios</h2>
+                        <form class="filter-form">
+                            <div class="check-warp">
+                                <input type="checkbox" id="onef">
+                                <label for="onef">Cuchillo - Experto</label>
+                            </div>
+                            <div class="check-warp">
+                                <input type="checkbox" id="twof">
+                                <label for="twof">Horno - Principiante</label>
+                            </div>
+                            <div class="check-warp">
+                                <input type="checkbox" id="threef">
+                                <label for="threef">Batidora - dificil</label>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -192,7 +224,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <input type="text" name="commentSubject" placeholder="commentSubject">
-                    <textarea placeholder="Message" name="commentMessage" ></textarea>
+                    <textarea placeholder="Message" name="commentMessage"></textarea>
                     <button class="site-btn">Send</button>
                 </div>
             </div>

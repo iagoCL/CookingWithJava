@@ -86,15 +86,23 @@
                 <div class="site-btn">Recetas favoritas</div>
             </div>
             <div class="col-lg-6">
-                <img src="/userImage/{{usuario.id}}.jpg" alt="">
+                <img src="/image/{{usuario.imagendb_id.id}}.jpg" alt="">
             </div>
-
-            <h2>Debug</h2>
-            {{#recetas}}
-                <p> - {{id}}:{{nombre_receta}}</p>
-            {{/recetas}}
         </div>
     </div>
+    <h2>Debug</h2>
+    <h3>recetasVacio</h3>
+    {{#recetas}}
+        <p> - {{id}}:{{nombre_receta}}</p>
+    {{/recetas}}
+    <h3>recetasCreadas</h3>
+    {{#recetasCreadas}}
+        <p> - {{id}}:{{nombre_receta}}</p>
+    {{/recetasCreadas}}
+    <h3>recetasFavoritas</h3>
+    {{#recetasFavoritas}}
+        <p> - {{id}}:{{nombre_receta}}</p>
+    {{/recetasFavoritas}}
 </section>
 <!-- About section end -->
 
@@ -108,21 +116,21 @@
                     <div class="fact-icon">
                         <img src="img/icon/1.png" alt="">
                     </div>
-                    <h2>1287</h2>
+                    <h2>{{num_recetas_subidas}}</h2>
                     <p>Recetas subidas</p>
                 </div>
                 <div class="col-lg-4 col-sm-6 fact-item">
                     <div class="fact-icon">
                         <img src="img/icon/2.png" alt="">
                     </div>
-                    <h2>25</h2>
+                    <h2>{{num_recetas_favoritas}}</h2>
                     <p>Recetas favoritas</p>
                 </div>
                 <div class="col-lg-4 col-sm-6 fact-item">
                     <div class="fact-icon">
                         <img src="img/icon/3.png" alt="">
                     </div>
-                    <h2>471</h2>
+                    <h2>{{usuario.num_comentarios_usuario}}</h2>
                     <p>Comentarios</p>
                 </div>
             </div>

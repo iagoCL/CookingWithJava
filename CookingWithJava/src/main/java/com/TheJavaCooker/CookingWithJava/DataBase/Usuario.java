@@ -1,6 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
-import com.TheJavaCooker.CookingWithJava.DatabaseRandomData;
+import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -33,19 +33,21 @@ public class Usuario {
     private String nombre_apellidos;
     @Column(nullable = false, name = "fecha_creacion")
     private LocalDate fecha_creacion;
-    @Lob
-    @Column(nullable = false, name = "imagen_usuario")
-    private byte[] imagenUsuario;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imagendb_id")
+    private Imagendb imagendb_id;
 
     @OneToMany(
             mappedBy = "creador_de_la_receta",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
     private Set<Receta> recetas_creadas = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoritos")
+    @ManyToMany(fetch = FetchType.LAZY,
+            mappedBy = "favoritos")
     private List<Receta> recetas_favoritas = new ArrayList<>();
 
     @Column(nullable = true, name = "num_comentarios_usuario")
@@ -55,16 +57,8 @@ public class Usuario {
         return id;
     }
 
-    public byte[] getImagenUsuario() {
-        return imagenUsuario;
-    }
-
-    public void setImagenUsuario(byte[] nuevaImageUsuario_) {
-        if (nuevaImageUsuario_ == null || nuevaImageUsuario_.length == 0) {
-            this.imagenUsuario = DatabaseManager.transformarAImagenDeUsuario(DatabaseRandomData.getRandomUserImage());
-        } else {
-            this.imagenUsuario = DatabaseManager.transformarAImagenDeUsuario(nuevaImageUsuario_);
-        }
+    public long getImagenUsuario() {
+        return imagendb_id.getId();
     }
 
     public String getNombreApellidos() {
@@ -150,6 +144,7 @@ public class Usuario {
 
     @Transactional
     public Set<Receta> getRecetasCreadas() {
+        Hibernate.initialize(this.recetas_creadas);
         return recetas_creadas;
     }
 
@@ -172,6 +167,7 @@ public class Usuario {
 
     @Transactional
     public List<Receta> getRecetasFavoritas() {
+        Hibernate.initialize(this.recetas_favoritas);
         return recetas_favoritas;
     }
 
@@ -180,16 +176,16 @@ public class Usuario {
         return recetas_creadas.size();
     }
 
-    protected Usuario() {
+    public Usuario() {
     }
 
-    public Usuario(String nombre_usuario_, String contrasena_, String correo_electronico_, String nombre_apellidos_, byte[] imagenUsuario_) {
+    public Usuario(String nombre_usuario_, String contrasena_, String correo_electronico_, String nombre_apellidos_, Imagendb imagendb_id_) {
         this.nombre_usuario = nombre_usuario_;
         this.contrasena = contrasena_;
         this.correo_electronico = correo_electronico_;
         this.nombre_apellidos = nombre_apellidos_;
         resetFechaCreacion();
-        setImagenUsuario(imagenUsuario_);
+        imagendb_id = imagendb_id_;
         this.num_comentarios_usuario = 0;
     }
 

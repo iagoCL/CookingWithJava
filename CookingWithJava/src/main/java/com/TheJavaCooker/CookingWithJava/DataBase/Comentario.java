@@ -33,7 +33,7 @@ public class Comentario implements Comparable<Comentario> {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
-    private Usuario usuarioId;
+    private Usuario usuario_id;
 
     protected Comentario() {
     }
@@ -64,12 +64,12 @@ public class Comentario implements Comparable<Comentario> {
                       String titulo_comentario,
                       LocalDateTime fecha_comentario,
                       Receta receta_id,
-                      Usuario usuarioId) {
+                      Usuario usuario_id) {
         this.descripcion_comentario = descripcion_comentario;
         this.titulo_comentario = titulo_comentario;
         setFechaComentario(fecha_comentario);
         this.receta_id = receta_id;
-        this.usuarioId = usuarioId;
+        this.usuario_id = usuario_id;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class Comentario implements Comparable<Comentario> {
                 ", titulo_comentario='" + titulo_comentario + '\'' +
                 ", fecha_comentario=" + fecha_comentario.format(formatoFechaHora) +
                 ", receta_id=" + receta_id.getId() +
-                ", usuarioId=" + usuarioId.getId() +
+                ", usuario_id=" + usuario_id.getId() +
                 '}';
     }
 
@@ -99,7 +99,7 @@ public class Comentario implements Comparable<Comentario> {
 
     @Override
     public int compareTo(Comentario other_) {
-        if(other_==null || other_.fecha_comentario==null)
+        if (other_ == null || other_.fecha_comentario == null)
             return 1;
         int fecha = other_.fecha_comentario.compareTo(this.fecha_comentario);
         if (fecha == 0) {

@@ -21,6 +21,8 @@ public class WebController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private RecetaRepository recetaRepository;
+    @Autowired
+    private ImagendbRepository imagenRepository;
 
     //todo session para almacenar usuario
 
@@ -72,15 +74,32 @@ public class WebController {
             //todo usuario no encontrado
             return "index";
         }
+        model.addAttribute("num_recetas_subidas",usuario.getNumRecetasFavoritas());
+        model.addAttribute("num_recetas_favoritas",usuario.getNumRecetasFavoritas());
         model.addAttribute("usuario",usuario);
-        model.addAttribute("recetas",recetaRepository.findAll());
+        model.addAttribute("recetasCreadas",usuario.getRecetasCreadas());
+        model.addAttribute("recetasFavoritas",usuario.getRecetasFavoritas());
+        model.addAttribute("recetas",new ArrayList<Receta>());
         return "perfil";
     }
 
 
-    @GetMapping(value={"/receta","/receta-completa","/recetaCompleta"})
-    public String mostrarReceta(Model model) {
-        //todo identificar receta usando parametro id (pasar por GET)
+    @GetMapping(value={"/receta-{recetaId}","/receta-completa-{recetaId}","/recetaCompleta-{recetaId}"})
+    public String mostrarReceta(Model model,@PathVariable long recetaId) {
+        Receta receta = recetaRepository.findById(recetaId).orElse(null);
+        if(receta==null){
+            //todo receta no encontrada
+            return "index";
+        }
+        model.addAttribute("receta",receta);
+        model.addAttribute("fechaDeCreacion",receta.getStringFechaCreacion());
+        model.addAttribute("duracionTotal",receta.getStringDuracionTotal());
+        Usuario creadorReceta = receta.getCreadorDeLaReceta();
+        model.addAttribute("creadorRecetaNombre",creadorReceta.getNombreUsuario());
+        model.addAttribute("pasos",receta.getPasos());
+        model.addAttribute("comentarios",receta.getComentarios());
+        model.addAttribute("utensilios",receta.getUtensilios());
+        model.addAttribute("ingredientes",receta.getIngredientes());
         return "receta-completa";
     }
 
@@ -101,24 +120,14 @@ public class WebController {
         return "recetas";
     }
 
-    @RequestMapping(value = {"/userImage/{imageId}","/userImage/{imageId}.jpg"})
+    @RequestMapping(value = {"/image/{imageId}","/image/{imageId}.jpg"})
     @ResponseBody
     public byte[] getImageUsuario(@PathVariable long imageId)  {
-        Usuario u = usuarioRepository.findById(imageId).orElse(null);
+        Imagendb u = imagenRepository.findById(imageId).orElse(null);
         if(u != null){
-            return u.getImagenUsuario();
+            return u.getImagen();
         }
         else
-            return DatabaseRandomData.getRandomUserImage();
-    }
-
-    @RequestMapping(value = {"/recetaImage/{imageId}","/recetaImage/{imageId}.jpg"})
-    @ResponseBody
-    public byte[] getImageReceta(@PathVariable long imageId)  {
-        Receta r = recetaRepository.findById(imageId).orElse(null);
-        if(r != null){
-            return r.getImagenReceta();
-        }
-        else return DatabaseRandomData.getRandomRecipeImage();
+            return DatabaseRandomData.getRandomRecipeImage();
     }
 }
