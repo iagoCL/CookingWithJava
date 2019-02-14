@@ -222,9 +222,9 @@ public class DatabaseRandomData {
     }
 
     public static List<Pair<Integer, String>> getListaDePasosAleatorios() {
-        int numPasos = random.nextInt(12);
-        List<Pair<Integer, String>> listaPasos = new ArrayList<>(numPasos);
-        for (int i = 0; i < numPasos; ++i) {
+        int numero_pasos = random.nextInt(12);
+        List<Pair<Integer, String>> listaPasos = new ArrayList<>(numero_pasos);
+        for (int i = 0; i < numero_pasos; ++i) {
             listaPasos.add(Pair.of(1 + random.nextInt(240), getDescripcionAleatoria()));
         }
         return listaPasos;

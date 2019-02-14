@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "Paso")
-@Table(name = "paso",
+@Table(name = "Paso",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"numPaso", "receta_id"}, name = Paso.constraintNombrePaso)
+                @UniqueConstraint(columnNames = {"numero_paso", "receta_id"}, name = Paso.constraintNombrePaso)
         }
 )
 public class Paso implements Comparable<Paso> {
@@ -16,22 +16,22 @@ public class Paso implements Comparable<Paso> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Lob
-    @Column(nullable = false)
-    private String descripcionPaso;
-    @Column(nullable = false)
-    private int numPaso;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "descripcion_paso")
+    private String descripcion_paso;
+    @Column(nullable = false, name = "numero_paso")
+    private int numero_paso;
+    @Column(nullable = false, name = "duracion")
     private int duracion;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
-    private Receta recetaId;
+    private Receta receta_id;
 
-    public Paso(int numPaso_, int duracion_, String descripcionPaso_, Receta recetaId_) {
-        this.descripcionPaso = descripcionPaso_;
-        this.numPaso = numPaso_;
+    public Paso(int numero_paso_, int duracion_, String descripcion_paso_, Receta receta_id_) {
+        this.descripcion_paso = descripcion_paso_;
+        this.numero_paso = numero_paso_;
         this.duracion = duracion_;
-        this.recetaId = recetaId_;
+        this.receta_id = receta_id_;
     }
 
     protected Paso() {
@@ -41,19 +41,19 @@ public class Paso implements Comparable<Paso> {
     public String toString() {
         return "Paso{" +
                 "id=" + id +
-                ", numPaso='" + numPaso + '\'' +
+                ", numero_paso='" + numero_paso + '\'' +
                 ", duracion=" + getDuracionString() +
-                ", recetaId=" + recetaId.getId() +
-                ", descripcionPaso=" + descripcionPaso +
+                ", receta_id=" + receta_id.getId() +
+                ", descripcion_paso=" + descripcion_paso +
                 '}';
     }
 
     public String getDescripcionPaso() {
-        return descripcionPaso;
+        return descripcion_paso;
     }
 
     public int getNumPaso() {
-        return numPaso;
+        return numero_paso;
     }
 
     public int getDuracion() {
@@ -93,6 +93,6 @@ public class Paso implements Comparable<Paso> {
 
     @Override
     public int compareTo(Paso other_) {
-        return this.numPaso - other_.numPaso;
+        return this.numero_paso - other_.numero_paso;
     }
 }

@@ -5,7 +5,13 @@
     - [Nombre y descripción de las entidades principales.](#nombre-y-descripci%C3%B3n-de-las-entidades-principales)
     - [Descripción de las funcionalidades del servicio interno](#descripci%C3%B3n-de-las-funcionalidades-del-servicio-interno)
   - [FASE 2 - Desarrollo de la aplicación web en local](#fase-2---desarrollo-de-la-aplicaci%C3%B3n-web-en-local)
+    - [Capturas de pantalla y una breve descripción de cada una de las páginas principales](#capturas-de-pantalla-y-una-breve-descripci%C3%B3n-de-cada-una-de-las-p%C3%A1ginas-principales)
+    - [Diagrama de navegación de las principales páginas.](#diagrama-de-navegaci%C3%B3n-de-las-principales-p%C3%A1ginas)
+    - [Modelo de datos de la aplicación](#modelo-de-datos-de-la-aplicaci%C3%B3n)
+      - [Diagrama de clases UML](#diagrama-de-clases-uml)
+      - [Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.](#diagrama-entidadrelaci%C3%B3n-que-muestre-c%C3%B3mo-se-persisten-dichos-datos-en-la-base-de-datos-relacional)
   - [FASE 3 - Inclusión de seguridad y servicio interno](#fase-3---inclusi%C3%B3n-de-seguridad-y-servicio-interno)
+    - [Instrucciones de despliegue](#instrucciones-de-despliegue)
   - [FASE 4 - Incluir tolerancia a fallos en la aplicación](#fase-4---incluir-tolerancia-a-fallos-en-la-aplicaci%C3%B3n)
   - [FASE 5 - Automatizar el despliegue de la aplicación.](#fase-5---automatizar-el-despliegue-de-la-aplicaci%C3%B3n)
 
@@ -69,8 +75,31 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 * Un sistema de **correo electrónico** que notifique a los usuarios cuando una de sus recetas sea marcada como favorita o cuando esta reciba algún comentario.
 * Generar un **documento PDF** de la receta, permitiendo guardar la receta en local para un usuario, se planea basarse en este tutorial: <http://chuwiki.chuidiang.org/index.php?title=Ejemplo_sencillo_de_creaci%C3%B3n_de_un_pdf_con_iText>.
 ## FASE 2 - Desarrollo de la aplicación web en local
+### Capturas de pantalla y una breve descripción de cada una de las páginas principales
+### Diagrama de navegación de las principales páginas.
+### Modelo de datos de la aplicación
+#### Diagrama de clases UML
+#### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
+### Instrucciones de despliegue
+Es necesario instalar mysql 8.0.15; para ello se puede usar el gestor de paquetes [chocolatey](https://chocolatey.org/). Una vez instalado chocolatey se puede simplemente instalar con ejecutar como administrador:
+
+```
+choco install mysql --version 8.0.15
+```
+
+Despues se debe abrir una consola mysql con permisos necesarios, para ello en windows se puede ejecutar para que pregunte la contraseña del administrador de la base de datos (nula por defecta):
+```
+mysql -u root -p
+```
+A continuacion se debe configuar la base de datos y otorgar permiso al usuario por defecto.
+```
+create database db_cooking_with_java; -- Crea la base de datos
+create user 'cookingWithJavaDefaultUser'@'%' identified by 'cookingWithJavaDefaultPass'; -- Crea el usaurio por defecto
+grant all on db_cooking_with_java.* to 'cookingWithJavaDefaultUser'@'%'; --Otorga privilegios al usuario sobre la base de datos.
+```
+
 
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 

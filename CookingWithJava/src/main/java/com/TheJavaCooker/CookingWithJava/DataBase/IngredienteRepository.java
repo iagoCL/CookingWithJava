@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
 
-    @Query("select distinct i.nombreIngrediente from Ingrediente i")
+    @Query("select distinct i.nombre_ingrediente from Ingrediente i")
     List<String> todosLosIngredientes();
 }

@@ -12,18 +12,18 @@ import java.util.List;
 @org.springframework.stereotype.Repository
 public interface RecetaRepository extends JpaRepository<Receta, Long>
         , Repository<Receta, Long>
-        , QuerydslPredicateExecutor<Receta>{
+        , QuerydslPredicateExecutor<Receta> {
 
-    @Query("select r from Receta r where r.nombreReceta = ?1")
+    @Query("select r from Receta r where r.nombre_receta = ?1")
     Receta buscarPorNombreReceta(String buscarPorNombreReceta);
 
-    @Query("select r from Receta r where r.tipoPlato = ?1")
-    List<Receta> buscarPorTipoDePlato(String tipoPlatoEnMiniscula);
+    @Query("select r from Receta r where r.tipo_plato = ?1")
+    List<Receta> buscarPorTipoDePlato(String tipo_platoEnMiniscula);
 
-    @Query("select distinct r.tipoPlato from Receta r")
+    @Query("select distinct r.tipo_plato from Receta r")
     List<String> tiposDePlato();
 
-    @Query("select r from Receta r order by r.fechaCreacion desc")
+    @Query("select r from Receta r order by r.fecha_creacion desc")
     Page<Receta> ultimasRecetas(PageRequest pageable);
 
     long count();//numero de usuarios

@@ -34,7 +34,7 @@ public class DatabaseManager {
     private UtensilioRepository utensilioRepository;
     @Autowired
     private ComentarioRepository comentarioRepository;
-    private static final Sort sortOrder = new Sort(Sort.Direction.ASC, "numFavoritos");
+
     private static final int userX = 500;
     private static final int userY = 430;
     private static final int recetaX = 577;
@@ -68,8 +68,12 @@ public class DatabaseManager {
     }
 
     public void clear() {
-        //todo
-        //todo pasar a mysql
+        utensilioRepository.deleteAll();
+        comentarioRepository.deleteAll();
+        pasoRepository.deleteAll();
+        ingredienteRepository.deleteAll();
+        recetaRepository.deleteAll();
+        usuarioRepository.deleteAll();
     }
 
     public static byte[] transformarAImagenDeUsuario(byte[] bytes) {
@@ -325,7 +329,9 @@ public class DatabaseManager {
             }
             recetaId_.getComentarios().add(comentario);
             recetaId_.recalcNumComentarios();
+            usuarioId_.nuevoComentario();
             recetaRepository.save(recetaId_);
+            usuarioRepository.save(usuarioId_);
             return Pair.of(Errores.SIN_ERRORES, comentario);
         }
     }
@@ -381,16 +387,17 @@ public class DatabaseManager {
     }
 
     public Pair<Errores, Receta> crearReceta(String nombreReceta_,
-                String tipoDePlato,
-                String nivelDeDificultad,
-                byte[] imagenDeReceta_,
-                List<Pair<String, String>> listaDeIngredientes_,
-                List<Pair<String, String>> listaDeUtensilios_,
-                List<Pair<Integer, String>> listaDePasos_,
-                Usuario usuario_) {
-       return crearReceta(nombreReceta_,
+                                             String tipoDePlato,
+                                             String nivelDeDificultad,
+                                             byte[] imagenDeReceta_,
+                                             List<Pair<String, String>> listaDeIngredientes_,
+                                             List<Pair<String, String>> listaDeUtensilios_,
+                                             List<Pair<Integer, String>> listaDePasos_,
+                                             Usuario usuario_) {
+        return crearReceta(nombreReceta_,
                 tipoDePlato,
-                nivelDeDificultad, LocalDate.now(),
+                nivelDeDificultad,
+                LocalDate.now(),
                 imagenDeReceta_,
                 listaDeIngredientes_,
                 listaDeUtensilios_,
@@ -538,38 +545,33 @@ public class DatabaseManager {
         }
         QReceta recetaDsl = QReceta.receta;
         BooleanExpression predicate =
-                recetaDsl.duracionTotal.between(duracionMinima_, duracionMaxima_);
+                recetaDsl.duracion_total.between(duracionMinima_, duracionMaxima_);
         if (numPasosMin_ != null && numPasosMax_ != null && numPasosMin_ > numPasosMax_) {
             return new ArrayList<>();
         }
         if (numPasosMin_ != null && numPasosMin_ > 0) {
-            predicate = predicate.and(recetaDsl.numPasos.goe(numPasosMin_));
+            predicate = predicate.and(recetaDsl.numero_pasos.goe(numPasosMin_));
         }
         if (numPasosMax_ != null) {
-            predicate = predicate.and(recetaDsl.numPasos.loe(numPasosMax_));
+            predicate = predicate.and(recetaDsl.numero_pasos.loe(numPasosMax_));
         }
         if (numFavoritosMin_ != null && numFavoritosMin_ > 0) {
-            predicate = predicate.and(recetaDsl.numFavoritos.goe(numFavoritosMin_));
+            predicate = predicate.and(recetaDsl.numero_favoritos.goe(numFavoritosMin_));
         }
         if (numComentariosMin_ != null && numComentariosMin_ > 0) {
-            predicate = predicate.and(recetaDsl.numComentarios.goe(numComentariosMin_));
+            predicate = predicate.and(recetaDsl.numero_comentarios.goe(numComentariosMin_));
         }
         if (tipoDePlato_ != null && !tipoDePlato_.isEmpty()) {
-            predicate = predicate.and(recetaDsl.tipoPlato.like(tipoDePlato_.toLowerCase()));
+            predicate = predicate.and(recetaDsl.tipo_plato.like(tipoDePlato_.toLowerCase()));
         }
         if (nombreDeReceta_ != null && !nombreDeReceta_.isEmpty()) {
-            predicate = predicate.and(recetaDsl.nombreReceta.likeIgnoreCase("%" + nombreDeReceta_ + "%"));
+            predicate = predicate.and(recetaDsl.nombre_receta.likeIgnoreCase("%" + nombreDeReceta_ + "%"));
         }
         if (nivelDeDificultad_ != null) {
-            predicate = predicate.and(recetaDsl.nivelDificultad.eq(nivelDeDificultad_));
+            predicate = predicate.and(recetaDsl.nivel_de_dificultad.eq(nivelDeDificultad_));
         }
 
-        //todo busqueda por ingrediente y utensilio
-        //todo fotos
-
-        //todo paso a mysql
-
-        return recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_, sortOrder));
+        return recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_));
     }
 
     public UsuarioRepository getUsuarioRepository() {

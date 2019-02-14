@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "Ingrediente")
-@Table(name = "ingrediente",
+@Table(name = "Ingrediente",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"nombreIngrediente", "receta_id"}, name = Ingrediente.constraintNombreIngrediente)
+                @UniqueConstraint(columnNames = {"nombre_ingrediente", "receta_id"}, name = Ingrediente.constraintNombreIngrediente)
         }
 )
 public class Ingrediente {
@@ -15,32 +15,33 @@ public class Ingrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(nullable = false)
-    private String nombreIngrediente;
-    @Column(nullable = false)
-    private String cantidadIngrediente;
+    @Column(nullable = false, name = "nombre_ingrediente")
+    private String nombre_ingrediente;
+    @Column(nullable = false, name = "cantidad_ingrediente")
+    private String cantidad_ingrediente;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
-    private Receta recetaId;
+    private Receta receta_id;
 
-    public Ingrediente(String nombreIngrediente, String cantidadIngrediente, Receta recetaId) {
-        this.nombreIngrediente = nombreIngrediente.toLowerCase();
-        this.cantidadIngrediente = cantidadIngrediente;
-        this.recetaId = recetaId;
+    public Ingrediente(String nombre_ingrediente, String cantidad_ingrediente, Receta receta_id) {
+        this.nombre_ingrediente = nombre_ingrediente.toLowerCase();
+        this.cantidad_ingrediente = cantidad_ingrediente;
+        this.receta_id = receta_id;
     }
 
     @Override
     public String toString() {
         return "Ingrediente{" +
                 "id=" + id +
-                ", nombreIngrediente='" + nombreIngrediente + '\'' +
-                ", cantidadIngrediente='" + cantidadIngrediente + '\'' +
-                ", recetaId=" + recetaId.getId() +
+                ", nombre_ingrediente='" + nombre_ingrediente + '\'' +
+                ", cantidad_ingrediente='" + cantidad_ingrediente + '\'' +
+                ", receta_id=" + receta_id.getId() +
                 '}';
     }
 
-    protected Ingrediente(){}
+    protected Ingrediente() {
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,10 +57,10 @@ public class Ingrediente {
     }
 
     public String getNombreIngrediente() {
-        return nombreIngrediente;
+        return nombre_ingrediente;
     }
 
     public String getCantidadIngrediente() {
-        return cantidadIngrediente;
+        return cantidad_ingrediente;
     }
 }

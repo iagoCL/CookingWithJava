@@ -1,20 +1,18 @@
 package com.TheJavaCooker.CookingWithJava.DataBase;
 
 import com.TheJavaCooker.CookingWithJava.DatabaseRandomData;
-import org.hibernate.annotations.Formula;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Entity(name = "Usuario")
-@Table(name = "usuario",
+@Table(name = "Usuario",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"nombreUsuario"}, name = Usuario.constraintNombreUsuario),
-                @UniqueConstraint(columnNames = {"correoElectronico"}, name = Usuario.constraintCorreoElectronico)
+                @UniqueConstraint(columnNames = {"nombre_usuario"}, name = Usuario.constraintNombreUsuario),
+                @UniqueConstraint(columnNames = {"correo_electronico"}, name = Usuario.constraintCorreoElectronico)
         }
 )
 public class Usuario {
@@ -25,33 +23,33 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(nullable = false)
-    private String nombreUsuario;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "nombre_usuario")
+    private String nombre_usuario;
+    @Column(nullable = false, name = "contrasena")
     private String contrasena;
-    @Column(nullable = false)
-    private String correoElectronico;
-    @Column(nullable = false)
-    private String nombreApellidos;
-    @Column(nullable = false)
-    private LocalDate fechaCreacion;
+    @Column(nullable = false, name = "correo_electronico")
+    private String correo_electronico;
+    @Column(nullable = false, name = "nombre_apellidos")
+    private String nombre_apellidos;
+    @Column(nullable = false, name = "fecha_creacion")
+    private LocalDate fecha_creacion;
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, name = "imagen_usuario")
     private byte[] imagenUsuario;
 
     @OneToMany(
-            mappedBy = "creadorDeLaReceta",
+            mappedBy = "creador_de_la_receta",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             orphanRemoval = true
     )
-    private Set<Receta> recetasCreadas = new HashSet<>();
+    private Set<Receta> recetas_creadas = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favoritos")
-    private List<Receta> recetasFavoritas = new ArrayList<>();
+    private List<Receta> recetas_favoritas = new ArrayList<>();
 
-    @Formula(value = "select count(p.id) from Comentario p where p.usuario_id = id")
-    private long numComentarios;
+    @Column(nullable = true, name = "num_comentarios_usuario")
+    private int num_comentarios_usuario;
 
     public long getId() {
         return id;
@@ -70,15 +68,15 @@ public class Usuario {
     }
 
     public String getNombreApellidos() {
-        return nombreApellidos;
+        return nombre_apellidos;
     }
 
     public void setNombreApellidos(String nombreApellidos_) {
-        this.nombreApellidos = nombreApellidos_;
+        this.nombre_apellidos = nombreApellidos_;
     }
 
     public String getNombreUsuario() {
-        return nombreUsuario;
+        return nombre_usuario;
     }
 
     public String getContrasena() {
@@ -86,32 +84,32 @@ public class Usuario {
     }
 
     public String getCorreoElectronico() {
-        return correoElectronico;
+        return correo_electronico;
     }
 
     public LocalDate getFechaCreacion() {
-        return fechaCreacion;
+        return fecha_creacion;
     }
 
     public String getStringFechaCreacion() {
-        return fechaCreacion.format(Usuario.formatoFecha);
+        return fecha_creacion.format(Usuario.formatoFecha);
     }
 
 
     public void resetFechaCreacion() {
-        this.fechaCreacion = LocalDate.now();
+        this.fecha_creacion = LocalDate.now();
     }
 
-    public void setNombreUsuario(String nombreUsuario_) {
-        this.nombreUsuario = nombreUsuario_;
+    public void setNombreUsuario(String nombre_usuario_) {
+        this.nombre_usuario = nombre_usuario_;
     }
 
     public void setContrasena(String contrasena_) {
         this.contrasena = contrasena_;
     }
 
-    public void setCorreoElectronico(String correoElectronico_) {
-        this.correoElectronico = correoElectronico_;
+    public void setCorreoElectronico(String correo_electronico_) {
+        this.correo_electronico = correo_electronico_;
     }
 
     @Override
@@ -127,11 +125,10 @@ public class Usuario {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
         return id == usuario.id &&
-                Objects.equals(nombreUsuario, usuario.nombreUsuario) &&
+                Objects.equals(nombre_usuario, usuario.nombre_usuario) &&
                 Objects.equals(contrasena, usuario.contrasena) &&
-                Objects.equals(nombreApellidos, usuario.nombreApellidos) &&
-                Objects.equals(fechaCreacion, usuario.fechaCreacion) &&
-                Objects.equals(correoElectronico, usuario.correoElectronico);
+                Objects.equals(nombre_apellidos, usuario.nombre_apellidos) &&
+                Objects.equals(correo_electronico, usuario.correo_electronico);
     }
 
     @Override
@@ -143,48 +140,57 @@ public class Usuario {
     public String toString() {
         return "Usuario{" +
                 "id=" + id +
-                ", nombreUsuario='" + nombreUsuario + '\'' +
+                ", nombre_usuario='" + nombre_usuario + '\'' +
                 ", contrasena='" + contrasena + '\'' +
-                ", correoElectronico='" + correoElectronico + '\'' +
-                ", nombreApellidos='" + nombreApellidos + '\'' +
-                ", fechaDeCreacion='" + fechaCreacion.format(formatoFecha) + '\'' +
+                ", correo_electronico='" + correo_electronico + '\'' +
+                ", nombre_apellidos='" + nombre_apellidos + '\'' +
+                ", fechaDeCreacion='" + fecha_creacion.format(formatoFecha) + '\'' +
                 '}';
     }
 
     @Transactional
     public Set<Receta> getRecetasCreadas() {
-        return recetasCreadas;
+        return recetas_creadas;
     }
 
-    public long getNumComentarios() {
-        return numComentarios;
+    public int getNumComentariosUsuario() {
+        return num_comentarios_usuario;
+    }
+
+    public void nuevoComentario() {
+        ++num_comentarios_usuario;
+    }
+
+    public void eliminarComentario() {
+        --num_comentarios_usuario;
     }
 
     @Transactional
     public int getNumRecetasFavoritas() {
-        return recetasFavoritas.size();
+        return recetas_favoritas.size();
     }
 
     @Transactional
     public List<Receta> getRecetasFavoritas() {
-        return recetasFavoritas;
+        return recetas_favoritas;
     }
 
     @Transactional
     public int getNumRecetasCreadas() {
-        return recetasCreadas.size();
+        return recetas_creadas.size();
     }
 
     protected Usuario() {
     }
 
-    public Usuario(String nombreUsuario_, String contrasena_, String correoElectronico_, String nombreApellidos_, byte[] imagenUsuario_) {
-        this.nombreUsuario = nombreUsuario_;
+    public Usuario(String nombre_usuario_, String contrasena_, String correo_electronico_, String nombre_apellidos_, byte[] imagenUsuario_) {
+        this.nombre_usuario = nombre_usuario_;
         this.contrasena = contrasena_;
-        this.correoElectronico = correoElectronico_;
-        this.nombreApellidos = nombreApellidos_;
+        this.correo_electronico = correo_electronico_;
+        this.nombre_apellidos = nombre_apellidos_;
         resetFechaCreacion();
         setImagenUsuario(imagenUsuario_);
+        this.num_comentarios_usuario = 0;
     }
 
 }

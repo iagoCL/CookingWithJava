@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface UtensilioRepository extends JpaRepository<Utensilio, Long> {
 
-    @Query("select distinct u.nombreUtensilio from Utensilio u")
+    @Query("select distinct u.nombre_utensilio from Utensilio u")
     List<String> todosLosUtensilios();
 }

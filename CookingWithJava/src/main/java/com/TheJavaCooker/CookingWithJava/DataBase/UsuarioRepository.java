@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Query("select u from Usuario u where u.correoElectronico = ?1")
-    Usuario buscarPorCorreoElectronico(String correoElectronico_);
+    @Query("select u from Usuario u where u.correo_electronico = ?1")
+    Usuario buscarPorCorreoElectronico(String correo_electronico_);
 
-    @Query("select u from Usuario u where u.nombreUsuario = ?1")
+    @Query("select u from Usuario u where u.nombre_usuario = ?1")
     Usuario buscarPorNombreUsuario(String nombreUsuario_);
 
     long count();//numero de usuarios

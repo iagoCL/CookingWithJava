@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "Utensilio")
-@Table(name = "utensilio",
+@Table(name = "Utensilio",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"nombreUtensilio", "receta_id"}, name = Utensilio.constraintNombreUtensilio)
+                @UniqueConstraint(columnNames = {"nombre_utensilio", "receta_id"}, name = Utensilio.constraintNombreUtensilio)
         }
 )
 public class Utensilio {
@@ -15,34 +15,34 @@ public class Utensilio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(nullable = false)
-    private String nombreUtensilio;
+    @Column(nullable = false, name = "nombre_utensilio")
+    private String nombre_utensilio;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NivelDeDificultad nivelDeDificultad;
+    @Column(nullable = false, name = "nivel_de_dificultad")
+    private NivelDeDificultad nivel_de_dificultad;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
-    private Receta recetaId;
+    private Receta receta_id;
 
     protected Utensilio() {
     }
 
     public String getNombreUtensilio() {
-        return nombreUtensilio;
+        return nombre_utensilio;
     }
 
     public NivelDeDificultad getNivelDeDificultad() {
-        return nivelDeDificultad;
+        return nivel_de_dificultad;
     }
 
     @Override
     public String toString() {
         return "Utensilio{" +
                 "id=" + id +
-                ", nombreUtensilio='" + nombreUtensilio + '\'' +
-                ", nivelDeDificultad=" + nivelDeDificultad +
-                ", recetaId=" + recetaId.getId() +
+                ", nombre_utensilio='" + nombre_utensilio + '\'' +
+                ", nivel_de_dificultad=" + nivel_de_dificultad +
+                ", receta_id=" + receta_id.getId() +
                 '}';
     }
 
@@ -59,9 +59,9 @@ public class Utensilio {
         return Objects.hash(id);
     }
 
-    public Utensilio(String nombreUtensilio_, NivelDeDificultad nivelDeDificultad_, Receta recetaId_) {
-        this.nombreUtensilio = nombreUtensilio_.toLowerCase();
-        this.nivelDeDificultad = nivelDeDificultad_;
-        this.recetaId = recetaId_;
+    public Utensilio(String nombre_utensilio_, NivelDeDificultad nivel_de_dificultad_, Receta receta_id_) {
+        this.nombre_utensilio = nombre_utensilio_.toLowerCase();
+        this.nivel_de_dificultad = nivel_de_dificultad_;
+        this.receta_id = receta_id_;
     }
 }
