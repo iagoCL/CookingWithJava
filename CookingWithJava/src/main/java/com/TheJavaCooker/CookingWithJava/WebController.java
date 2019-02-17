@@ -105,18 +105,27 @@ public class WebController {
 
     @GetMapping(value={"/recetas"})
     public String mostrarRecetas(Model model) {
-        //todo recetas-favoritas muestra las recetas favoritas de un usuario pasado por GET
         //todo misRecetas-favoritas muestra las recetas favoritas del usuario en la sesion actual
-        //todo analogo para creadas
         //todo recibir por get parametros de busqueda ejecutar la busqueda
         //todo si no recibe parametros mostrar las ultimas recetas.
         //todo hacer un metodo auxiliar para gestionar las opciones
-        ArrayList<String> recetas = new ArrayList<>();
-        int nRecetas = 9;
-        for (int i=0; i<nRecetas; i++) {
-            recetas.add("Receta " + (i+1));
-        }
-        model.addAttribute("recetas", recetas);
+        model.addAttribute("recetas", database.getRecetaRepository().buscarTodas());
+        return "recetas";
+    }
+
+    @GetMapping(value={"/recetas-favoritas"})
+    public String mostrarRecetasFavoritas(Model model, Usuario usuario) {
+        //todo obtener id usuario actual
+        usuario = usuarioRepository.findAll().get(0);
+        model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        return "recetas";
+    }
+
+    @GetMapping(value={"/recetas-creadas"})
+    public String mostrarRecetasCreadas(Model model, Usuario usuario) {
+        //todo obtener id usuario actual
+        usuario = usuarioRepository.findAll().get(0);
+        model.addAttribute("recetas", usuario.getRecetasCreadas());
         return "recetas";
     }
 

@@ -14,6 +14,9 @@ public interface RecetaRepository extends JpaRepository<Receta, Long>
         , Repository<Receta, Long>
         , QuerydslPredicateExecutor<Receta> {
 
+    @Query("select r from Receta r")
+    List<Receta> buscarTodas();
+
     @Query("select r from Receta r where r.nombre_receta = ?1")
     Receta buscarPorNombreReceta(String buscarPorNombreReceta);
 
@@ -26,5 +29,5 @@ public interface RecetaRepository extends JpaRepository<Receta, Long>
     @Query("select r from Receta r order by r.fecha_creacion desc")
     Page<Receta> ultimasRecetas(PageRequest pageable);
 
-    long count();//numero de usuarios
+    long count();//numero de recetas
 }
