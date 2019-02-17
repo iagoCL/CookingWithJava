@@ -27,13 +27,13 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script>
+    <!--<script>
         $(document).ready(function () {
             $("#buttonUser").click(function () {
 
             });
         });
-    </script>
+    </script>-->
 
 </head>
 <body>
@@ -102,7 +102,7 @@
                     <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-register" role="tabpanel"
                              aria-labelledby="nav-register-tab">
-                            <form class="contact-form" method="post">
+                            <form class="contact-form" action="formulario_registro" method="post">
                                 <div>
                                     <div class="form-group row col-md-12">
                                         <label class="col-sm-3" for="nickRegistro">Nick:</label>
@@ -131,14 +131,14 @@
                                                type="password"
                                                placeholder="*****">
                                     </div>
-                                    <button type="button" class="site-btn col-md-12" id="buttonUserRegister">Registrar
+                                    <button type="submit" class="site-btn col-md-12" id="buttonUserRegister">Registrar
                                     </button>
                                 </div>
                             </form>
                         </div>
                         <div class="tab-pane fade" id="nav-login" role="tabpanel"
                              aria-labelledby="nav-login-tab">
-                            <form class="contact-form">
+                            <form class="contact-form" action="formulario_login">
                                 <div>
                                     <div class="form-group row col-md-12">
                                         <label class="col-sm-3" for="nickLogin">Nick:</label>
@@ -151,7 +151,7 @@
                                                type="password"
                                                placeholder="*****">
                                     </div>
-                                    <button type="button" class="site-btn col-md-12" id="buttonUserLogin">Login</button>
+                                    <button type="submit" class="site-btn col-md-12" id="buttonUserLogin">Login</button>
                                 </div>
                             </form>
                         </div>

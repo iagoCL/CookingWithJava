@@ -13,6 +13,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Query("select u from Usuario u where u.nombre_usuario = ?1")
     Usuario buscarPorNombreUsuario(String nombreUsuario_);
 
+    @Query("select u from Usuario u where u.nombre_usuario = ?1")
+    Usuario loginValido(String nombre_usuario, String contrasena);
+
     long count();//numero de usuarios
 }
 

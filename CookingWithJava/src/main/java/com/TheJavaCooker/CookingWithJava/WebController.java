@@ -5,10 +5,7 @@ import net.bytebuddy.dynamic.loading.ClassInjector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -23,6 +20,8 @@ public class WebController {
     private RecetaRepository recetaRepository;
     @Autowired
     private ImagendbRepository imagenRepository;
+
+    private long usuarioActivoId = 2;
 
     //todo session para almacenar usuario
 
@@ -50,6 +49,20 @@ public class WebController {
         return "login";
     }
 
+    @RequestMapping(value={"/formulario_login"})
+    public String formulario_login(Model model, @RequestParam String nickLogin, @RequestParam String contrasenaLogin) {
+        model.addAttribute("nickLogin", nickLogin);
+        model.addAttribute("contrasenaLogin", contrasenaLogin);
+        Usuario usuario = usuarioRepository.loginValido(nickLogin, contrasenaLogin);
+        if(usuario==null) {
+            //todo usuario o contraseña incorrectos
+        } else {
+            usuarioActivoId = usuario.getId();
+            return "perfil-" + usuario.getId();
+        }
+        return "login";
+    }
+
     @GetMapping(value={"/error"})
     public String error(Model model) {
         //todo pagina de error
@@ -64,8 +77,7 @@ public class WebController {
 
     @GetMapping(value={"/usuario","/perfil","/miusuario","/miperfil","/miUsuario","/miPerfil"})
     public String miPerfil(Model model) {
-        //todo obtener id usuario actual
-        Usuario usuario = usuarioRepository.findAll().get(0);
+        Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         return returnPerfil(model,usuario);
     }
 
@@ -82,7 +94,6 @@ public class WebController {
         model.addAttribute("recetas",new ArrayList<Receta>());
         return "perfil";
     }
-
 
     @GetMapping(value={"/receta-{recetaId}","/receta-completa-{recetaId}","/recetaCompleta-{recetaId}"})
     public String mostrarReceta(Model model,@PathVariable long recetaId) {
@@ -113,18 +124,18 @@ public class WebController {
         return "recetas";
     }
 
-    @GetMapping(value={"/recetas-favoritas"})
-    public String mostrarRecetasFavoritas(Model model, Usuario usuario) {
+    @GetMapping(value={"/recetas-favoritas-{usuarioId}"})
+    public String mostrarRecetasFavoritas(Model model, @PathVariable long usuarioId) {
         //todo obtener id usuario actual
-        usuario = usuarioRepository.findAll().get(0);
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
         return "recetas";
     }
 
-    @GetMapping(value={"/recetas-creadas"})
-    public String mostrarRecetasCreadas(Model model, Usuario usuario) {
+    @GetMapping(value={"/recetas-creadas-{usuarioId}"})
+    public String mostrarRecetasCreadas(Model model, @PathVariable long usuarioId) {
         //todo obtener id usuario actual
-        usuario = usuarioRepository.findAll().get(0);
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         model.addAttribute("recetas", usuario.getRecetasCreadas());
         return "recetas";
     }
