@@ -143,7 +143,7 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
 #### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
-<img src="gddImages/database-export.svg">
+<img src="gddImages/database-export.png">
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
 ### Instrucciones de despliegue

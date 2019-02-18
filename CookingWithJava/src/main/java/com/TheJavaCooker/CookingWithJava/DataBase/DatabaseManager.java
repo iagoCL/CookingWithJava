@@ -500,7 +500,7 @@ public class DatabaseManager {
         }
     }
 
-    public Iterable<Receta> buscarReceta(int indicePagina_,
+    public List<Receta> buscarReceta(int indicePagina_,
                                          int elementosPagina_,
                                          Integer duracionMaxima_,
                                          Integer duracionMinima_,
@@ -550,7 +550,10 @@ public class DatabaseManager {
             predicate = predicate.and(recetaDsl.nivel_de_dificultad.eq(nivelDeDificultad_));
         }
 
-        return recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_));
+        List<Receta> recetas = new ArrayList<>();
+        Iterable<Receta> it = recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_));
+        it.forEach((e)->recetas.add( e));
+        return recetas;
     }
 
     public UsuarioRepository getUsuarioRepository() {
