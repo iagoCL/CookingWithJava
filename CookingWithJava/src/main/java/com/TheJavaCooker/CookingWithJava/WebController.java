@@ -49,8 +49,8 @@ public class WebController {
         return "login";
     }
 
-    @RequestMapping(value={"/formulario_login"})
-    public String formulario_login(Model model, @RequestParam String nickLogin, @RequestParam String contrasenaLogin) {
+    @RequestMapping(value={"/formulario-login"})
+    public String formularioLogin(Model model, @RequestParam String nickLogin, @RequestParam String contrasenaLogin) {
         model.addAttribute("nickLogin", nickLogin);
         model.addAttribute("contrasenaLogin", contrasenaLogin);
         Usuario usuario = usuarioRepository.loginValido(nickLogin, contrasenaLogin);
@@ -61,6 +61,18 @@ public class WebController {
             return "perfil-" + usuario.getId();
         }
         return "login";
+    }
+
+    @RequestMapping(value={"/formulario-registro"})
+    public String formularioRegistro(Model model, @RequestParam String nickRegistro, @RequestParam String contrasenaRegistro, @RequestParam String correoRegistro, @RequestParam String nombreRegistro) {
+        model.addAttribute("nickRegistro", nickRegistro);
+        model.addAttribute("contrasenaRegistro", contrasenaRegistro);
+        model.addAttribute("correoRegistro", correoRegistro);
+        model.addAttribute("nombreRegistro", nombreRegistro);
+        database.crearUsuario(nickRegistro, contrasenaRegistro, correoRegistro, nombreRegistro, DatabaseRandomData.getRandomUserImage());
+        Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickRegistro);
+        usuarioActivoId = usuario.getId();
+        return "index";
     }
 
     @GetMapping(value={"/error"})
