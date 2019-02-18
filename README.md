@@ -77,7 +77,67 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 ## FASE 2 - Desarrollo de la aplicación web en local
 ### Capturas de pantalla y una breve descripción de cada una de las páginas principales
-![alt text](gddImages/index_1 "Figura 1: Primera imagen de la página de inicio.)
+
+
+### Página de incio
+
+
+![alt text](gddImages/index_1.JPG "Figura 1: Primera imagen de la página de inicio.")
+
+*Figura 1: Primera imagen de la página de inicio.*
+
+![alt text](gddImages/index_2.JPG "Figura 1: Segunda imagen de la página de inicio.")
+
+*Figura 2: Segunda imagen de la página de inicio.*
+
+* Está página actuará como inicio de la página web. Aquí, el usuario podrá acceder a las funciones principales tales como subir una nueva receta, logearse y registrarse, acceder a su perfil y buscar recetas.
+
+### Acceso
+
+
+![alt text](gddImages/register_1.JPG "Figura 3: Primera imagen de la página donde el usuario podrá logearse o registarse.")
+
+*Figura 3: Primera imagen de la página donde el usuario podrá logearse o registarse.*
+
+![alt text](gddImages/register_2.JPG "Figura 4: Segunda imagen de la página donde el usuario podrá logearse o registarse.")
+
+*Figura 4: Segunda imagen de la página donde el usuario podrá logearse o registarse.*
+
+![alt text](gddImages/register_3.JPG "Figura 5: Tercera imagen de la página donde el usuario podrá logearse o registarse.")
+
+*Figura 5: Tercera imagen de la página donde el usuario podrá logearse o registarse.*
+
+* En esta página el usuario podrá o bien registrarse como nuevo usuario, donde tendrá que rellenar los campos de nombre y apellidos, nickname, correo electrónico y contraseña; o bien logearse directamente si ya tiene cuenta, indicando su nick y su contraseña.
+
+
+### Subir receta
+![alt text](gddImages/nuevareceta_1.JPG "Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.")
+
+*Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.*
+
+![alt text](gddImages/nuevareceta_2.JPG "Figura 7: Segunda imagen de la página que el usuario usará para subir recetas nuevas.")
+
+*Figura 7: Segunda imagen de la página que el usuario usará para subir recetas nuevas.*
+
+![alt text](gddImages/nuevarectea_3.JPG "Figura 8: Tercera imagen de la página que el usuario usará para subir recetas nuevas.")
+
+*Figura 8: Tercera imagen de la página que el usuario usará para subir recetas nuevas.*
+
+![alt text](gddImages/nuevareceta_4.JPG "Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.")
+
+*Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.*
+
+* En esta sección de la página, el usuario podrá crear y subir nuevas recetas. Para poder crear nuevas recetas, deberá una serie de campos en los que se incluyen: nombre de la receta, tipo de plato, nivel de dificultad,los nombres y las cantidades de  los diferentes ingredientes, los utensilios que se van a usar y los pasos a seguir para crear la receta.
+
+
+
+
+
+
+
+
+
+
 
 ### Diagrama de navegación de las principales páginas.
 ### Modelo de datos de la aplicación
