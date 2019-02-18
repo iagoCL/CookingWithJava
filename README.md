@@ -90,7 +90,7 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 *Figura 2: Segunda imagen de la página de inicio.*
 
-* Está página actuará como inicio de la página web. Aquí, el usuario podrá acceder a las funciones principales tales como subir una nueva receta, logearse y registrarse, acceder a su perfil y buscar recetas.
+* Está página actuará como inicio de la página web. Aquí, el usuario podrá acceder a las funciones principales tales como subir una nueva receta, logearse y registrarse, acceder a su perfil, ver todas las recetas y buscar recetas concretas.
 
 
 ### Acceso
@@ -131,7 +131,7 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 *Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.*
 
-* En esta sección de la página, el usuario podrá crear y subir nuevas recetas. Para poder crear nuevas recetas, deberá una serie de campos en los que se incluyen: nombre de la receta, tipo de plato, nivel de dificultad,los nombres y las cantidades de  los diferentes ingredientes, los utensilios que se van a usar y los pasos a seguir para crear la receta.
+* En esta sección de la página, el usuario podrá crear y subir nuevas recetas. Para poder crear nuevas recetas, deberá rellenar una serie de campos en los que se incluyen: nombre de la receta, tipo de plato, nivel de dificultad,los nombres y las cantidades de  los diferentes ingredientes, los utensilios que se van a usar y los pasos a seguir para crear la receta.
 
 
 ### Buscar recetas
@@ -147,11 +147,20 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 * En esta página, el usuario podrá buscar recetas en función del nombre de la receta, el tipo de plato, el nivel de dificultad, el número de pasos, la duración y el número de comentarios o de favoritos que tiene.
 
 
+### Recetas
+
+![alt text](gddImages/recetas.JPG "Figura 12: Imagen de la página donde se muestran todas las recetas.")
+
+*Figura 12: Imagen de la página donde se muestran todas las recetas.*
+
+* En esta parte de la web se mostrarán todas las recetas subidas de todos los usuarios.
+
+
 ### Perfil
 
-![alt text](gddImages/perfil.JPG "Figura 12: Página del perfil del usuario.")
+![alt text](gddImages/perfil.JPG "Figura 13: Página del perfil del usuario.")
 
-*Figura 12: Página del perfil del usuario.*
+*Figura 13: Página del perfil del usuario.*
 
 * Aquí se mostrará la información del usuario y dos links a sus recetas y su recetas favoritas.
 
@@ -169,6 +178,17 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 
 ### Diagrama de navegación de las principales páginas.
+A continuación, se muestra un diagrama simplificado de la navegación en la web.
+
+
+![alt text](gddImages/diagramaNavegacion.jpg "Figura 14: Diagrama de navegación.")
+
+*Figura 14: Diagrama de navegación.*
+
+Se ha decidido usar este esquema más simplificado porque en la aplicación que se ha desarrollado, se puede acceder a cualquier página desde la página en la que esté el usuario y, por lo tanto, daría como resultado un diagrama de navegación casi ilegible, pues habría que unir cada página con el resto. Como resultado, se ha optado por definir este esquema en el que se explica que desde la barra de navegación, presente en todas las páginas, puedes acceder al resto.
+
+
+
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
 #### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
