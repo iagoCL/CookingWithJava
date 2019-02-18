@@ -74,8 +74,11 @@ Las principales entidades que se planea implementar en nuestra aplicación son:
 Las principales funcionalidades de las que se ha pensado en dotar al servicio interno son:
 * Un sistema de **correo electrónico** que notifique a los usuarios cuando una de sus recetas sea marcada como favorita o cuando esta reciba algún comentario.
 * Generar un **documento PDF** de la receta, permitiendo guardar la receta en local para un usuario, se planea basarse en este tutorial: <http://chuwiki.chuidiang.org/index.php?title=Ejemplo_sencillo_de_creaci%C3%B3n_de_un_pdf_con_iText>.
+
 ## FASE 2 - Desarrollo de la aplicación web en local
 ### Capturas de pantalla y una breve descripción de cada una de las páginas principales
+![alt text](gddImages/index_1 "Figura 1: Primera imagen de la página de inicio.)
+
 ### Diagrama de navegación de las principales páginas.
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
