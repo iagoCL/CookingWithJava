@@ -92,6 +92,7 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 * Está página actuará como inicio de la página web. Aquí, el usuario podrá acceder a las funciones principales tales como subir una nueva receta, logearse y registrarse, acceder a su perfil y buscar recetas.
 
+
 ### Acceso
 
 
@@ -110,7 +111,10 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 * En esta página el usuario podrá o bien registrarse como nuevo usuario, donde tendrá que rellenar los campos de nombre y apellidos, nickname, correo electrónico y contraseña; o bien logearse directamente si ya tiene cuenta, indicando su nick y su contraseña.
 
 
+
 ### Subir receta
+
+
 ![alt text](gddImages/nuevareceta_1.JPG "Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.")
 
 *Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.*
@@ -128,6 +132,31 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 *Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.*
 
 * En esta sección de la página, el usuario podrá crear y subir nuevas recetas. Para poder crear nuevas recetas, deberá una serie de campos en los que se incluyen: nombre de la receta, tipo de plato, nivel de dificultad,los nombres y las cantidades de  los diferentes ingredientes, los utensilios que se van a usar y los pasos a seguir para crear la receta.
+
+
+### Buscar recetas
+
+![alt text](gddImages/buscarReceta_1.JPG "Figura 10: Primera imagen del buscador de recetas.")
+
+*Figura 10: Primera imagen del buscador de recetas.*
+
+![alt text](gddImages/buscarReceta_2.JPG "Figura 11: Segunda imagen del buscador de recetas.")
+
+*Figura 11: Segunda imagen del buscador de recetas.*
+
+* En esta página, el usuario podrá buscar recetas en función del nombre de la receta, el tipo de plato, el nivel de dificultad, el número de pasos, la duración y el número de comentarios o de favoritos que tiene.
+
+
+### Perfil
+
+![alt text](gddImages/perfil.JPG "Figura 12: Página del perfil del usuario.")
+
+*Figura 12: Página del perfil del usuario.*
+
+* Aquí se mostrará la información del usuario y dos links a sus recetas y su recetas favoritas.
+
+
+
 
 
 
