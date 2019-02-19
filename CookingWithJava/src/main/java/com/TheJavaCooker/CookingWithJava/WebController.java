@@ -161,7 +161,7 @@ public class WebController {
     }
 
     @PostMapping(value = {"/formulario-favorito"})
-    public String formularioRegistro(Model model,
+    public String formularioFavorito(Model model,
                                      @RequestParam boolean favoritoMarcar,
                                      @RequestParam long favoritoRecetaId) {
         model.addAttribute("favoritoMarcar", favoritoMarcar);
