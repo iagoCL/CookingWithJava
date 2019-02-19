@@ -191,8 +191,10 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
-#### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
 <img src="gddImages/database-export.png">
+
+#### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
+<img src="gddImages/entidadrelacion.jpg">
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
 ### Instrucciones de despliegue
