@@ -72,38 +72,35 @@ public class WebController {
         List<Pair<String, String>> listaDeIngredientes = new ArrayList<>(numIngredientes);
         List<Pair<String, String>> listaDeUtensilios = new ArrayList<>(numUtensilios);
         List<Pair<Integer, String>> listaDePasos = new ArrayList<>(numPasos);
-        for(int i = 1; i<=numPasos;++i)
-        {
-            Integer duracion = Integer.parseInt(allRequestParams.get("paso-"+i+"Duracion"));
-            String descripcion = allRequestParams.get("paso-"+i+"Descripcion");
-            listaDePasos.add(Pair.of(duracion,descripcion));
+        for (int i = 1; i <= numPasos; ++i) {
+            Integer duracion = Integer.parseInt(allRequestParams.get("paso-" + i + "Duracion"));
+            String descripcion = allRequestParams.get("paso-" + i + "Descripcion");
+            listaDePasos.add(Pair.of(duracion, descripcion));
         }
-        for(int i = 1; i<=numIngredientes;++i)
-        {
-            String cantidad = allRequestParams.get("ingrediente-"+i+"Cantidad");
-            String nombre = allRequestParams.get("ingrediente-"+i+"Name");
-            listaDeIngredientes.add(Pair.of(nombre,cantidad));
+        for (int i = 1; i <= numIngredientes; ++i) {
+            String cantidad = allRequestParams.get("ingrediente-" + i + "Cantidad");
+            String nombre = allRequestParams.get("ingrediente-" + i + "Name");
+            listaDeIngredientes.add(Pair.of(nombre, cantidad));
         }
-        for(int i = 1; i<=numUtensilios;++i)
-        {
-            String dificultad = allRequestParams.get("utensilio-"+i+"Nivel");
-            String nombre = allRequestParams.get("utensilio-"+i+"Name");
-            listaDeUtensilios.add(Pair.of(nombre,dificultad));
+        for (int i = 1; i <= numUtensilios; ++i) {
+            String dificultad = allRequestParams.get("utensilio-" + i + "Nivel");
+            String nombre = allRequestParams.get("utensilio-" + i + "Name");
+            listaDeUtensilios.add(Pair.of(nombre, dificultad));
         }
 
 
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            return mostrarError(model,"ERROR:","Creando Receta.","No esta logueado.");
+            return mostrarError(model, "ERROR:", "Creando Receta.", "No esta logueado.");
         }
         Pair<DatabaseManager.Errores, Receta> pair = null;
         try {
             pair = database.crearReceta(nombreDeLaReceta, tipoDePlato, nivelDificultadReceta, imagenReceta.getBytes(), listaDeIngredientes, listaDeUtensilios, listaDePasos, usuario);
         } catch (IOException e) {
-            return mostrarError(model,"ERROR:","Cargando Imagen Receta.",e.toString());
+            return mostrarError(model, "ERROR:", "Cargando Imagen Receta.", e.toString());
         }
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            return mostrarError(model,"ERROR:","Creando Receta.",pair.getFirst().name());
+            return mostrarError(model, "ERROR:", "Creando Receta.", pair.getFirst().name());
         }
         return "redirect:/receta-" + pair.getSecond().getId();
     }
@@ -113,11 +110,10 @@ public class WebController {
         return "index";
     }
 
-    public String mostrarError(Model model, String error1, String error2,String error3)
-    {
+    public String mostrarError(Model model, String error1, String error2, String error3) {
         model.addAttribute("mensaje1", error1);
         model.addAttribute("mensaje2", error2);
-        model.addAttribute("mensaje3", error3 );
+        model.addAttribute("mensaje3", error3);
         return "mensaje";
     }
 
@@ -133,15 +129,15 @@ public class WebController {
         model.addAttribute("commentRecetaId", commentRecetaId);
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            return mostrarError(model,"ERROR:","Al poner comentario.","No esta logueado.");
+            return mostrarError(model, "ERROR:", "Al poner comentario.", "No esta logueado.");
         }
         Receta receta = recetaRepository.findById(commentRecetaId).orElse(null);
         if (receta == null) {
-            return mostrarError(model,"ERROR:","Al poner comentario.","No exite la receta enviada.");
+            return mostrarError(model, "ERROR:", "Al poner comentario.", "No exite la receta enviada.");
         }
         Pair<DatabaseManager.Errores, Comentario> pair = database.crearComentario(commentMessage, commentSubject, receta, usuario);
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            return mostrarError(model,"ERROR:","Al poner comentario.",pair.getFirst().name());
+            return mostrarError(model, "ERROR:", "Al poner comentario.", pair.getFirst().name());
         }
         return "redirect:/receta-" + commentRecetaId;
     }
@@ -153,18 +149,37 @@ public class WebController {
         model.addAttribute("contrasenaLogin", contrasenaLogin);
         Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickLogin);
         if (usuario == null) {
-            return mostrarError(model,"ERROR:","Creando Usuario.","Login: no valido");
+            return mostrarError(model, "ERROR:", "Creando Usuario.", "Login: no valido");
         } else {
-            if(usuario.getContrasena().equals(contrasenaLogin))
-            {
+            if (usuario.getContrasena().equals(contrasenaLogin)) {
                 usuarioActivoId = usuario.getId();
                 return "redirect:/perfil-" + usuario.getId();
-            }
-            else
-            {
-                return  mostrarError(model,"ERROR:","Logueando usuario.","Contraseña Incorrecta");
+            } else {
+                return mostrarError(model, "ERROR:", "Logueando usuario.", "Contraseña Incorrecta");
             }
         }
+    }
+
+    @PostMapping(value = {"/formulario-favorito"})
+    public String formularioRegistro(Model model,
+                                     @RequestParam boolean favoritoMarcar,
+                                     @RequestParam long favoritoRecetaId) {
+        model.addAttribute("favoritoMarcar", favoritoMarcar);
+        model.addAttribute("favoritoRecetaId", favoritoRecetaId);
+        Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
+        if (usuario == null) {
+            return mostrarError(model, "ERROR:", "Buscando Usuario.", "El Usuario actual: no se ha encontrado.");
+        }
+        Receta receta = recetaRepository.findById(favoritoRecetaId).orElse(null);
+        if (receta == null) {
+            return mostrarError(model, "ERROR:", "Buscando Receta.", "La receta actual: no se ha encontrado.");
+        }
+        if (favoritoMarcar) {
+            database.marcarFavorito(usuario, receta);
+        } else {
+            database.quitarFavorito(usuario, receta);
+        }
+        return "redirect:/receta-" + favoritoRecetaId;
     }
 
     @PostMapping(value = {"/formulario-registro"})
@@ -181,18 +196,17 @@ public class WebController {
         model.addAttribute("contrasena2Registro", contrasena2Registro);
         model.addAttribute("correoRegistro", correoRegistro);
         model.addAttribute("nombreRegistro", nombreRegistro);
-        if(!contrasena2Registro.equals(contrasenaRegistro))
-        {
-            return mostrarError(model,"ERROR:","Registrando Usuario.","Las contraseñas no coinciden.");
+        if (!contrasena2Registro.equals(contrasenaRegistro)) {
+            return mostrarError(model, "ERROR:", "Registrando Usuario.", "Las contraseñas no coinciden.");
         }
         Pair<DatabaseManager.Errores, Usuario> pair = null;
         try {
             pair = database.crearUsuario(nickRegistro, contrasenaRegistro, correoRegistro, nombreRegistro, imagenRegistro.getBytes());
         } catch (IOException e) {
-            return mostrarError(model,"ERROR:","Creando Imagen Usuario.",e.toString());
+            return mostrarError(model, "ERROR:", "Creando Imagen Usuario.", e.toString());
         }
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            return mostrarError(model,"ERROR:","Creando Usuario.",pair.getFirst().name());
+            return mostrarError(model, "ERROR:", "Creando Usuario.", pair.getFirst().name());
 
         }
         Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickRegistro);
@@ -215,14 +229,14 @@ public class WebController {
     public String miPerfil(Model model) {
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            return mostrarError(model,"ERROR:","Buscando Usuario.","El Usuario actual: no se ha encontrado.");
+            return mostrarError(model, "ERROR:", "Buscando Usuario.", "El Usuario actual: no se ha encontrado.");
         }
         return returnPerfil(model, usuario);
     }
 
     public String returnPerfil(Model model, Usuario usuario) {
         if (usuario == null) {
-            return mostrarError(model,"ERROR:","Buscando Usuario.","El Usuario: no se ha encontrado.");
+            return mostrarError(model, "ERROR:", "Buscando Usuario.", "El Usuario: no se ha encontrado.");
         }
         model.addAttribute("num_recetas_subidas", usuario.getNumRecetasCreadas());
         model.addAttribute("num_recetas_favoritas", usuario.getNumRecetasFavoritas());
@@ -237,7 +251,7 @@ public class WebController {
     public String mostrarReceta(Model model, @PathVariable long recetaId) {
         Receta receta = recetaRepository.findById(recetaId).orElse(null);
         if (receta == null) {
-            return mostrarError(model,"ERROR:","Buscando Receta.","La receta: " + recetaId + " no se ha encontrado.");
+            return mostrarError(model, "ERROR:", "Buscando Receta.", "La receta: " + recetaId + " no se ha encontrado.");
         }
         model.addAttribute("receta", receta);
         model.addAttribute("tipoDePlato", receta.getTipoPlato());
@@ -250,6 +264,13 @@ public class WebController {
         model.addAttribute("comentarios", receta.getComentarios());
         model.addAttribute("utensilios", receta.getUtensilios());
         model.addAttribute("ingredientes", receta.getIngredientes());
+        boolean marcadaFavorita = false;
+        Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
+        if (usuario != null) {
+            marcadaFavorita = receta.marcadaComoFavorita(usuario);
+        }
+        model.addAttribute("esFavorita", marcadaFavorita);
+
         return "receta-completa";
     }
 

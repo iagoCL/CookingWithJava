@@ -79,8 +79,32 @@
             <div class="recipe-date">{{fechaDeCreacion}} - <a href="">{{creadorRecetaNombre}}</a></div>
 
             <div class="rating">
-                <i class="fa fa-star"></i>{{favoritos}}
-                <!-- No Favorita<i class="fa fa-star is-fade"></i>-->
+                {{#esFavorita}}
+                    <i class="fa fa-star"></i>{{favoritos}}
+                    <form action="formulario-favorito" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="favoritoMarcar" value="false"/>
+                                <input type="hidden" name="favoritoRecetaId" value="{{receta.id}}"/>
+                                <button class="site-btn" type="submit">Desmarcar Favorito</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- No Favorita<i class="fa fa-star is-fade"></i>-->
+                {{/esFavorita}}
+                {{^esFavorita}}
+                    <i class="fa fa-star is-fade"></i>{{favoritos}}
+                    <form action="formulario-favorito" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="favoritoMarcar" value="true"/>
+                                <input type="hidden" name="favoritoRecetaId" value="{{receta.id}}"/>
+                                <button class="site-btn" type="submit">Marcar Favorita</button>
+                            </div>
+                        </div>
+                    </form>
+                {{/esFavorita}}
+
             </div>
         </div>
     </div>
@@ -107,21 +131,21 @@
                     <div class="filter-form-warp">
                         <h2>Ingredientes</h2>
                         <form class="filter-form">
-                        {{#ingredientes}}
-                            <div class="check-warp">
-                                <input type="checkbox" id="one">
-                                <label for="one">{{getNombreIngrediente}} - {{getCantidadIngrediente}}</label>
-                            </div>
-                        {{/ingredientes}}
+                            {{#ingredientes}}
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">{{getNombreIngrediente}} - {{getCantidadIngrediente}}</label>
+                                </div>
+                            {{/ingredientes}}
                         </form>
                         <h2>Utensilios</h2>
                         <form class="filter-form">
-                        {{#utensilios}}
-                            <div class="check-warp">
-                                <input type="checkbox" id="onef">
-                                <label for="onef">{{nombre_utensilio}} - {{nivel_de_dificultad}}</label>
-                            </div>
-                        {{/utensilios}}
+                            {{#utensilios}}
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">{{nombre_utensilio}} - {{nivel_de_dificultad}}</label>
+                                </div>
+                            {{/utensilios}}
                         </form>
                     </div>
                 </div>
@@ -129,11 +153,11 @@
             <div class="col-lg-7">
                 <ul class="recipe-info-list">
                     {{#pasos}}
-                    <li>
-                        <h2>{{numero_paso}}.</h2>
-                        <p>{{descripcion_paso}}</p>
-                        <p><strong>{{getDuracionString}}</strong></p>
-                    </li>
+                        <li>
+                            <h2>{{numero_paso}}.</h2>
+                            <p>{{descripcion_paso}}</p>
+                            <p><strong>{{getDuracionString}}</strong></p>
+                        </li>
                     {{/pasos}}
                 </ul>
             </div>
@@ -152,8 +176,8 @@
                 <div class="col-md-12">
                     <input type="text" name="commentSubject" placeholder="Asunto">
                     <textarea placeholder="Message" name="commentMessage"></textarea>
-                    <input type="hidden" name="commentRecetaId" value="{{receta.id}}" />
-                    <button class="site-btn">Send</button>
+                    <input type="hidden" name="commentRecetaId" value="{{receta.id}}"/>
+                    <button class="site-btn" type="submit">ENVIAR</button>
                 </div>
             </div>
         </form>
@@ -162,26 +186,27 @@
 
 <!-- Comment section -->
 <div class="container">
-{{#comentarios}}
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-2">
-                    <img src="image/{{getUsuario.getImagenUsuario}}.jpg" class="img img-rounded img-fluid"/>
-                    <p class="text-secondary text-center">
-                        <a class="text-secondary text-center" href="usuario-{{getUsuario.getId}}"><strong>{{getUsuario.getNombreUsuario}}</strong></a>
-                    </p>
-                    <p class="text-secondary text-center">{{fecha_comentario}}</p>
-                </div>
-                <div class="col-md-10">
-                    <div class="clearfix"></div>
-                    <h4>{{titulo_comentario}}</h4>
-                    <p>{{descripcion_comentario}}</p>
+    {{#comentarios}}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="image/{{getUsuario.getImagenUsuario}}.jpg" class="img img-rounded img-fluid"/>
+                        <p class="text-secondary text-center">
+                            <a class="text-secondary text-center"
+                               href="usuario-{{getUsuario.getId}}"><strong>{{getUsuario.getNombreUsuario}}</strong></a>
+                        </p>
+                        <p class="text-secondary text-center">{{fecha_comentario}}</p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="clearfix"></div>
+                        <h4>{{titulo_comentario}}</h4>
+                        <p>{{descripcion_comentario}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-{{/comentarios}}
+    {{/comentarios}}
 </div>
 </section><!-- Comment section -->
 
