@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Nombre de la receta</title>
+    <title>{{receta.nombre_receta}}</title>
     <meta charset="UTF-8">
     <meta name="description" content="Food Blog Web Template">
     <meta name="keywords" content="food, unica, creative, html">
@@ -31,37 +31,6 @@
 <div id="preloder">
     <div class="loader"></div>
 </div>
-
-
-<!-- Debug section -->
-<h3>debug</h3>
-<p>id: {{receta.id}}</p>
-<p>Nombre: {{receta.nombre_receta}}</p>
-<p>tipo_plato: {{receta.tipo_plato}}</p>
-<p>nivel_de_dificultad: {{receta.nivel_de_dificultad}}</p>
-<p>numero_comentarios: {{receta.numero_comentarios}}</p>
-<p>numero_pasos: {{receta.numero_pasos}}</p>
-<p>numero_favoritos: {{receta.numero_favoritos}}</p>
-<p>fechaDeCreacionfechaDeCreacion: {{fechaDeCreacion}}</p>
-<p>duracionTotal: {{duracionTotal}}</p>
-<p>Creador: {{creadorRecetaNombre}}</p>
-<h4>Pasos</h4>
-{{#pasos}}
-    <p> - {{id}}:{{descripcion_paso}} - {{numero_paso}} - {{duracion}}</p>
-{{/pasos}}
-<h4>ingredientes</h4>
-{{#ingredientes}}
-    <p> - {{id}}:{{nombre_ingrediente}} - {{cantidad_ingrediente}} </p>
-{{/ingredientes}}
-<h4>utensilios</h4>
-{{#utensilios}}
-    <p> - {{id}}:{{nombre_utensilio}} - {{nivel_de_dificultad}} </p>
-{{/utensilios}}
-<h4>comentarios</h4>
-{{#comentarios}}
-    <p> - {{id}}:{{descripcion_comentario}} - {{titulo_comentario}} - {{fecha_comentario}} - {{usuario_id.id}}</p>
-{{/comentarios}}
-<!-- end debug section -->
 
 <!-- Header section -->
 <header class="header-section">
@@ -96,7 +65,7 @@
 <!-- Hero section -->
 <section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
     <div class="container">
-        <h2>Recipe</h2>
+        <h2>Receta</h2>
     </div>
 </section>
 <!-- Hero section end -->
@@ -104,13 +73,13 @@
     <div class="container">
         <div class="recipe-meta">
             <div class="racipe-cata">
-                <span>Para principiantes</span>
+                <span>{{receta.nivel_de_dificultad.text}}</span>
             </div>
-            <h2>Lamb Chops with green peper sauce</h2>
-            <div class="recipe-date">May 15, 2018 - <a href="">Creador de la receta</a></div>
+            <h2>{{receta.nombre_receta}}</h2>
+            <div class="recipe-date">{{fechaDeCreacion}} - <a href="">{{creadorRecetaNombre}}</a></div>
 
             <div class="rating">
-                <i class="fa fa-star"></i>45
+                <i class="fa fa-star"></i>{{favoritos}}
                 <!-- No Favorita<i class="fa fa-star is-fade"></i>-->
             </div>
         </div>
@@ -130,84 +99,42 @@
                 <div class="recipe-filter-warp">
                     <div class="filter-top">
                         <div class="filter-top-text">
-                            <p>Tiempo de preparación: 30 mins</p>
-                            <p>Tipo de plato: carne</p>
+                            <p>Tiempo de preparación: {{duracionTotal}}</p>
+                            <p>Tipo de plato: {{tipoDePlato}}</p>
                         </div>
                     </div>
                     <!-- recipe filter form -->
                     <div class="filter-form-warp">
                         <h2>Ingredientes</h2>
                         <form class="filter-form">
+                        {{#ingredientes}}
                             <div class="check-warp">
                                 <input type="checkbox" id="one">
-                                <label for="one">Mantequilla - 45 gr</label>
+                                <label for="one">{{getNombreIngrediente}} - {{getCantidadIngrediente}}</label>
                             </div>
-                            <div class="check-warp">
-                                <input type="checkbox" id="two">
-                                <label for="two">huevos - 2</label>
-                            </div>
-                            <div class="check-warp">
-                                <input type="checkbox" id="three">
-                                <label for="three">Azucar - 2 cucharadas</label>
-                            </div>
+                        {{/ingredientes}}
                         </form>
                         <h2>Utensilios</h2>
                         <form class="filter-form">
+                        {{#utensilios}}
                             <div class="check-warp">
                                 <input type="checkbox" id="onef">
-                                <label for="onef">Cuchillo - Experto</label>
+                                <label for="onef">{{nombre_utensilio}} - {{nivel_de_dificultad}}</label>
                             </div>
-                            <div class="check-warp">
-                                <input type="checkbox" id="twof">
-                                <label for="twof">Horno - Principiante</label>
-                            </div>
-                            <div class="check-warp">
-                                <input type="checkbox" id="threef">
-                                <label for="threef">Batidora - dificil</label>
-                            </div>
+                        {{/utensilios}}
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col-lg-7">
                 <ul class="recipe-info-list">
+                    {{#pasos}}
                     <li>
-                        <h2>01.</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec varius dui.
-                            Suspendisse potenti. Vestibulum ac pellentesque tortor. Aenean congue sed metus in iaculis.
-                            Cras a tortor enim. Phasellus posuere vestibulum ipsum, eget lobortis purus. Orci varius
-                            natoque penatibus et magni.</p>
-                        <p><strong>30 min</strong></p>
+                        <h2>{{numero_paso}}.</h2>
+                        <p>{{descripcion_paso}}</p>
+                        <p><strong>{{getDuracionString}}</strong></p>
                     </li>
-                    <li>
-                        <h2>02.</h2>
-                        <p>Sit amet, consectetur adipiscing elit. Vestibulum nec varius dui. Suspendisse potenti.
-                            Vestibulum ac pellentesque tortor. Aenean congue sed metus in iaculis. Cras a tortor enim.
-                            Phasellus posuere vestibulum ipsum, eget lobortis purus.</p>
-                        <p><strong>30 min</strong></p>
-                    </li>
-                    <li>
-                        <h2>03.</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec varius dui.
-                            Suspendisse potenti. Vestibulum ac pellentesque tortor. Aenean congue sed metus in iaculis.
-                            Cras a tortor enim. Phasellus posuere vestibulum ipsum</p>
-                        <p><strong>30 min</strong></p>
-                    </li>
-                    <li>
-                        <h2>04.</h2>
-                        <p>Sit amet, consectetur adipiscing elit. Vestibulum nec varius dui. Suspendisse potenti.
-                            Vestibulum ac pellentesque tortor. Aenean congue sed metus in iaculis. Cras a tortor enim.
-                            Phasellus posuere vestibulum ipsum, eget lobortis.</p>
-                        <p><strong>30 min</strong></p>
-                    </li>
-                    <li>
-                        <h2>05.</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec varius dui.
-                            Suspendisse potenti. Vestibulum ac pellentesque tortor. Aenean congue sed metus in iaculis.
-                            Cras a tortor enim. Phasellus posuere vestibulum ipsum, eget lobortis purus. Orci varius
-                            natoque penatibus et magni.</p>
-                        <p><strong>30 min</strong></p>
-                    </li>
+                    {{/pasos}}
                 </ul>
             </div>
         </div>
@@ -219,12 +146,13 @@
 <!-- New Comment section -->
 <section class="comment-section spad pt-0">
     <div class="container">
-        <h4>Leave a comment</h4>
-        <form class="comment-form">
+        <h4>Deja un comentario</h4>
+        <form class="comment-form" action="formulario-comentario" method="post">
             <div class="row">
                 <div class="col-md-12">
-                    <input type="text" name="commentSubject" placeholder="commentSubject">
+                    <input type="text" name="commentSubject" placeholder="Asunto">
                     <textarea placeholder="Message" name="commentMessage"></textarea>
+                    <input type="hidden" name="commentRecetaId" value="{{receta.id}}" />
                     <button class="site-btn">Send</button>
                 </div>
             </div>
@@ -234,50 +162,26 @@
 
 <!-- Comment section -->
 <div class="container">
-    <!-- first comment -->
+{{#comentarios}}
     <div class="card">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2">
-                    <img src="img/about.jpg" class="img img-rounded img-fluid"/>
+                    <img src="image/{{getUsuario.getImagenUsuario}}.jpg" class="img img-rounded img-fluid"/>
                     <p class="text-secondary text-center">
-                        <a class="text-secondary text-center" href=""><strong>Nombre Usuario</strong></a>
+                        <a class="text-secondary text-center" href="usuario-{{getUsuario.getId}}"><strong>{{getUsuario.getNombreUsuario}}</strong></a>
                     </p>
-                    <p class="text-secondary text-center">May 5; 2018 - 11:38</p>
+                    <p class="text-secondary text-center">{{fecha_comentario}}</p>
                 </div>
                 <div class="col-md-10">
                     <div class="clearfix"></div>
-                    <h4>asunto del mensaje</h4>
-                    <p>Lorem Ipsum is simply dummy text of the pr make but also the leap into electronic typesetting,
-                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-                        Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    <h4>{{titulo_comentario}}</h4>
+                    <p>{{descripcion_comentario}}</p>
                 </div>
             </div>
         </div>
     </div>
-    <!-- seconde comment -->
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-2">
-                    <img src="img/about.jpg" class="img img-rounded img-fluid"/>
-                    <p class="text-secondary text-center">
-                        <a class="text-secondary text-center" href=""><strong>Nombre Usuario</strong></a>
-                    </p>
-                    <p class="text-secondary text-center">May 5; 2018 - 11:38</p>
-                </div>
-                <div class="col-md-10">
-                    <div class="clearfix"></div>
-                    <h4>asunto del mensaje</h4>
-                    <p>Lorem Ipsum is simply dummy text of the pr make but also the leap into electronic typesetting,
-                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-                        Aldus PageMaker including versions of Lorem Ipsum.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+{{/comentarios}}
 </div>
 </section><!-- Comment section -->
 

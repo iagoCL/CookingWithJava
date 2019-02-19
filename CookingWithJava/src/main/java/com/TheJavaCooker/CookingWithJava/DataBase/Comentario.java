@@ -72,6 +72,10 @@ public class Comentario implements Comparable<Comentario> {
         this.usuario_id = usuario_id;
     }
 
+    public Usuario getUsuario(){
+        return usuario_id;
+    }
+
     @Override
     public String toString() {
         return "Comentario{" +
