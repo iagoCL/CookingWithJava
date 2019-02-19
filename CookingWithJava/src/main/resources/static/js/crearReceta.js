@@ -7,8 +7,12 @@ $(document).ready(function () {
     var pasoNode = $("#pasos");
     var utensiliosNode = $("#utensilios");
 
+    var numIngredientesNode = $("#numIngredientes");
+    var numPasoNode = $("#numPasos");
+    var numUtensiliosNode = $("#numUtensilios");
+
     $("#buttonIngrediente").click(function () {
-        ++ingredientesId;
+        numIngredientesNode.val(++ingredientesId);
         ingredientesNode.append(
             "<div class=\"form-group\" id=\"ingrediente-" + ingredientesId + "Group\">" +
             "    <h6 class=\"form-group row col-md-12\">Ingrediente " + ingredientesId + ":</h6>" +
@@ -29,7 +33,7 @@ $(document).ready(function () {
         );
     });
     $("#buttonUtensilio").click(function () {
-        ++utensiliosId;
+        numUtensiliosNode.val(++utensiliosId);
         utensiliosNode.append(
             "<div class=\"form-group\" id=\"utensilio-" + utensiliosId + "Group\">" +
             "    <h6 class=\"form-group row col-md-12\">Utensilio " + utensiliosId + ":</h6>" +
@@ -56,7 +60,7 @@ $(document).ready(function () {
     });
 
     $("#buttonPaso").click(function () {
-        ++pasoId;
+        numPasoNode.val(++pasoId);
         pasoNode.append(
             "<div class=\"form-group\" id=\"paso-" + pasoId + "Group\">" +
             "    <h6 class=\"form-group row col-md-12\">Paso " + pasoId + ":</h6>" +
@@ -75,14 +79,14 @@ $(document).ready(function () {
     });
     $("#buttonQuitarIngrediente").click(function () {
         $("#ingrediente-" + ingredientesId + "Group").remove();
-        --ingredientesId;
+        numIngredientesNode.val(--ingredientesId);
     });
     $("#buttonQuitarUtensilio").click(function () {
         $("#utensilio-" + utensiliosId + "Group").remove();
-        --utensiliosId;
+        numUtensiliosNode.val(--utensiliosId);
     });
     $("#buttonQuitarPaso").click(function () {
         $("#paso-" + pasoId + "Group").remove();
-        --pasoId;
+        numPasoNode.val(--pasoId);
     });
 });

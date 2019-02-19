@@ -66,30 +66,44 @@ public class WebController {
         String nombreDeLaReceta = allRequestParams.get("nombreDeLaReceta");
         String tipoDePlato = allRequestParams.get("tipoDePlato");
         String nivelDificultadReceta = allRequestParams.get("nivelDificultadReceta");
-        List<Pair<String, String>> listaDeIngredientes = new ArrayList<>();
-        List<Pair<String, String>> listaDeUtensilios = new ArrayList<>();
-        List<Pair<Integer, String>> listaDePasos = new ArrayList<>();
+        Integer numPasos = Integer.parseInt(allRequestParams.get("numPasos"));
+        Integer numIngredientes = Integer.parseInt(allRequestParams.get("numIngredientes"));
+        Integer numUtensilios = Integer.parseInt(allRequestParams.get("numUtensilios"));
+        List<Pair<String, String>> listaDeIngredientes = new ArrayList<>(numIngredientes);
+        List<Pair<String, String>> listaDeUtensilios = new ArrayList<>(numUtensilios);
+        List<Pair<Integer, String>> listaDePasos = new ArrayList<>(numPasos);
+        for(int i = 1; i<=numPasos;++i)
+        {
+            Integer duracion = Integer.parseInt(allRequestParams.get("paso-"+i+"Duracion"));
+            String descripcion = allRequestParams.get("paso-"+i+"Descripcion");
+            listaDePasos.add(Pair.of(duracion,descripcion));
+        }
+        for(int i = 1; i<=numIngredientes;++i)
+        {
+            String cantidad = allRequestParams.get("ingrediente-"+i+"Cantidad");
+            String nombre = allRequestParams.get("ingrediente-"+i+"Name");
+            listaDeIngredientes.add(Pair.of(nombre,cantidad));
+        }
+        for(int i = 1; i<=numUtensilios;++i)
+        {
+            String dificultad = allRequestParams.get("utensilio-"+i+"Nivel");
+            String nombre = allRequestParams.get("utensilio-"+i+"Name");
+            listaDeUtensilios.add(Pair.of(nombre,dificultad));
+        }
+
+
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Creando Receta.");
-            model.addAttribute("mensaje3", "No esta logueado.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Creando Receta.","No esta logueado.");
         }
         Pair<DatabaseManager.Errores, Receta> pair = null;
         try {
             pair = database.crearReceta(nombreDeLaReceta, tipoDePlato, nivelDificultadReceta, imagenReceta.getBytes(), listaDeIngredientes, listaDeUtensilios, listaDePasos, usuario);
         } catch (IOException e) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Cargando Imagen Receta.:");
-            model.addAttribute("mensaje3", e.toString());
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Cargando Imagen Receta.",e.toString());
         }
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Creando Receta.");
-            model.addAttribute("mensaje3", pair.getFirst().name());
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Creando Receta.",pair.getFirst().name());
         }
         return "redirect:/receta-" + pair.getSecond().getId();
     }
@@ -97,6 +111,14 @@ public class WebController {
     @GetMapping(value = {"/inicio", "/index", "/"})
     public String index(Model model) {
         return "index";
+    }
+
+    public String mostrarError(Model model, String error1, String error2,String error3)
+    {
+        model.addAttribute("mensaje1", error1);
+        model.addAttribute("mensaje2", error2);
+        model.addAttribute("mensaje3", error3 );
+        return "mensaje";
     }
 
     @GetMapping(value = {"/login", "/register"})
@@ -111,24 +133,15 @@ public class WebController {
         model.addAttribute("commentRecetaId", commentRecetaId);
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Al poner comentario.");
-            model.addAttribute("mensaje3", "No esta logueado.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Al poner comentario.","No esta logueado.");
         }
         Receta receta = recetaRepository.findById(commentRecetaId).orElse(null);
         if (receta == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Al poner comentario.");
-            model.addAttribute("mensaje3", "No exite la receta enviada.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Al poner comentario.","No exite la receta enviada.");
         }
         Pair<DatabaseManager.Errores, Comentario> pair = database.crearComentario(commentMessage, commentSubject, receta, usuario);
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Creando Comentario.");
-            model.addAttribute("mensaje3", pair.getFirst().name());
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Al poner comentario.",pair.getFirst().name());
         }
         return "redirect:/receta-" + commentRecetaId;
     }
@@ -138,15 +151,19 @@ public class WebController {
         //todo cambiar a POST
         model.addAttribute("nickLogin", nickLogin);
         model.addAttribute("contrasenaLogin", contrasenaLogin);
-        Usuario usuario = usuarioRepository.loginValido(nickLogin, contrasenaLogin);
+        Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickLogin);
         if (usuario == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Creando Usuario.:");
-            model.addAttribute("mensaje3", "Login: no valido");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Creando Usuario.","Login: no valido");
         } else {
-            usuarioActivoId = usuario.getId();
-            return "redirect:/perfil-" + usuario.getId();
+            if(usuario.getContrasena().equals(contrasenaLogin))
+            {
+                usuarioActivoId = usuario.getId();
+                return "redirect:/perfil-" + usuario.getId();
+            }
+            else
+            {
+                return  mostrarError(model,"ERROR:","Logueando usuario.","Contraseña Incorrecta");
+            }
         }
     }
 
@@ -154,28 +171,29 @@ public class WebController {
     public String formularioRegistro(Model model,
                                      @RequestParam String nickRegistro,
                                      @RequestParam String contrasenaRegistro,
+                                     @RequestParam String contrasena2Registro,
                                      @RequestParam String correoRegistro,
                                      @RequestParam String nombreRegistro,
                                      @RequestParam("imagenRegistro") MultipartFile imagenRegistro) {
         //todo comprobar si las dos contraseñas son iguales
         model.addAttribute("nickRegistro", nickRegistro);
         model.addAttribute("contrasenaRegistro", contrasenaRegistro);
+        model.addAttribute("contrasena2Registro", contrasena2Registro);
         model.addAttribute("correoRegistro", correoRegistro);
         model.addAttribute("nombreRegistro", nombreRegistro);
+        if(!contrasena2Registro.equals(contrasenaRegistro))
+        {
+            return mostrarError(model,"ERROR:","Registrando Usuario.","Las contraseñas no coinciden.");
+        }
         Pair<DatabaseManager.Errores, Usuario> pair = null;
         try {
             pair = database.crearUsuario(nickRegistro, contrasenaRegistro, correoRegistro, nombreRegistro, imagenRegistro.getBytes());
         } catch (IOException e) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Cargando Imagen Usuario.:");
-            model.addAttribute("mensaje3", e.toString());
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Creando Imagen Usuario.",e.toString());
         }
         if (pair.getFirst() != DatabaseManager.Errores.SIN_ERRORES) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Creando Usuario.:");
-            model.addAttribute("mensaje3", pair.getFirst().name());
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Creando Usuario.",pair.getFirst().name());
+
         }
         Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickRegistro);
         usuarioActivoId = usuario.getId();
@@ -197,20 +215,14 @@ public class WebController {
     public String miPerfil(Model model) {
         Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
         if (usuario == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Buscando Usuario.:");
-            model.addAttribute("mensaje3", "El Usuario actual: no se ha encontrado.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Buscando Usuario.","El Usuario actual: no se ha encontrado.");
         }
         return returnPerfil(model, usuario);
     }
 
     public String returnPerfil(Model model, Usuario usuario) {
         if (usuario == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Buscando Usuario.:");
-            model.addAttribute("mensaje3", "El Usuario: no se ha encontrado.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Buscando Usuario.","El Usuario: no se ha encontrado.");
         }
         model.addAttribute("num_recetas_subidas", usuario.getNumRecetasCreadas());
         model.addAttribute("num_recetas_favoritas", usuario.getNumRecetasFavoritas());
@@ -225,10 +237,7 @@ public class WebController {
     public String mostrarReceta(Model model, @PathVariable long recetaId) {
         Receta receta = recetaRepository.findById(recetaId).orElse(null);
         if (receta == null) {
-            model.addAttribute("mensaje1", "ERROR:");
-            model.addAttribute("mensaje2", "Buscando Receta.:");
-            model.addAttribute("mensaje3", "La receta: " + recetaId + " no se ha encontrado.");
-            return "mensaje";
+            return mostrarError(model,"ERROR:","Buscando Receta.","La receta: " + recetaId + " no se ha encontrado.");
         }
         model.addAttribute("receta", receta);
         model.addAttribute("tipoDePlato", receta.getTipoPlato());
