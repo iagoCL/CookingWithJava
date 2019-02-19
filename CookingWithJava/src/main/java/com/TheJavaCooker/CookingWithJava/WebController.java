@@ -24,7 +24,7 @@ public class WebController {
     private ImagendbRepository imagenRepository;
 
     //todo session para almacenar usuario
-    private long usuarioActivoId = 2;
+    private long usuarioActivoId = -1;
     private List<Receta> recetasBuscadas;
 
     @GetMapping(value = {"/busqueda", "/buscarReceta", "buscar-receta"})
@@ -54,6 +54,21 @@ public class WebController {
 
     @GetMapping(value = {"/crearReceta", "/crear-receta", "/subir-receta", "/subirReceta"})
     public String crearReceta(Model model) {
+        return "crearReceta";
+    }
+
+    @RequestMapping(value={"/formulario-crear-receta"})
+    public String formularioCrearReceta(Model model, @RequestParam String nombreDeLaReceta, @RequestParam String tipoDePlato, @RequestParam String nivelDificultadReceta) {
+        //todo cambiar a POST
+        model.addAttribute("nombreDeLaReceta", nombreDeLaReceta);
+        model.addAttribute("tipoDePlato", tipoDePlato);
+        model.addAttribute("nivelDificultadReceta", nivelDificultadReceta);
+        List<Pair<String, String>> listaDeIngredientes = new ArrayList<>();
+        List<Pair<String, String>> listaDeUtensilios = new ArrayList<>();
+        List<Pair<Integer, String>> listaDePasos = new ArrayList<>();
+        LocalDate localDate = LocalDate.now();
+        Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
+        database.crearReceta(nombreDeLaReceta, tipoDePlato, nivelDificultadReceta, localDate, DatabaseRandomData.getRandomRecipeImage(), listaDeIngredientes, listaDeUtensilios, listaDePasos, usuario);
         return "crearReceta";
     }
 
@@ -119,7 +134,7 @@ public class WebController {
             //todo usuario no encontrado
             return "index";
         }
-        model.addAttribute("num_recetas_subidas", usuario.getNumRecetasFavoritas());
+        model.addAttribute("num_recetas_subidas", usuario.getNumRecetasCreadas());
         model.addAttribute("num_recetas_favoritas", usuario.getNumRecetasFavoritas());
         model.addAttribute("usuario", usuario);
         model.addAttribute("recetasCreadas", usuario.getRecetasCreadas());
@@ -136,6 +151,8 @@ public class WebController {
             return "index";
         }
         model.addAttribute("receta", receta);
+        model.addAttribute("tipoDePlato", receta.getTipoPlato());
+        model.addAttribute("favoritos", receta.getNumFavoritos());
         model.addAttribute("fechaDeCreacion", receta.getStringFechaCreacion());
         model.addAttribute("duracionTotal", receta.getStringDuracionTotal());
         Usuario creadorReceta = receta.getCreadorDeLaReceta();
@@ -166,6 +183,13 @@ public class WebController {
     public String mostrarRecetasFavoritas(Model model, @PathVariable long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        return "recetas";
+    }
+
+    @GetMapping(value = {"/mis-recetas-creadas"})
+    public String mostrarRecetasCreadas(Model model) {
+        Usuario usuario = usuarioRepository.findById(usuarioActivoId).orElse(null);
+        model.addAttribute("recetas", usuario.getRecetasCreadas());
         return "recetas";
     }
 

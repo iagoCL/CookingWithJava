@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Cooking With Java - Perfil</title>
+    <title>Perfil de {{usuario.nombre_usuario}}</title>
     <meta charset="UTF-8">
     <meta name="description" content="Food Blog Web Template">
     <meta name="keywords" content="food, unica, creative, html">
@@ -82,15 +82,19 @@
                 <h2>Correo</h2>
                 <p>{{usuario.correo_electronico}}</p>
 
-                <div class="site-btn">Mis recetas</div>
-                <div class="site-btn">Recetas favoritas</div>
+                <a href="/mis-recetas-creadas">
+                    <div class="site-btn">Mis recetas</div>
+                </a>
+                <a href="/mis-recetas-favoritas">
+                    <div class="site-btn">Recetas favoritas</div>
+                </a>
             </div>
             <div class="col-lg-6">
                 <img src="/image/{{usuario.imagendb_id.id}}.jpg" alt="">
             </div>
         </div>
     </div>
-    <h2>Debug</h2>
+    <!-- <h2>Debug</h2>
     <h3>recetasVacio</h3>
     {{#recetas}}
         <p> - {{id}}:{{nombre_receta}}</p>
@@ -102,7 +106,7 @@
     <h3>recetasFavoritas</h3>
     {{#recetasFavoritas}}
         <p> - {{id}}:{{nombre_receta}}</p>
-    {{/recetasFavoritas}}
+    {{/recetasFavoritas}} -->
 </section>
 <!-- About section end -->
 
