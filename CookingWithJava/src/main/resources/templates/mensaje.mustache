@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Perfil de {{usuario.nombre_usuario}}</title>
+    <title>Cooking With Java</title>
     <meta charset="UTF-8">
-    <meta name="description" content="Food Blog Web Template">
+    <meta name="description" content="Cooking With Java">
     <meta name="keywords" content="food, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
@@ -63,73 +63,25 @@
 
 
 <!-- Hero section -->
-<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-    <div class="container">
-        <h2>Tu perfil</h2>
+<section class="hero-section">
+    <div class="hero-slider owl-carousel">
+        <div class="hero-slide-item set-bg" data-setbg="img/slider-bg-1.jpg">
+            <div class="hs-text">
+                <h2 class="hs-title-1"><span>{{mensaje1}}</span></h2>
+                <h2 class="hs-title-2"><span>{{mensaje2}}</span></h2>
+                <h2 class="hs-title-3"><span>{{mensaje3}}</span></h2>
+            </div>
+        </div>
+        <div class="hero-slide-item set-bg" data-setbg="img/slider-bg-2.jpg">
+            <div class="hs-text">
+                <h2 class="hs-title-1"><span>{{mensaje1}}</span></h2>
+                <h2 class="hs-title-2"><span>{{mensaje2}}</span></h2>
+                <h2 class="hs-title-3"><span>{{mensaje3}}</span></h2>
+            </div>
+        </div>
     </div>
 </section>
 <!-- Hero section end -->
-
-<!-- About section -->
-<section class="about-section spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 about-text">
-                <h2>Usuario</h2>
-                <p>{{usuario.nombre_usuario}}</p>
-                <h2>Nombre y apellidos</h2>
-                <p>{{usuario.nombre_apellidos}}</p>
-                <h2>Correo</h2>
-                <p>{{usuario.correo_electronico}}</p>
-
-                <a href="/mis-recetas-creadas">
-                    <div class="site-btn">Mis recetas</div>
-                </a>
-                <a href="/mis-recetas-favoritas">
-                    <div class="site-btn">Recetas favoritas</div>
-                </a>
-            </div>
-            <div class="col-lg-6">
-                <img src="/image/{{usuario.imagendb_id.id}}.jpg" alt="">
-            </div>
-        </div>
-    </div>
-</section>
-<!-- About section end -->
-
-
-<!-- Facts section -->
-<section class="facts-section">
-    <div class="facts-warp">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-sm-6 fact-item">
-                    <div class="fact-icon">
-                        <img src="img/icon/1.png" alt="">
-                    </div>
-                    <h2>{{num_recetas_subidas}}</h2>
-                    <p>Recetas subidas</p>
-                </div>
-                <div class="col-lg-4 col-sm-6 fact-item">
-                    <div class="fact-icon">
-                        <img src="img/icon/2.png" alt="">
-                    </div>
-                    <h2>{{num_recetas_favoritas}}</h2>
-                    <p>Recetas favoritas</p>
-                </div>
-                <div class="col-lg-4 col-sm-6 fact-item">
-                    <div class="fact-icon">
-                        <img src="img/icon/3.png" alt="">
-                    </div>
-                    <h2>{{usuario.num_comentarios_usuario}}</h2>
-                    <p>Comentarios</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Facts section end -->
-
 
 <!-- Gallery section -->
 <div class="gallery">

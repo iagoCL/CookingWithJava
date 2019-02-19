@@ -76,7 +76,7 @@
             <div class="col-lg-8">
                 <div class="contact-form-warp">
                     <h4>Crear una nueva receta.</h4>
-                    <form class="contact-form" action="formulario-crear-receta" method="get">
+                    <form class="contact-form" action="formulario-crear-receta" method="post" enctype="multipart/form-data">
                         <div>
                             <div class="form-group row">
                                 <label class="col-sm-3" for="nombreDeLaReceta">Nombre de la receta</label>
@@ -98,6 +98,11 @@
                                     <option value="Experto">Experto</option>
                                     <option value="Profesional">Profesional</option>
                                 </select>
+                            </div>
+                            <div class="form-group row col-md-12">
+                                <label class="col-sm-3" for="imagenReceta">Imagen de Receta:</label>
+                                <input class="col-sm-9" id="imagenReceta" name="imagenReceta"
+                                       type="file" accept="image/png, image/jpeg">
                             </div>
                             <h5 class="form-group row col-md-12">Ingredientes:</h5>
                             <div id="ingredientes">

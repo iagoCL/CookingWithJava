@@ -32,37 +32,6 @@
     <div class="loader"></div>
 </div>
 
-
-<!-- Debug section -->
-<!--<h3>debug</h3>
-<p>id: {{receta.id}}</p>
-<p>Nombre: {{receta.nombre_receta}}</p>
-<p>tipo_plato: {{receta.tipo_plato}}</p>
-<p>nivel_de_dificultad: {{receta.nivel_de_dificultad}}</p>
-<p>numero_comentarios: {{receta.numero_comentarios}}</p>
-<p>numero_pasos: {{receta.numero_pasos}}</p>
-<p>numero_favoritos: {{receta.numero_favoritos}}</p>
-<p>fechaDeCreacionfechaDeCreacion: {{fechaDeCreacion}}</p>
-<p>duracionTotal: {{duracionTotal}}</p>
-<p>Creador: {{creadorRecetaNombre}}</p>
-<h4>Pasos</h4>
-{{#pasos}}
-    <p> - {{id}}:{{descripcion_paso}} - {{numero_paso}} - {{duracion}}</p>
-{{/pasos}}
-<h4>ingredientes</h4>
-{{#ingredientes}}
-    <p> - {{id}}:{{nombre_ingrediente}} - {{cantidad_ingrediente}} </p>
-{{/ingredientes}}
-<h4>utensilios</h4>
-{{#utensilios}}
-    <p> - {{id}}:{{nombre_utensilio}} - {{nivel_de_dificultad}} </p>
-{{/utensilios}}
-<h4>comentarios</h4>
-{{#comentarios}}
-    <p> - {{id}}:{{descripcion_comentario}} - {{titulo_comentario}} - {{fecha_comentario}} - {{usuario_id.id}}</p>
-{{/comentarios}}-->
-<!-- end debug section -->
-
 <!-- Header section -->
 <header class="header-section">
     <div class="header-top">
@@ -138,12 +107,12 @@
                     <div class="filter-form-warp">
                         <h2>Ingredientes</h2>
                         <form class="filter-form">
-                        {{#comentarios}}
+                        {{#ingredientes}}
                             <div class="check-warp">
                                 <input type="checkbox" id="one">
-                                <label for="one">Nombre ingrediente - Cantidad ingrediente</label>
+                                <label for="one">{{getNombreIngrediente}} - {{getCantidadIngrediente}}</label>
                             </div>
-                        {{/comentarios}}
+                        {{/ingredientes}}
                         </form>
                         <h2>Utensilios</h2>
                         <form class="filter-form">
@@ -178,11 +147,12 @@
 <section class="comment-section spad pt-0">
     <div class="container">
         <h4>Deja un comentario</h4>
-        <form class="comment-form">
+        <form class="comment-form" action="formulario-comentario" method="post">
             <div class="row">
                 <div class="col-md-12">
                     <input type="text" name="commentSubject" placeholder="Asunto">
-                    <textarea placeholder="Message" name="Comentario"></textarea>
+                    <textarea placeholder="Message" name="commentMessage"></textarea>
+                    <input type="hidden" name="commentRecetaId" value="{{receta.id}}" />
                     <button class="site-btn">Send</button>
                 </div>
             </div>
@@ -197,9 +167,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2">
-                    <img src="image//{{usuario_id.imagendb_id.id}}" class="img img-rounded img-fluid"/>
+                    <img src="image/{{getUsuario.getImagenUsuario}}.jpg" class="img img-rounded img-fluid"/>
                     <p class="text-secondary text-center">
-                        <a class="text-secondary text-center" href=""><strong>{{usuario_id.nombre_usuario}}</strong></a>
+                        <a class="text-secondary text-center" href="usuario-{{getUsuario.getId}}"><strong>{{getUsuario.getNombreUsuario}}</strong></a>
                     </p>
                     <p class="text-secondary text-center">{{fecha_comentario}}</p>
                 </div>
