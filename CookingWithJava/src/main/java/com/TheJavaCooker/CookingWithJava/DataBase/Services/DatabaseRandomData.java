@@ -1,8 +1,15 @@
-package com.TheJavaCooker.CookingWithJava;
+package com.TheJavaCooker.CookingWithJava.DataBase.Services;
 
-import com.TheJavaCooker.CookingWithJava.DataBase.*;
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Comentario;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
+import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
+import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 
 import java.net.URI;
@@ -17,9 +24,14 @@ import java.util.List;
 import java.util.Random;
 
 public class DatabaseRandomData {
-    private DatabaseManager database;
-    private UsuarioRepository usuarioRepository;
-    private RecetaRepository recetaRepository;
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private RecetaService recetaService;
+    @Autowired
+    private ComentarioService comentarioService;
+    @Autowired
+    private FavoritoService favoritoService;
 
     private final static String[] rutasImagenesRecetaAleatorias = {
             "/randomRecipes/1.jpg",
@@ -88,10 +100,7 @@ public class DatabaseRandomData {
     private static Random random = new Random();
     private static Lorem lorem = LoremIpsum.getInstance();
 
-    public DatabaseRandomData(DatabaseManager database_) {
-        this.database = database_;
-        usuarioRepository = database.getUsuarioRepository();
-        recetaRepository = database.getRecetaRepository();
+    public DatabaseRandomData() {
     }
 
     public static byte[] getRandomUserImage() {
@@ -118,12 +127,12 @@ public class DatabaseRandomData {
     }
 
     public Receta getRecetaAletoria() {
-        List<Receta> recetas = recetaRepository.findAll();
+        List<Receta> recetas = recetaService.todasLasRecetas();
         return recetas.get(random.nextInt(recetas.size()));
     }
 
     public Usuario getUsuarioAletorio() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioService.todosLosUsuarios();
         return usuarios.get(random.nextInt(usuarios.size()));
     }
 
@@ -256,13 +265,13 @@ public class DatabaseRandomData {
 
     public void crearFavoritosAleatorios(int numFavoritos_) {
         for (int i = 0; i < numFavoritos_; ++i) {
-            database.marcarFavorito(getUsuarioAletorio(), getRecetaAletoria());
+            favoritoService.marcarFavorito(getUsuarioAletorio(), getRecetaAletoria());
         }
     }
 
     public void crearUsuariosEjemplo(int numUsuarios_) {
-        for (long i = 1 + usuarioRepository.count(), l = i + numUsuarios_; i < l; ++i) {
-            database.crearUsuario(lorem.getFirstName() + i,
+        for (long i = 1 + usuarioService.getNumUsuarios(), l = i + numUsuarios_; i < l; ++i) {
+            usuarioService.crearUsuario(lorem.getFirstName() + i,
                     "contasena" + i,
                     "correo" + i + "@example.com",
                     lorem.getFirstName() + " " + lorem.getLastName() + " " + lorem.getLastName(),
@@ -271,8 +280,9 @@ public class DatabaseRandomData {
     }
 
     public void crearRecetasEjemplo(int numRecetas) {
-        for (long i = 1 + recetaRepository.count(), l = i + numRecetas; i < l; ++i) {
-            Pair<DatabaseManager.Errores, Receta> p = database.crearReceta("Nombre Receta " + i,
+        for (long i = 1 + recetaService.getNumRecetas(), l = i + numRecetas; i < l; ++i) {
+            Pair<DatabaseService.Errores, Receta> p = recetaService.crearRecetaConFecha(
+                    "Nombre Receta " + i,
                     getTipoDePlatoAleatorio(),
                     getNivelDeDificultadAleatorio(),
                     getRandomDate(),
@@ -286,7 +296,8 @@ public class DatabaseRandomData {
 
     public void crearComentariosEjemplo(int numComentarios) {
         for (int i = 1; i < numComentarios; ++i) {
-            Pair<DatabaseManager.Errores, Comentario> p = database.crearComentarioConFecha(getDescripcionAleatoria(),
+            Pair<DatabaseService.Errores, Comentario> p = comentarioService.crearComentarioConFecha(
+                    getDescripcionAleatoria(),
                     "Titulo de comentario " + i,
                     getRandomDateTime(),
                     getRecetaAletoria(),

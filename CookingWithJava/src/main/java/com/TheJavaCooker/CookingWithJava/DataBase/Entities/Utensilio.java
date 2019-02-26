@@ -1,4 +1,6 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
+
+import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 
 import javax.persistence.*;
 import java.util.Objects;

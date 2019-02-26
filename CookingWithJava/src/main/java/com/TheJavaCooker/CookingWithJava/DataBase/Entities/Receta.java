@@ -1,5 +1,6 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.querydsl.core.annotations.QueryEntity;
 import org.hibernate.Hibernate;

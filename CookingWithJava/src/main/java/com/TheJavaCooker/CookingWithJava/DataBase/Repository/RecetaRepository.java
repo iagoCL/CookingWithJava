@@ -1,4 +1,6 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Repository;
+
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

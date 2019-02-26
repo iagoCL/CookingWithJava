@@ -1,4 +1,4 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import javax.persistence.*;
 import java.util.Objects;

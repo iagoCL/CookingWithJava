@@ -1,4 +1,6 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Repository;
+
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Utensilio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

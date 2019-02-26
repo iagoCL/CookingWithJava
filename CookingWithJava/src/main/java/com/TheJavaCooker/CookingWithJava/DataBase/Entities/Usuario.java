@@ -1,4 +1,4 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;

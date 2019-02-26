@@ -1,10 +1,9 @@
-package com.TheJavaCooker.CookingWithJava.DataBase;
+package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
 
 @Table(name = "Comentario",
         uniqueConstraints = {
@@ -72,7 +71,7 @@ public class Comentario implements Comparable<Comentario> {
         this.usuario_id = usuario_id;
     }
 
-    public Usuario getUsuario(){
+    public Usuario getUsuario() {
         return usuario_id;
     }
 
