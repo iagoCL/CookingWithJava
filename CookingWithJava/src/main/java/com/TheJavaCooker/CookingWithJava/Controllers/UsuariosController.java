@@ -7,11 +7,13 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
@@ -25,8 +27,11 @@ public class UsuariosController {
     public static long usuarioActivoId = -1;
 
     @GetMapping(value = {"/login", "/register"})
-    public String login(Model model) {
+    public String login(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        model.addAttribute("token", token.getToken());
         return "login";
+
     }
 
     @PostMapping(value = {"/formulario-login"})

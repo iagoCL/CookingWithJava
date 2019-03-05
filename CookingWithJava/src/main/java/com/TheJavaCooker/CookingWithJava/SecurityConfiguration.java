@@ -19,7 +19,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(("/login")).permitAll();
         http.authorizeRequests().antMatchers(("/index")).permitAll();
         http.authorizeRequests().antMatchers(("/busquedaReceta")).permitAll();
-        http.authorizeRequests().antMatchers(("/perfil")).permitAll();
         http.authorizeRequests().antMatchers(("/receta-completa")).permitAll();
         http.authorizeRequests().antMatchers(("/recetas")).permitAll();
         http.authorizeRequests().antMatchers(("/css/**")).permitAll();
@@ -32,8 +31,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated();
 
         http.formLogin().loginPage("/login");
-        http.formLogin().usernameParameter("username");
-        http.formLogin().passwordParameter("password");
+        http.formLogin().usernameParameter("nickLogin");
+        http.formLogin().passwordParameter("contrasenaLogin");
         http.formLogin().defaultSuccessUrl("/perfil");
         http.formLogin().failureUrl("/loginError");
 
@@ -41,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.logout().logoutUrl("/logout");
         http.logout().logoutSuccessUrl("/");
 
-        http.csrf().disable();
+
 
 
 

@@ -5,6 +5,7 @@ import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -20,7 +22,9 @@ public class BuscarRecetasController {
     private RecetaService recetaService;
 
     @GetMapping(value = {"/busqueda", "/buscarReceta", "buscar-receta"})
-    public String buscar(Model model) {
+    public String buscar(Model model, HttpServletRequest request) {
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        model.addAttribute("token", token.getToken());
         return "busqueda";
     }
 

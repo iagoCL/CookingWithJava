@@ -8,11 +8,13 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,9 @@ public class RecetaController {
     private UsuarioService usuarioService;
 
     @GetMapping(value = {"/crearReceta", "/crear-receta", "/subir-receta", "/subirReceta"})
-    public String crearReceta(Model model) {
+    public String crearReceta(Model model, HttpServletRequest request ) {
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        model.addAttribute("token", token.getToken());
         return "crearReceta";
     }
 
@@ -78,7 +82,7 @@ public class RecetaController {
 
 
     @GetMapping(value = {"/receta-{recetaId}", "/receta-completa-{recetaId}", "/recetaCompleta-{recetaId}"})
-    public String mostrarReceta(Model model, @PathVariable long recetaId) {
+    public String mostrarReceta(Model model, @PathVariable long recetaId, HttpServletRequest request) {
         Receta receta = recetaService.buscarPorId(recetaId);
         if (receta == null) {
             return WebController.mostrarError(model, "ERROR:", "Buscando Receta.", "La receta: " + recetaId + " no se ha encontrado.");
@@ -100,6 +104,8 @@ public class RecetaController {
             marcadaFavorita = receta.marcadaComoFavorita(usuario);
         }
         model.addAttribute("esFavorita", marcadaFavorita);
+        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+        model.addAttribute("token", token.getToken());
 
         return "receta-completa";
     }
