@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 public class UsuariosController {
@@ -23,8 +24,11 @@ public class UsuariosController {
     @Autowired
     private UsuarioService usuarioService;
 
-    //todo session para almacenar usuario
-    public static long usuarioActivoId = -1;
+    //todo logout
+    //todo auth al registrarse
+    //todo borrar receta
+    //todo auth para almacenar usuario
+    //todo url publicas
 
     @GetMapping(value = {"/login", "/register"})
     public String login(Model model, HttpServletRequest request) {
@@ -32,23 +36,6 @@ public class UsuariosController {
         model.addAttribute("token", token.getToken());
         return "login";
 
-    }
-
-    @PostMapping(value = {"/formulario-login"})
-    public String formularioLogin(Model model,
-                                  @RequestParam String nickLogin,
-                                  @RequestParam String contrasenaLogin) {
-        Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickLogin);
-        if (usuario == null) {
-            return loginErroneo(model);
-        } else {
-            if (usuario.getContrasena().equals(contrasenaLogin)) {
-                usuarioActivoId = usuario.getId();
-                return "redirect:/perfil-" + usuario.getId();
-            } else {
-                return loginErroneo(model);
-            }
-        }
     }
 
     @GetMapping(value = {"/login-error", "/loginError"})
@@ -79,19 +66,22 @@ public class UsuariosController {
 
         }
         Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickRegistro);
-        usuarioActivoId = usuario.getId();
+        //todo autentificar
+        long usuarioActivoId = usuario.getId();
         return "redirect:/usuario-" + usuarioActivoId;
     }
 
     @GetMapping(value = {"/usuario-{usuarioId}", "/perfil-{usuarioId}"})
-    public String perfilId(Model model, @PathVariable long usuarioId) {
+    public String perfilId(Model model,
+                           @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         return returnPerfil(model, usuario);
     }
 
     @GetMapping(value = {"/usuario", "/perfil", "/miusuario", "/miperfil", "/miUsuario", "/miPerfil"})
-    public String miPerfil(Model model) {
-        Usuario usuario = usuarioService.buscarPorId(usuarioActivoId);
+    public String miPerfil(Model model,
+                           Principal principal) {
+        Usuario usuario = usuarioActivo(principal);
         if (usuario == null) {
             return WebController.mostrarError(model, "ERROR:", "Buscando Usuario.", "El Usuario actual: no se ha encontrado.");
         }
@@ -108,5 +98,13 @@ public class UsuariosController {
         model.addAttribute("recetasCreadas", usuario.getRecetasCreadas());
         model.addAttribute("recetasFavoritas", usuario.getRecetasFavoritas());
         return "perfil";
+    }
+
+    public Usuario usuarioActivo(Principal principal)
+    {
+        if (principal == null) {
+            return null;
+        }
+        return usuarioRepository.buscarPorNombreUsuario(principal.getName());
     }
 }

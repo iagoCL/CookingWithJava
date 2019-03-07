@@ -6,7 +6,6 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.ComentarioService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
-import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -14,12 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 public class ComentarioController {
     @Autowired
     private RecetaService recetaService;
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuariosController usuariosController;
     @Autowired
     private ComentarioService comentarioService;
 
@@ -27,8 +28,9 @@ public class ComentarioController {
     public String login(Model model,
                         @RequestParam String commentSubject,
                         @RequestParam String commentMessage,
-                        @RequestParam long commentRecetaId) {
-        Usuario usuario = usuarioService.buscarPorId(UsuariosController.usuarioActivoId);
+                        @RequestParam long commentRecetaId,
+                        Principal principal) {
+        Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario == null) {
             return WebController.mostrarError(model, "ERROR:", "Al poner comentario.", "No esta logueado.");
         }

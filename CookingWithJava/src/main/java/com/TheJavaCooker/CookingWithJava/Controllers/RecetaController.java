@@ -4,7 +4,6 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
-import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -16,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class RecetaController {
     @Autowired
     private RecetaService recetaService;
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuariosController usuariosController;
 
     @GetMapping(value = {"/crearReceta", "/crear-receta", "/subir-receta", "/subirReceta"})
     public String crearReceta(Model model, HttpServletRequest request ) {
@@ -37,7 +37,14 @@ public class RecetaController {
     @PostMapping(value = {"/formulario-crear-receta"})
     public String formularioCrearReceta(Model model,
                                         @RequestParam Map<String, String> allRequestParams,
-                                        @RequestParam("imagenReceta") MultipartFile imagenReceta) {
+                                        @RequestParam("imagenReceta") MultipartFile imagenReceta,
+                                        Principal principal) {
+
+        Usuario usuario = usuariosController.usuarioActivo(principal);
+        if (usuario == null) {
+            return WebController.mostrarError(model, "ERROR:", "Creando Receta.", "No esta logueado.");
+        }
+
         String nombreDeLaReceta = allRequestParams.get("nombreDeLaReceta");
         String tipoDePlato = allRequestParams.get("tipoDePlato");
         String nivelDificultadReceta = allRequestParams.get("nivelDificultadReceta");
@@ -62,12 +69,6 @@ public class RecetaController {
             String nombre = allRequestParams.get("utensilio-" + i + "Name");
             listaDeUtensilios.add(Pair.of(nombre, dificultad));
         }
-
-
-        Usuario usuario = usuarioService.buscarPorId(UsuariosController.usuarioActivoId);
-        if (usuario == null) {
-            return WebController.mostrarError(model, "ERROR:", "Creando Receta.", "No esta logueado.");
-        }
         Pair<DatabaseService.Errores, Receta> pair = null;
         try {
             pair = recetaService.crearReceta(nombreDeLaReceta, tipoDePlato, nivelDificultadReceta, imagenReceta.getBytes(), listaDeIngredientes, listaDeUtensilios, listaDePasos, usuario);
@@ -82,7 +83,11 @@ public class RecetaController {
 
 
     @GetMapping(value = {"/receta-{recetaId}", "/receta-completa-{recetaId}", "/recetaCompleta-{recetaId}"})
-    public String mostrarReceta(Model model, @PathVariable long recetaId, HttpServletRequest request) {
+    public String mostrarReceta(Model model,
+                                @PathVariable long recetaId,
+                                HttpServletRequest request,
+                                Principal principal) {
+
         Receta receta = recetaService.buscarPorId(recetaId);
         if (receta == null) {
             return WebController.mostrarError(model, "ERROR:", "Buscando Receta.", "La receta: " + recetaId + " no se ha encontrado.");
@@ -99,7 +104,7 @@ public class RecetaController {
         model.addAttribute("utensilios", receta.getUtensilios());
         model.addAttribute("ingredientes", receta.getIngredientes());
         boolean marcadaFavorita = false;
-        Usuario usuario = usuarioService.buscarPorId(UsuariosController.usuarioActivoId);
+        Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario != null) {
             marcadaFavorita = receta.marcadaComoFavorita(usuario);
         }
