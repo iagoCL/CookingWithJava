@@ -89,6 +89,9 @@ public class Usuario {
         return fecha_creacion.format(Usuario.formatoFecha);
     }
 
+    public boolean compararContrasena(String contrasena_) {
+        return this.contrasena.equals(contrasena_);
+    }
 
     public void resetFechaCreacion() {
         this.fecha_creacion = LocalDate.now();

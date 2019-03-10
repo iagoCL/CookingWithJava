@@ -1351,6 +1351,14 @@ ol {
     background: #ddd;
 }
 
+.logout-button {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+    font-size: 14px;
+    font-weight: 600;
+}
+
 /*------------------
 	Responsive
 ---------------------*/

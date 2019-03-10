@@ -31,7 +31,7 @@ public class UserRepositoryAuthenticationProvider implements AuthenticationProvi
         }
 
         String password = auth.getCredentials().toString();
-        if (!password.equals(user.getContrasena())) {
+        if (!user.compararContrasena(password)) {
             throw new BadCredentialsException("Wrong password");
         }
 
@@ -39,13 +39,13 @@ public class UserRepositoryAuthenticationProvider implements AuthenticationProvi
         for (String role : user.getRoles()) {
             roles.add(new SimpleGrantedAuthority(role));
         }*/
-        return new UsernamePasswordAuthenticationToken(user.getNombreUsuario(), password,new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(user.getNombreUsuario(), password, new ArrayList<>());
 
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
 
-        return authentication.equals( UsernamePasswordAuthenticationToken.class);
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

@@ -5,7 +5,6 @@ import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,22 +13,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class BuscarRecetasController {
     @Autowired
     private RecetaService recetaService;
+    @Autowired
+    private WebController webController;
 
     @GetMapping(value = {"/busqueda", "/buscarReceta", "buscar-receta"})
-    public String buscar(Model model, HttpServletRequest request) {
-        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("token", token.getToken());
+    public String buscar(Model model, HttpServletRequest request, Principal principal) {
+        webController.anadirUsuarioActual(principal, request, model);
         return "busqueda";
     }
 
     @RequestMapping(value = {"/formulario-buscar-receta"}, method = RequestMethod.GET)
     public String formularioBuscarReceta(Model model,
+                                         HttpServletRequest request,
+                                         Principal principal,
                                          @RequestParam String nombreDeLaReceta,
                                          @RequestParam String tipoDePlato,
                                          @RequestParam String nivelDificultadReceta,
@@ -56,6 +59,7 @@ public class BuscarRecetasController {
                 null,
                 null);
         model.addAttribute("recetas", recetasBuscadas);
+        webController.anadirUsuarioActual(principal, request, model);
         return "recetas";
     }
 }

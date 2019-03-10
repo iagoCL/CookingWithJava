@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -20,47 +21,65 @@ public class RecetasVariasController {
     private UsuariosController usuariosController;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private WebController webController;
 
 
     @GetMapping(value = {"/recetas"})
-    public String mostrarRecetas(Model model) {
-        //todo si no recibe parametros mostrar las ultimas recetas.
-        //todo hacer un metodo auxiliar para gestionar las opciones
+    public String mostrarRecetas(Model model,
+                                 Principal principal,
+                                 HttpServletRequest request) {
         model.addAttribute("recetas", recetaRepository.findAll());
+        webController.anadirUsuarioActual(principal, request, model);
         return "recetas";
     }
 
     @GetMapping(value = {"/mis-recetas-favoritas"})
-    public String mostrarRecetasFavoritas(Model model, Principal principal) {
+    public String mostrarRecetasFavoritas(Model model,
+                                          Principal principal,
+                                          HttpServletRequest request
+    ) {
         Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario == null) {
-            return WebController.mostrarError(model, "ERROR:", "Mostrando recetas favoritas.", "El Usuario actual: no se ha encontrado.");
+            return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas favoritas.", "El Usuario actual: no se ha encontrado.");
         }
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        webController.anadirUsuarioActual(usuario, request, model);
         return "recetas";
     }
 
     @GetMapping(value = {"/recetas-favoritas-{usuarioId}"})
-    public String mostrarRecetasFavoritas(Model model, @PathVariable long usuarioId) {
+    public String mostrarRecetasFavoritas(Model model,
+                                          Principal principal,
+                                          HttpServletRequest request,
+                                          @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        webController.anadirUsuarioActual(principal, request, model);
         return "recetas";
     }
 
     @GetMapping(value = {"/mis-recetas-creadas"})
-    public String mostrarRecetasCreadas(Model model, Principal principal) {
+    public String mostrarRecetasCreadas(Model model,
+                                        Principal principal,
+                                        HttpServletRequest request) {
         Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario == null) {
-            return WebController.mostrarError(model, "ERROR:", "Mostrando recetas creadas.", "El Usuario actual: no se ha encontrado.");
+            return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas creadas.", "El Usuario actual: no se ha encontrado.");
         }
         model.addAttribute("recetas", usuario.getRecetasCreadas());
+        webController.anadirUsuarioActual(usuario, request, model);
         return "recetas";
     }
 
     @GetMapping(value = {"/recetas-creadas-{usuarioId}"})
-    public String mostrarRecetasCreadas(Model model, @PathVariable long usuarioId) {
+    public String mostrarRecetasCreadas(Model model,
+                                        Principal principal,
+                                        HttpServletRequest request,
+                                        @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         model.addAttribute("recetas", usuario.getRecetasCreadas());
+        webController.anadirUsuarioActual(principal, request, model);
         return "recetas";
     }
 

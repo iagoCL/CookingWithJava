@@ -36,13 +36,7 @@
 <header class="header-section">
     <div class="header-top">
         <div class="container">
-            <div class="user-panel">
-                <a href="login"><i class="fa fa-lock"></i> Acceso</a>
-            </div>
-            <div class="user-panel">
-                <a href="crearReceta"><i class="fa fa-upload"></i> Subir receta</a>
-            </div>
-
+            {{{usuarioActivo}}}
         </div>
     </div>
     <div class="header-bottom">
@@ -82,7 +76,7 @@
                 {{#esFavorita}}
                     <i class="fa fa-star"></i>{{favoritos}}
                     <form action="formulario-favorito" method="post">
-                        <input type="hidden" name="_csrf" value="{{token}}" />
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" name="favoritoMarcar" value="false"/>
@@ -96,7 +90,7 @@
                 {{^esFavorita}}
                     <i class="fa fa-star is-fade"></i>{{favoritos}}
                     <form action="formulario-favorito" method="post">
-                        <input type="hidden" name="_csrf" value="{{token}}" />
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" name="favoritoMarcar" value="true"/>
@@ -174,7 +168,7 @@
     <div class="container">
         <h4>Deja un comentario</h4>
         <form class="comment-form" action="formulario-comentario" method="post">
-            <input type="hidden" name="_csrf" value="{{token}}" />
+            <input type="hidden" name="_csrf" value="{{token}}"/>
             <div class="row">
                 <div class="col-md-12">
                     <input type="text" name="commentSubject" placeholder="Asunto">

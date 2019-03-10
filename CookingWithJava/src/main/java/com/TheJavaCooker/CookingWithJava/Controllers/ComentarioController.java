@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -23,24 +24,27 @@ public class ComentarioController {
     private UsuariosController usuariosController;
     @Autowired
     private ComentarioService comentarioService;
+    @Autowired
+    private WebController webController;
 
     @RequestMapping(value = {"/formulario-comentario"}, method = RequestMethod.POST)
     public String login(Model model,
                         @RequestParam String commentSubject,
                         @RequestParam String commentMessage,
                         @RequestParam long commentRecetaId,
-                        Principal principal) {
+                        Principal principal,
+                        HttpServletRequest request) {
         Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario == null) {
-            return WebController.mostrarError(model, "ERROR:", "Al poner comentario.", "No esta logueado.");
+            return webController.mostrarMensaje(model, principal, request, "ERROR:", "Al poner comentario.", "No esta logueado.");
         }
         Receta receta = recetaService.buscarPorId(commentRecetaId);
         if (receta == null) {
-            return WebController.mostrarError(model, "ERROR:", "Al poner comentario.", "No exite la receta enviada.");
+            return webController.mostrarMensaje(model, principal, request, "ERROR:", "Al poner comentario.", "No exite la receta enviada.");
         }
         Pair<DatabaseService.Errores, Comentario> pair = comentarioService.crearComentario(commentMessage, commentSubject, receta, usuario);
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
-            return WebController.mostrarError(model, "ERROR:", "Al poner comentario.", pair.getFirst().name());
+            return webController.mostrarMensaje(model, principal, request, "ERROR:", "Al poner comentario.", pair.getFirst().name());
         }
         return "redirect:/receta-" + commentRecetaId;
     }

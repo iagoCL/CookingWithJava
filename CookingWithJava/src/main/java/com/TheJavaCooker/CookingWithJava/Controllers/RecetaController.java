@@ -7,7 +7,6 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +25,12 @@ public class RecetaController {
     private RecetaService recetaService;
     @Autowired
     private UsuariosController usuariosController;
+    @Autowired
+    private WebController webController;
 
     @GetMapping(value = {"/crearReceta", "/crear-receta", "/subir-receta", "/subirReceta"})
-    public String crearReceta(Model model, HttpServletRequest request ) {
-        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("token", token.getToken());
+    public String crearReceta(Model model, Principal principal, HttpServletRequest request ) {
+        webController.anadirUsuarioActual(principal, request, model);
         return "crearReceta";
     }
 
@@ -38,11 +38,12 @@ public class RecetaController {
     public String formularioCrearReceta(Model model,
                                         @RequestParam Map<String, String> allRequestParams,
                                         @RequestParam("imagenReceta") MultipartFile imagenReceta,
-                                        Principal principal) {
+                                        Principal principal,
+                                        HttpServletRequest request) {
 
         Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario == null) {
-            return WebController.mostrarError(model, "ERROR:", "Creando Receta.", "No esta logueado.");
+            return webController.mostrarMensaje(model,principal,request, "ERROR:", "Creando Receta.", "No esta logueado.");
         }
 
         String nombreDeLaReceta = allRequestParams.get("nombreDeLaReceta");
@@ -73,10 +74,10 @@ public class RecetaController {
         try {
             pair = recetaService.crearReceta(nombreDeLaReceta, tipoDePlato, nivelDificultadReceta, imagenReceta.getBytes(), listaDeIngredientes, listaDeUtensilios, listaDePasos, usuario);
         } catch (IOException e) {
-            return WebController.mostrarError(model, "ERROR:", "Cargando Imagen Receta.", e.toString());
+            return webController.mostrarMensaje(model,principal,request, "ERROR:", "Cargando Imagen Receta.", e.toString());
         }
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
-            return WebController.mostrarError(model, "ERROR:", "Creando Receta.", pair.getFirst().name());
+            return webController.mostrarMensaje(model,principal,request, "ERROR:", "Creando Receta.", pair.getFirst().name());
         }
         return "redirect:/receta-" + pair.getSecond().getId();
     }
@@ -90,7 +91,7 @@ public class RecetaController {
 
         Receta receta = recetaService.buscarPorId(recetaId);
         if (receta == null) {
-            return WebController.mostrarError(model, "ERROR:", "Buscando Receta.", "La receta: " + recetaId + " no se ha encontrado.");
+            return webController.mostrarMensaje(model,principal,request, "ERROR:", "Buscando Receta.", "La receta: " + recetaId + " no se ha encontrado.");
         }
         model.addAttribute("receta", receta);
         model.addAttribute("tipoDePlato", receta.getTipoPlato());
@@ -109,9 +110,7 @@ public class RecetaController {
             marcadaFavorita = receta.marcadaComoFavorita(usuario);
         }
         model.addAttribute("esFavorita", marcadaFavorita);
-        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("token", token.getToken());
-
+        webController.anadirUsuarioActual(principal, request, model);
         return "receta-completa";
     }
 }
