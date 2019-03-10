@@ -40,9 +40,13 @@ public class FavoritosController {
             return webController.mostrarMensaje(model,principal, request, "ERROR:", "Marcando Favorito.", "La receta actual: no se ha encontrado.");
         }
         if (favoritoMarcar) {
-            favoritoService.marcarFavorito(usuario, receta);
+            if (!favoritoService.marcarFavorito(usuario, receta)){
+                webController.mostrarMensaje(model,principal,request,"Error:","Marcando Favorito.","El usuario actual ya la ha marcado como favorita");
+            }
         } else {
-            favoritoService.quitarFavorito(usuario, receta);
+            if (!favoritoService.quitarFavorito(usuario, receta)){
+                webController.mostrarMensaje(model,principal,request,"Error:","Quitando Favorito.","El usuario actual no la ha marcado como favorita");
+            }
         }
         return "redirect:/receta-" + favoritoRecetaId;
     }

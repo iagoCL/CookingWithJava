@@ -19,6 +19,8 @@ public class Usuario {
     public static final String constraintNombreUsuario = "CONSTRAINT_NOMBRE_USUARIO_UNICO";
     public static final String constraintCorreoElectronico = "CONSTRAINT_CORREO_ELECTRONICO_UNICO";
     public static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd LLL yy");
+    private static final String randomHash1 = "dsefsSfsvreh435gvQEFQabhsr";
+    private static final String randomHash2 = "AadsfFWT2354T3GEsfda435";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -90,7 +92,7 @@ public class Usuario {
     }
 
     public boolean compararContrasena(String contrasena_) {
-        return this.contrasena.equals(contrasena_);
+        return this.contrasena.equals(obtenercontrasena(contrasena_));
     }
 
     public void resetFechaCreacion() {
@@ -102,7 +104,11 @@ public class Usuario {
     }
 
     public void setContrasena(String contrasena_) {
-        this.contrasena = contrasena_;
+        this.contrasena =obtenercontrasena(contrasena_);
+    }
+    private String obtenercontrasena( String contrasena_)
+    {
+        return "c:"+(randomHash1 + contrasena_ + randomHash2).hashCode();
     }
 
     public void setCorreoElectronico(String correo_electronico_) {
@@ -182,9 +188,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre_usuario_, String contrasena_, String correo_electronico_, String nombre_apellidos_, Imagendb imagendb_id_) {
+    public Usuario(String nombre_usuario_, String contrasena_,
+                   String correo_electronico_,
+                   String nombre_apellidos_,
+                   Imagendb imagendb_id_) {
         this.nombre_usuario = nombre_usuario_;
-        this.contrasena = contrasena_;
+        setContrasena(contrasena_);
         this.correo_electronico = correo_electronico_;
         this.nombre_apellidos = nombre_apellidos_;
         resetFechaCreacion();

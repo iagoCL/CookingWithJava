@@ -65,7 +65,7 @@ public class CookingWithJavaApplication {
         if (clearDatabase) {
             databaseService.eliminarTodos();
         }
-        DatabaseRandomData databaseRandomData = new DatabaseRandomData();
+        DatabaseRandomData databaseRandomData = new DatabaseRandomData(databaseService);
         if (crearUsuarios > 0) {
             databaseRandomData.crearUsuariosEjemplo(crearUsuarios);
             PersonalDebug.imprimir("NUEVOS USUARIOS CREADOS");

@@ -4,15 +4,22 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Repository.UsuarioRepository;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
+import com.TheJavaCooker.CookingWithJava.UserRepositoryAuthenticationProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -23,10 +30,9 @@ public class UsuariosController {
     @Autowired
     private UsuarioService usuarioService;
     @Autowired
+    private UserRepositoryAuthenticationProvider userAuthentication;
+    @Autowired
     private WebController webController;
-
-    //todo auth al registrarse
-    //todo borrar receta
 
     @GetMapping(value = {"/login", "/register"})
     public String login(Model model, Principal principal, HttpServletRequest request) {
@@ -74,9 +80,15 @@ public class UsuariosController {
 
         }
         Usuario usuario = usuarioRepository.buscarPorNombreUsuario(nickRegistro);
-        //todo autentificar
-        long usuarioActivoId = usuario.getId();
-        return "redirect:/usuario-" + usuarioActivoId;
+        UsernamePasswordAuthenticationToken authReq =
+                new UsernamePasswordAuthenticationToken(usuario.getNombreUsuario(), contrasenaRegistro);
+        Authentication auth = userAuthentication.authenticate(authReq);
+
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+        HttpSession session = request.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+        return "redirect:/usuario-" + usuario.getId();
     }
 
     @GetMapping(value = {"/usuario-{usuarioId}", "/perfil-{usuarioId}"})

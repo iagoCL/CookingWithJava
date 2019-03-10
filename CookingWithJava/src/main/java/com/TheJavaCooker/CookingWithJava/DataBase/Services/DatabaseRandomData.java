@@ -24,13 +24,9 @@ import java.util.List;
 import java.util.Random;
 
 public class DatabaseRandomData {
-    @Autowired
     private UsuarioService usuarioService;
-    @Autowired
     private RecetaService recetaService;
-    @Autowired
     private ComentarioService comentarioService;
-    @Autowired
     private FavoritoService favoritoService;
 
     private final static String[] rutasImagenesRecetaAleatorias = {
@@ -100,7 +96,11 @@ public class DatabaseRandomData {
     private static Random random = new Random();
     private static Lorem lorem = LoremIpsum.getInstance();
 
-    public DatabaseRandomData() {
+    public DatabaseRandomData(DatabaseService databaseService) {
+        this.usuarioService = databaseService.getUsuarioService();
+        this.recetaService = databaseService.getRecetaService();
+        this.comentarioService = databaseService.getComentarioService();
+        this.favoritoService = databaseService.getFavoritoService();
     }
 
     public static byte[] getRandomUserImage() {

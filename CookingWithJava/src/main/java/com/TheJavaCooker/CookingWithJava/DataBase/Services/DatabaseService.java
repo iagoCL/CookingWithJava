@@ -12,7 +12,9 @@ public class DatabaseService {
     @Autowired
     private ComentarioService comentarioService;
     @Autowired
-    ImagenService imagenService;
+    private FavoritoService favoritoService;
+    @Autowired
+    private ImagenService imagenService;
 
 
     public enum Errores {
@@ -40,6 +42,26 @@ public class DatabaseService {
         NUMERO_DE_PASO_REPETIDO,
         IMAGEN_ERRONEA,
         ERRROR_DESCONOCIDO
+    }
+
+    public UsuarioService getUsuarioService() {
+        return usuarioService;
+    }
+
+    public RecetaService getRecetaService() {
+        return recetaService;
+    }
+
+    public ComentarioService getComentarioService() {
+        return comentarioService;
+    }
+
+    public FavoritoService getFavoritoService() {
+        return favoritoService;
+    }
+
+    public ImagenService getImagenService() {
+        return imagenService;
     }
 
     public void eliminarTodos() {
