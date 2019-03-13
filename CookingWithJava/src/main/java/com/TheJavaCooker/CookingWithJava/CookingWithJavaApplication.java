@@ -47,7 +47,7 @@ public class CookingWithJavaApplication {
                         " [-c][--clear] [--usuariosRandomXX]" +
                         "[--recetasRandomXX] [--favoritosRandomXX]" +
                         " [-comentariosRandomXX]");
-                System.exit(-1);
+                //System.exit(-1);
             }
         }
         SpringApplication.run(CookingWithJavaApplication.class, args);

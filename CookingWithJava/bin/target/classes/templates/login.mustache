@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cooking With Java - Login</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Food Blog Web Template">
+    <meta name="keywords" content="food, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="shortcut icon"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,400i,500,500i,600,600i,700" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--<script>
+        $(document).ready(function () {
+            $("#buttonUser").click(function () {
+
+            });
+        });
+    </script>-->
+
+</head>
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header section -->
+<header class="header-section">
+    <div class="header-top">
+        <div class="container">
+            {{{usuarioActivo}}}
+        </div>
+    </div>
+    <div class="header-bottom">
+        <div class="container">
+            <a href="index" class="site-logo">
+                <img src="img/logo.png" alt="">
+            </a>
+            <ul class="main-menu">
+                <li><a href="buscarReceta"><i class="fa fa-search"></i> Buscar</a></li>
+                <li><a href="index"><i class="fa fa-home"></i> Inicio</a></li>
+                <li><a href="recetas"><i class="fa fa-book"></i> Recetas</a></li>
+                <li><a href="perfil"><i class="fa fa-user"></i> Tu perfil</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!-- Header section end -->
+
+
+<!-- Hero section -->
+<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
+    <div class="container">
+        <h2>Register / Log In</h2>
+    </div>
+</section>
+<!-- Hero section end -->
+
+
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <nav class="col-lg-8">
+                <div class="nav nav-tabs nav-fill col-md-12" id="nav-tab" role="tablist">
+                    <a class="col-md-6 nav-item nav-link active" id="nav-register-tab" data-toggle="tab"
+                       href="#nav-register"
+                       role="tab"
+                       aria-controls="nav-register" aria-selected="true">Register</a>
+                    <a class="col-md-6 nav-item nav-link" id="nav-login-tab" data-toggle="tab" href="#nav-login"
+                       role="tab"
+                       aria-controls="nav-login" aria-selected="false">Login</a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="contact-form-warp">
+                    <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-register" role="tabpanel"
+                             aria-labelledby="nav-register-tab">
+                            <form class="contact-form" action="formulario-registro" method="post"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" name="_csrf" value="{{token}}"/>
+                                <div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="nickRegistro">Nick:</label>
+                                        <input class="col-sm-9" id="nickRegistro" name="nickRegistro" type="text"
+                                               placeholder="Nick nuevo usuario">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="correoRegistro">Correo electrónico:</label>
+                                        <input class="col-sm-9" id="correoRegistro" name="correoRegistro" type="text"
+                                               placeholder="Correo electrónico nuevo usuario">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="nombreRegistro">Nombre y apellidos:</label>
+                                        <input class="col-sm-9" id="nombreRegistro" name="nombreRegistro" type="text"
+                                               placeholder="Nombre y apellidos nuevo usuario">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="contrasenaRegistro">Contraseña:</label>
+                                        <input class="col-sm-9" id="contrasenaRegistro" name="contrasenaRegistro"
+                                               type="password"
+                                               placeholder="*****">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="contrasena2Registro">Repetir contraseña:</label>
+                                        <input class="col-sm-9" id="contrasena2Registro" name="contrasena2Registro"
+                                               type="password"
+                                               placeholder="*****">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="imagenRegistro">Imagen de Usuario:</label>
+                                        <input class="col-sm-9" id="imagenRegistro" name="imagenRegistro"
+                                               type="file" accept="image/png, image/jpeg">
+                                    </div>
+                                    <button type="submit" class="site-btn col-md-12" id="buttonUserRegister">Registrar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="nav-login" role="tabpanel"
+                             aria-labelledby="nav-login-tab">
+                            <form class="contact-form" action="/formulario-login" method="post">
+                                <input type="hidden" name="_csrf" value="{{token}}"/>
+                                <div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="nickLogin">Nick:</label>
+                                        <input class="col-sm-9" id="nickLogin" name="nickLogin" type="text"
+                                               placeholder="Nick">
+                                    </div>
+                                    <div class="form-group row col-md-12">
+                                        <label class="col-sm-3" for="contrasenaLogin">Contraseña:</label>
+                                        <input class="col-sm-9" id="contrasenaLogin" name="contrasenaLogin"
+                                               type="password"
+                                               placeholder="*****">
+                                    </div>
+                                    <button type="submit" class="site-btn col-md-12" id="buttonUserLogin">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="contact-logo">
+                    <img src="img/logo.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- map -->
+
+    </div>
+</section>
+
+<!-- Gallery section -->
+<div class="gallery">
+    <div class="gallery-slider owl-carousel">
+        <div class="gs-item set-bg" data-setbg="img/low-bar/1.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/2.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/3.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/4.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/5.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/6.jpg"></div>
+    </div>
+</div>
+<!-- Gallery section end -->
+
+
+<!-- Footer section  -->
+<footer class="footer-section set-bg" data-setbg="img/footer-bg.jpg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 text-lg-right">
+                <p class="copyright">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                    All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+                <p class="copyright"> The Java Cookers: un blog de cocina de estudiantes de la URJC.</p>
+                <p class="copyright"> Iago Calvo lista. Javier Martinez Pablo. Juan Jimenez Galvez.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer section end -->
+
+
+<!--====== Javascripts & Jquery ======-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

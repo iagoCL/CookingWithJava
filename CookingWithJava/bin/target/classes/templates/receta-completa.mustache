@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{receta.nombre_receta}}</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Food Blog Web Template">
+    <meta name="keywords" content="food, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="shortcut icon"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,400i,500,500i,600,600i,700" rel="stylesheet">
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header section -->
+<header class="header-section">
+    <div class="header-top">
+        <div class="container">
+            {{{usuarioActivo}}}
+        </div>
+    </div>
+    <div class="header-bottom">
+        <div class="container">
+            <a href="index" class="site-logo">
+                <img src="img/logo.png" alt="">
+            </a>
+            <ul class="main-menu">
+                <li><a href="buscarReceta"><i class="fa fa-search"></i> Buscar</a></li>
+                <li><a href="index"><i class="fa fa-home"></i> Inicio</a></li>
+                <li><a href="recetas"><i class="fa fa-book"></i> Recetas</a></li>
+                <li><a href="perfil"><i class="fa fa-user"></i> Tu perfil</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!-- Header section end -->
+
+
+<!-- Hero section -->
+<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
+    <div class="container">
+        <h2>Receta</h2>
+    </div>
+</section>
+<!-- Hero section end -->
+<section class="recipe-details-section">
+    <div class="container">
+        <div class="recipe-meta">
+            <div class="racipe-cata">
+                <span>{{receta.nivel_de_dificultad.text}}</span>
+            </div>
+            <h2>{{receta.nombre_receta}}</h2>
+            <div class="recipe-date">{{fechaDeCreacion}} - <a href="">{{creadorRecetaNombre}}</a></div>
+
+            <div class="rating">
+                {{#esFavorita}}
+                    <i class="fa fa-star"></i>{{favoritos}}
+                    <form action="formulario-favorito" method="post">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="favoritoMarcar" value="false"/>
+                                <input type="hidden" name="favoritoRecetaId" value="{{receta.id}}"/>
+                                <button class="site-btn" type="submit">Desmarcar Favorito</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- No Favorita<i class="fa fa-star is-fade"></i>-->
+                {{/esFavorita}}
+                {{^esFavorita}}
+                    <i class="fa fa-star is-fade"></i>{{favoritos}}
+                    <form action="formulario-favorito" method="post">
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="favoritoMarcar" value="true"/>
+                                <input type="hidden" name="favoritoRecetaId" value="{{receta.id}}"/>
+                                <button class="site-btn" type="submit">Marcar Favorita</button>
+                            </div>
+                        </div>
+                    </form>
+                {{/esFavorita}}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recipe big view -->
+<div class="recipe-view-section">
+    <div class="rv-warp set-bg" data-setbg="/image/{{receta.imagendb_id.id}}.jpg"></div>
+</div>
+
+<!-- Recipe details section -->
+<section class="recipe-details-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="recipe-filter-warp">
+                    <div class="filter-top">
+                        <div class="filter-top-text">
+                            <p>Tiempo de preparación: {{duracionTotal}}</p>
+                            <p>Tipo de plato: {{tipoDePlato}}</p>
+                        </div>
+                    </div>
+                    <!-- recipe filter form -->
+                    <div class="filter-form-warp">
+                        <h2>Ingredientes</h2>
+                        <form class="filter-form">
+                            {{#ingredientes}}
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">{{getNombreIngrediente}} - {{getCantidadIngrediente}}</label>
+                                </div>
+                            {{/ingredientes}}
+                        </form>
+                        <h2>Utensilios</h2>
+                        <form class="filter-form">
+                            {{#utensilios}}
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">{{nombre_utensilio}} - {{nivel_de_dificultad}}</label>
+                                </div>
+                            {{/utensilios}}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <ul class="recipe-info-list">
+                    {{#pasos}}
+                        <li>
+                            <h2>{{numero_paso}}.</h2>
+                            <p>{{descripcion_paso}}</p>
+                            <p><strong>{{getDuracionString}}</strong></p>
+                        </li>
+                    {{/pasos}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Recipe details section end -->
+
+
+<!-- New Comment section -->
+<section class="comment-section spad pt-0">
+    <div class="container">
+        <h4>Deja un comentario</h4>
+        <form class="comment-form" action="formulario-comentario" method="post">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" name="commentSubject" placeholder="Asunto">
+                    <textarea placeholder="Message" name="commentMessage"></textarea>
+                    <input type="hidden" name="commentRecetaId" value="{{receta.id}}"/>
+                    <button class="site-btn" type="submit">ENVIAR</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Comment section -->
+<div class="container">
+    {{#comentarios}}
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="image/{{getUsuario.getImagenUsuario}}.jpg" class="img img-rounded img-fluid"/>
+                        <p class="text-secondary text-center">
+                            <a class="text-secondary text-center"
+                               href="usuario-{{getUsuario.getId}}"><strong>{{getUsuario.getNombreUsuario}}</strong></a>
+                        </p>
+                        <p class="text-secondary text-center">{{fecha_comentario}}</p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="clearfix"></div>
+                        <h4>{{titulo_comentario}}</h4>
+                        <p>{{descripcion_comentario}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/comentarios}}
+</div>
+</section><!-- Comment section -->
+
+
+<!-- Gallery section -->
+<div class="gallery">
+    <div class="gallery-slider owl-carousel">
+        <div class="gs-item set-bg" data-setbg="img/low-bar/1.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/2.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/3.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/4.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/5.jpg"></div>
+        <div class="gs-item set-bg" data-setbg="img/low-bar/6.jpg"></div>
+    </div>
+</div>
+<!-- Gallery section end -->
+
+
+<!-- Footer section  -->
+<footer class="footer-section set-bg" data-setbg="img/footer-bg.jpg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 text-lg-right">
+                <p class="copyright">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                    All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+                <p class="copyright"> The Java Cookers: un blog de cocina de estudiantes de la URJC.</p>
+                <p class="copyright"> Iago Calvo lista. Javier Martinez Pablo. Juan Jimenez Galvez.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer section end -->
+
+
+<!--====== Javascripts & Jquery ======-->
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

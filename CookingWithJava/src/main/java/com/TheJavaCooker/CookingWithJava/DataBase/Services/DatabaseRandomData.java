@@ -9,7 +9,6 @@ import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 
 import java.net.URI;
@@ -103,23 +102,26 @@ public class DatabaseRandomData {
         this.favoritoService = databaseService.getFavoritoService();
     }
 
-    public static byte[] getRandomUserImage() {
+    public byte[] getRandomUserImage() {
 
         String rutaArchivo = rutasImagenesUsuarioAleatorias[random.nextInt(rutasImagenesUsuarioAleatorias.length)];
         return getImageFromPath(rutaArchivo);
     }
 
-    public static byte[] getRandomRecipeImage() {
+    public byte[] getRandomRecipeImage() {
         String rutaArchivo = rutasImagenesRecetaAleatorias[random.nextInt(rutasImagenesRecetaAleatorias.length)];
         return getImageFromPath(rutaArchivo);
     }
 
-    private static byte[] getImageFromPath(String rutaArchivo) {
+    private byte[] getImageFromPath(String rutaArchivo) {
         try {
+            /*java 8
             URL resource = CookingWithJavaApplication.class.getResource(rutaArchivo);
             URI uri = resource.toURI();
             Path path = Paths.get(uri);
             return Files.readAllBytes(path);
+             //*/
+            return getClass().getClassLoader().getResourceAsStream(rutaArchivo).readAllBytes();
         } catch (Exception e) {
             PersonalDebug.imprimir("ERROR ABRIENDO IMAGEN ALETORIOA: " + e.toString());
             return null;
