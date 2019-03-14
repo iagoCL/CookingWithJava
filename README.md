@@ -6,12 +6,20 @@
     - [Descripción de las funcionalidades del servicio interno](#descripci%C3%B3n-de-las-funcionalidades-del-servicio-interno)
   - [FASE 2 - Desarrollo de la aplicación web en local](#fase-2---desarrollo-de-la-aplicaci%C3%B3n-web-en-local)
     - [Capturas de pantalla y una breve descripción de cada una de las páginas principales](#capturas-de-pantalla-y-una-breve-descripci%C3%B3n-de-cada-una-de-las-p%C3%A1ginas-principales)
+    - [Página de incio](#p%C3%A1gina-de-incio)
+    - [Acceso](#acceso)
+    - [Subir receta](#subir-receta)
+    - [Buscar recetas](#buscar-recetas)
+    - [Recetas](#recetas)
+    - [Perfil](#perfil)
     - [Diagrama de navegación de las principales páginas.](#diagrama-de-navegaci%C3%B3n-de-las-principales-p%C3%A1ginas)
     - [Modelo de datos de la aplicación](#modelo-de-datos-de-la-aplicaci%C3%B3n)
       - [Diagrama de clases UML](#diagrama-de-clases-uml)
-      - [Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.](#diagrama-entidadrelaci%C3%B3n-que-muestre-c%C3%B3mo-se-persisten-dichos-datos-en-la-base-de-datos-relacional)
+      - [Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional](#diagrama-entidadrelaci%C3%B3n-que-muestre-c%C3%B3mo-se-persisten-dichos-datos-en-la-base-de-datos-relacional)
   - [FASE 3 - Inclusión de seguridad y servicio interno](#fase-3---inclusi%C3%B3n-de-seguridad-y-servicio-interno)
     - [Instrucciones de despliegue](#instrucciones-de-despliegue)
+      - [Instrucciones de despliegue windows](#instrucciones-de-despliegue-windows)
+      - [Intrucciones de despliegue en ubuntu 18.04 server](#intrucciones-de-despliegue-en-ubuntu-1804-server)
   - [FASE 4 - Incluir tolerancia a fallos en la aplicación](#fase-4---incluir-tolerancia-a-fallos-en-la-aplicaci%C3%B3n)
   - [FASE 5 - Automatizar el despliegue de la aplicación.](#fase-5---automatizar-el-despliegue-de-la-aplicaci%C3%B3n)
 
@@ -193,13 +201,18 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 #### Diagrama de clases UML
 <img src="gddImages/database-export.png">
 
-#### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional.
+#### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional
 <img src="gddImages/entidadrelacion.jpg">
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
 ### Instrucciones de despliegue
-Es necesario instalar mysql 8.0.15; para ello se puede usar el gestor de paquetes [chocolatey](https://chocolatey.org/). Una vez instalado chocolatey se puede simplemente instalar con ejecutar como administrador:
+#### Instrucciones de despliegue windows
+Es necesario java-jre versión 9 o superior para ello se puede usar el gestor de paquetes [chocolatey](https://chocolatey.org/). Una vez instalado chocolatey se puede simplemente instalar con ejecutar como administrador:
 
+```
+choco install server-jre9 -y
+```
+A continuación se procedará a instalar mysql 8.0.15; siguiendo con cholatey:
 ```
 choco install mysql --version 8.0.15 -y
 ```
@@ -212,9 +225,61 @@ A continuacion se debe configuar la base de datos y otorgar permiso al usuario p
 ```
 create database db_cooking_with_java; -- Crea la base de datos
 create user 'cookingWithJavaDefaultUser'@'%' identified by 'cookingWithJavaDefaultPass'; -- Crea el usaurio por defecto
-grant all on db_cooking_with_java.* to 'cookingWithJavaDefaultUser'@'%'; --Otorga privilegios al usuario sobre la base de datos.
+grant all on db_cooking_with_java.* to 'cookingWithJavaDefaultUser'@'%'; --Otorga privilegios al usuario sobre la base de datos
 ```
+Finalmente la aplicación puede ser ejecutada con 
+```
+java -jar ruta/del/archivo
+```
+#### Intrucciones de despliegue en ubuntu 18.04 server
+Lo primero que se hará es configurar ssh para permitir control remoto de la máquina, para ello intale los paquetes necesarios:
+```
+sudo apt intall nano openssh-server -y
+```
+A continuacion se debe editar el archivo /etc/ssh/sshd_config para cambiar la linea *#Port 22* a *Port 1337*. Para ello ejecute:
+```
+sudo nano /etc/ssh/sshd_config
+```
+Cambie la linea y presione *ctrl+x*, a continuación presion *Y* y finalmente *enter*. A continuación ya podremos conectarnos desde nuestra máquina local.
 
+En caso de usar virtualbox se deberá poner como tipo de conexión y hacer un reenvio de puertos del 1337 al 1337.
+```
+ssh username@ip -p1337
+```
+En caso de que nuestro usuario sea thejavacookers y estemos usando la ip predefinida de virtual box:
+```
+ssh thejavacookers@127.0.0.1 -p1337
+```
+Empezamos installando java 9 o superior.
+```
+sudo add-apt-repository ppa:webupd8team/java -y
+sudo apt update
+sudo apt install default-jre -y
+```
+Continuamos intallando mysql:
+```
+sudo apt install mysql-server -y
+```
+Abrimos una consola mysql y creamos la base de datos y damos permiso a la aplicion para modificarla con:
+```
+sudo mysql
+create database db_cooking_with_java; 
+create user 'cookingWithJavaDefaultUser'@'%' identified by 'cookingWithJavaDefaultPass'; 
+grant all on db_cooking_with_java.* to 'cookingWithJavaDefaultUser'@'%';
+exit;
+```
+Finalmente envaimos el jar ejecutando en el remoto:
+```
+scp -P 1337 ruta/local/archivo.jar nombreUsuario@ip:/ruta/destino
+```
+Supondremos que lo guardaremos en home y que abrimos una consola en la carpeta del jar:
+```
+scp -P 1337 ./CookingWithJava.jar thejavacookers@127.0.0.1:/home/thejavacookers
+```
+Finalmente se puede ejecutar con:
+```
+java -jar CookingWithJava.jar
+```
 
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 
