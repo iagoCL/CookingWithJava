@@ -21,6 +21,7 @@ public class CookingWithJavaApplication {
     private static int crearFavoritos = 0;
 
     public static void main(String[] args) {
+        // Comprobación de argumentos
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-d") || args[i].equals("--debug")) {
                 activarDebug = true;
@@ -50,6 +51,12 @@ public class CookingWithJavaApplication {
                 //System.exit(-1);
             }
         }
+
+        // Conexión por sockets con el servicio interno
+        Cliente cliente = new Cliente();
+        cliente.start();
+
+        // Inicio de aplicación Spring
         SpringApplication.run(CookingWithJavaApplication.class, args);
     }
 
