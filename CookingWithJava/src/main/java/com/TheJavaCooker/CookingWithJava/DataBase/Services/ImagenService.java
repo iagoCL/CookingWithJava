@@ -75,7 +75,7 @@ public class ImagenService {
         bGr.drawImage(image, 0, 0, null);
         bGr.dispose();
 
-        //Concertit de bufferImage a un byte array
+        //Convertir de bufferImage a un byte array
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "jpg", outputStream);
         bytes_ = outputStream.toByteArray();

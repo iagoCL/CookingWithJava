@@ -13,20 +13,27 @@ public class Servidor {
 
     // Métodos
     public void start() {
-        try {
-            serverSocket = new ServerSocket(puerto);
-            socket = new Socket();
-            socket = serverSocket.accept();
+        while(true) {
+            try {
+                serverSocket = new ServerSocket(puerto);
+                socket = new Socket();
+                socket = serverSocket.accept();
 
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String mensaje = input.readLine();
-            System.out.println(mensaje);
-            output = new DataOutputStream(socket.getOutputStream());
-            output.writeUTF("Conection ended");
+                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String mensaje = input.readLine();
 
-            socket.close();
-        } catch (Exception e) {
+                byte[] pdf = PDFCreator.createPDF(mensaje, "Paso 1", "Paso 2");
 
+                output = new DataOutputStream(socket.getOutputStream());
+                output.writeInt(pdf.length);
+                output.write(pdf);
+
+                System.out.println("Conection ended");
+
+                socket.close();
+            } catch (Exception e) {
+
+            }
         }
     }
 }

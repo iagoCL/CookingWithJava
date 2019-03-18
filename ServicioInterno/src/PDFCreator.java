@@ -5,10 +5,16 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class PDFCreator {
     // Método para crear el PDF
-    public static void createPDF(String nombreReceta, String paso1, String paso2) {
+    public static byte[] createPDF(String nombreReceta, String paso1, String paso2) {
+
+        byte[] pdf = null;
+
         try {
             String fileName = nombreReceta + ".pdf";
 
@@ -41,9 +47,14 @@ public class PDFCreator {
             doc.save(fileName);
             doc.close();
 
-            System.out.println("File created in: " + System.getProperty("user.dir"));
+            String location = System.getProperty("user.dir") + "\\" + nombreReceta + ".pdf";
+            Path pdfPath = Paths.get(location);
+            pdf = Files.readAllBytes(pdfPath);
+            System.out.println("File created in: " + location);
         } catch(IOException | COSVisitorException e) {
             System.out.println(e.getMessage());
         }
+
+        return pdf;
     }
 }
