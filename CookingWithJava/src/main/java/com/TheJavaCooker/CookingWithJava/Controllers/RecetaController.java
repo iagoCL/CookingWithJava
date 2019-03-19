@@ -1,7 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
-import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
-import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
+import com.TheJavaCooker.CookingWithJava.Cliente;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.*;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 
@@ -18,6 +18,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class RecetaController {
@@ -32,6 +33,28 @@ public class RecetaController {
     public String crearReceta(Model model, Principal principal, HttpServletRequest request ) {
         webController.anadirUsuarioActual(principal, request, model);
         return "crearReceta";
+    }
+
+    @GetMapping(value = {"/formulario-crear-pdf"})
+    public String crearPDF(Model model,
+                           @RequestParam int recetaId,
+                           Principal principal,
+                           HttpServletRequest request) {
+
+        Receta receta = recetaService.buscarPorId(recetaId);
+
+        String nombre = receta.getNombreReceta();
+        String tipo = receta.getTipoPlato();
+        String duracion = receta.getStringDuracionTotal();
+        String nombre_creador = receta.getCreadorDeLaReceta().getNombreUsuario();
+        Set<Ingrediente> ingredientes = receta.getIngredientes();
+        Set<Utensilio> utensilios = receta.getUtensilios();
+        Set<Paso> pasos = receta.getPasos();
+
+        // Conexión por sockets con el servicio interno
+        Cliente cliente = new Cliente(nombre, tipo, duracion, nombre_creador, ingredientes, utensilios, pasos);
+        cliente.start();
+        return "receta-" + recetaId;
     }
 
     @PostMapping(value = {"/formulario-crear-receta"})

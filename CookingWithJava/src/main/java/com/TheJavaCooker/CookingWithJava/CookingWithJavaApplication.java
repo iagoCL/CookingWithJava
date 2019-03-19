@@ -52,10 +52,6 @@ public class CookingWithJavaApplication {
             }
         }
 
-        // Conexión por sockets con el servicio interno
-        Cliente cliente = new Cliente();
-        cliente.start();
-
         // Inicio de aplicación Spring
         SpringApplication.run(CookingWithJavaApplication.class, args);
     }

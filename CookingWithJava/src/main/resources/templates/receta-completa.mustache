@@ -158,10 +158,26 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Crear PDF -->
+
+        <form class="contact-form" action="/formulario-crear-pdf" method="get"
+              enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type="hidden" name="recetaId" value="{{receta.id}}"/>
+            <div class ="text-right">
+                <!-- Se podría pedir un correo electrónico al que enviar el PDF si no hay un usuario logueado -->
+                <!--<div class="form-group row col-md-12">
+                    <label class="col-sm-3" for="correo">Correo electrónico:</label>
+                    <input class="col-sm-9" id="correo" name="correo" type="text"
+                           placeholder="Correo electrónico">
+                </div>-->
+                <button type="submit" class="site-btn col-sm-2" id="buttonCreatePDF">Generar PDF</button>
+            </div>
+        </form>
     </div>
 </section>
 <!-- Recipe details section end -->
-
 
 <!-- New Comment section -->
 <section class="comment-section spad pt-0">
