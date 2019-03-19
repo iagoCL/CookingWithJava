@@ -10,9 +10,25 @@ import java.io.ByteArrayOutputStream;
 
 public class PDFCreator {
     // Método para crear el PDF
-    public static byte[] createPDF(String nombreReceta, String paso1, String paso2) {
+    public static byte[] createPDF(String[] args) {
         try {
-            String fileName = nombreReceta + ".pdf";
+            int pos = 0;
+
+            String nombreReceta = args[0];
+            String tipo = args[1];
+            String duracion = args[2];
+            String nombre_creador = args[3];
+            int nIngredientes = 0;
+            int nUtensilios = 0;
+            int nPasos = 0;
+            String[] ingredientes;
+            String[] utensilios;
+            String[] pasos;
+
+            ingredientes = new String[nIngredientes];
+            for (int i=0; i<nIngredientes; i++) {
+                ingredientes[i] = args[i+pos];
+            }
 
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage();
@@ -30,13 +46,13 @@ public class PDFCreator {
             content.beginText();
             content.setFont(PDType1Font.HELVETICA, 16);
             content.moveTextPositionByAmount(10, 675);
-            content.drawString("Paso 1: " + paso1);
+            content.drawString("Paso 1: ");
             content.endText();
 
             content.beginText();
             content.setFont(PDType1Font.HELVETICA, 16);
             content.moveTextPositionByAmount(10, 650);
-            content.drawString("Paso 2: " + paso2);
+            content.drawString("Paso 2: ");
             content.endText();
 
             content.close();
