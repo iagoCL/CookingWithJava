@@ -3,6 +3,8 @@ package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity(name = "Utensilio")
@@ -65,5 +67,12 @@ public class Utensilio {
         this.nombre_utensilio = nombre_utensilio_.toLowerCase();
         this.nivel_de_dificultad = nivel_de_dificultad_;
         this.receta_id = receta_id_;
+    }
+
+    public Map<String,Object> toJSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("nombre_utensilio",nombre_utensilio);
+        map.put("nivel_de_dificultad",nivel_de_dificultad);
+        return map;
     }
 }

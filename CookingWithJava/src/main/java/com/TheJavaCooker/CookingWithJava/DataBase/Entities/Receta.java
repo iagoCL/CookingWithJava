@@ -2,12 +2,16 @@ package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.annotations.QueryEntity;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.SortNatural;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -305,5 +309,46 @@ public class Receta {
         this.numero_comentarios = this.numero_favoritos = this.duracion_total = this.numero_pasos = 0;
         this.fecha_creacion = fecha_creacion_;
         imagendb_id = imagen_receta_;
+    }
+
+    public Map<String,Object> toJSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("tipo_plato",tipo_plato);
+        map.put("nombre_receta",nombre_receta);
+        map.put("nivel_de_dificultad",nivel_de_dificultad.toString());
+        map.put("numero_comentarios",numero_comentarios);
+        map.put("numero_favoritos",numero_favoritos);
+        map.put("duracion_total",getStringDuracionTotal());
+
+        map.put("creador",getCreadorDeLaReceta().toJSON());
+
+        map.put("numero_pasos",numero_pasos);
+        Map<String,Object> mapAux = new HashMap<>();
+        for(Paso paso : getPasos())
+        {
+            mapAux.put("paso-"+paso.getNumPaso(),paso.toJSON());
+        }
+        map.put("pasos",mapAux);
+
+        mapAux = new HashMap<>();
+        int i = 0;
+        for(Ingrediente ingrediente : getIngredientes())
+        {
+            ++i;
+            mapAux.put("ingrediente-"+i,ingrediente.toJSON());
+        }
+        map.put("numero_ingredientes",i);
+        map.put("ingredientes",mapAux);
+
+        mapAux = new HashMap<>();
+        i = 0;
+        for(Utensilio utensilio : getUtensilios())
+        {
+            ++i;
+            mapAux.put("utensilio-"+i,utensilio.toJSON());
+        }
+        map.put("numero_utensilios",i);
+        map.put("utensilios",mapAux);
+        return map;
     }
 }

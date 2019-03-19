@@ -2,22 +2,37 @@ package com.TheJavaCooker.CookingWithJava;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Ingrediente;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Paso;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Utensilio;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.JsonbHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class InternalServiceCliente {
 
-    private Socket socket;
-    private final static int puerto = 9000;
-    private final static String ip = "127.0.0.1";
+    private final static String uri = "http://127.0.0.1:9000/crearPDF";
     private DataInputStream input;
     private PrintStream output;
 
     private String nombre;
+    private Receta receta;
     private String tipo;
     private String duracion;
     private String nombre_creador;
@@ -25,43 +40,21 @@ public class InternalServiceCliente {
     private Set<Utensilio> utensilios;
     private Set<Paso> pasos;
 
-    public InternalServiceCliente(String nombre,
-                                  String tipo,
-                                  String duracion,
-                                  String nombre_creador,
-                                  Set<Ingrediente> ingredientes,
-                                  Set<Utensilio> utensilios,
-                                  Set<Paso> pasos) {
-        this.nombre = nombre;
-        this.tipo = tipo;
-        this.duracion = duracion;
-        this.nombre_creador = nombre_creador;
-        this.ingredientes = ingredientes;
-        this.utensilios = utensilios;
-        this.pasos = pasos;
+    public InternalServiceCliente(Receta receta) {
+        this.receta = receta;
     }
 
     public byte[] obtenerPDF() {
         try {
-            socket = new Socket(ip, puerto);
-            input = new DataInputStream(socket.getInputStream());
 
-            String mensaje = nombre;
-            output = new PrintStream(socket.getOutputStream());
-            output.println(mensaje);
+            Map<String,Object> mapa = this.receta.toJSON();
 
-            byte[] pdf = null;
-            int length = input.readInt();
-            if(length>0) {
-                pdf = new byte[length];
-                input.readFully(pdf, 0, pdf.length);
-            }
-
-            input.close();
-            output.close();
-            socket.close();
-            return pdf;
-        } catch(Exception e) {
+            RestTemplate rt = new RestTemplate();
+            rt.getMessageConverters().add(new StringHttpMessageConverter());
+            byte[] result = null;
+            result = rt.postForObject(uri, mapa, byte[].class);
+            return result;
+        } catch (Exception e) {
             return null;
         }
     }

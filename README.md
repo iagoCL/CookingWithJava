@@ -275,12 +275,14 @@ scp -P 1337 ruta/local/archivo.jar nombreUsuario@ip:/ruta/destino
 Supondremos que lo guardaremos en home y que abrimos una consola en la carpeta del jar:
 ```
 scp -P 1337 ./CookingWithJava.jar thejavacookers@127.0.0.1:/home/thejavacookers
+scp -P 1337 ./CookingWithJavaInternalService.jar thejavacookers@127.0.0.1:/home/thejavacookers
 ```
-Finalmente se puede ejecutar con:
+Finalmente se pueden ejecutar con:
 ```
 java -jar CookingWithJava.jar
+java -jar CookingWithJavaInternalService.jar
 ```
-
+Notose que si se usa virtualbox se debería hacer un reenvío de puertos del 9000 al 9000 (servicio interno) y otro para el 8443 (conexión https).
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 
 ## FASE 5 - Automatizar el despliegue de la aplicación.

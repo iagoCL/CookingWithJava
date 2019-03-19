@@ -1,6 +1,8 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity(name = "Ingrediente")
@@ -63,4 +65,12 @@ public class Ingrediente {
     public String getCantidadIngrediente() {
         return cantidad_ingrediente;
     }
+
+    public Map<String,Object> toJSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("nombre_ingrediente",nombre_ingrediente);
+        map.put("cantidad_ingrediente",cantidad_ingrediente);
+        return map;
+    }
+
 }

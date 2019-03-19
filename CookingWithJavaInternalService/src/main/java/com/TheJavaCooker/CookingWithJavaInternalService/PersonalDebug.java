@@ -1,4 +1,4 @@
-package CookingWithJavaInternalService;
+package com.TheJavaCooker.CookingWithJavaInternalService;
 
 public class PersonalDebug {
     private static boolean activarDebug;

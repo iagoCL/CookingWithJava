@@ -1,9 +1,12 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -199,6 +202,14 @@ public class Usuario {
         resetFechaCreacion();
         imagendb_id = imagendb_id_;
         this.num_comentarios_usuario = 0;
+    }
+
+    public Map<String,Object> toJSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("nombre_usuario",nombre_usuario);
+        map.put("correo_electronico",correo_electronico);
+        map.put("nombre_apellidos",nombre_apellidos);
+        return map;
     }
 
 }

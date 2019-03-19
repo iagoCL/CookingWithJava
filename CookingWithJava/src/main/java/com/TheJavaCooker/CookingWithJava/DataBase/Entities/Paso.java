@@ -1,6 +1,11 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+
 import javax.persistence.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity(name = "Paso")
@@ -94,5 +99,12 @@ public class Paso implements Comparable<Paso> {
     @Override
     public int compareTo(Paso other_) {
         return this.numero_paso - other_.numero_paso;
+    }
+
+    public Map<String,Object> toJSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("duracion",getDuracionString());
+        map.put("descripcion",descripcion_paso);
+        return map;
     }
 }

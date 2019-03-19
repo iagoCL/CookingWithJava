@@ -1,4 +1,4 @@
-package CookingWithJavaInternalService;
+package com.TheJavaCooker.CookingWithJavaInternalService;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;

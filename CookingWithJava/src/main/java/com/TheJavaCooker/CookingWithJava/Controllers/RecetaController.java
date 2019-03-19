@@ -53,7 +53,7 @@ public class RecetaController {
         Set<Paso> pasos = receta.getPasos();
 
         // Conexión por sockets con el servicio interno
-        InternalServiceCliente cliente = new InternalServiceCliente(nombre, tipo, duracion, nombre_creador, ingredientes, utensilios, pasos);
+        InternalServiceCliente cliente = new InternalServiceCliente(receta);
         byte[] u = cliente.obtenerPDF();
         if (u != null) {
             return new ResponseEntity<>(u, headers, HttpStatus.OK);
