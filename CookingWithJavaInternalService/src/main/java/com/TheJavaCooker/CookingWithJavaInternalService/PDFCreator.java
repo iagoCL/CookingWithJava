@@ -6,28 +6,35 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PDFCreator {
     // Método para crear el PDF
-    public static byte[] createPDF(String[] args) {
+    public static byte[] createPDF(List<String> args) {
         try {
             int pos = 0;
 
-            String nombreReceta = args[0];
-            String tipo = args[1];
-            String duracion = args[2];
-            String nombre_creador = args[3];
-            int nIngredientes = 0;
-            int nUtensilios = 0;
-            int nPasos = 0;
-            String[] ingredientes;
-            String[] utensilios;
-            String[] pasos;
+            String nombreReceta = args.get(pos++);
+            String tipo = args.get(pos++);
+            String duracion = args.get(pos++);
+            String nombre_creador = args.get(pos++);
+            int nIngredientes = Integer.parseInt(args.get(pos++));
+            int nUtensilios = Integer.parseInt(args.get(pos++));
+            int nPasos = Integer.parseInt(args.get(pos++));
+            List<String> ingredientes = new ArrayList<>(nIngredientes);
+            List<String> utensilios = new ArrayList<>(nUtensilios);
+            List<String> pasos = new ArrayList<>(nPasos);
 
-            ingredientes = new String[nIngredientes];
             for (int i=0; i<nIngredientes; i++) {
-                ingredientes[i] = args[i+pos];
+                ingredientes.add(args.get(pos++));
+            }
+            for (int i=0; i<nUtensilios; i++) {
+                utensilios.add(args.get(pos++));
+            }
+            for (int i=0; i<nPasos; i++) {
+                pasos.add(args.get(pos++));
             }
 
             PDDocument doc = new PDDocument();

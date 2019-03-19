@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -54,7 +56,7 @@ public class ApiRestController {
             int numeroIngredientes = rootNode.get("numero_ingredientes").asInt();
             PersonalDebug.imprimir("\nIngredientes: "+numeroIngredientes);
             JsonNode ingredientesNode = rootNode.get("ingredientes");
-            for(int i = 1; i<=numeroPasos;++i){
+            for(int i = 1; i<=numeroIngredientes;++i){
                 JsonNode ingrediente = ingredientesNode.get("ingrediente-"+i);
                 PersonalDebug.imprimir("\nIngrediente: "+i
                         + "\n\tnombre_ingrediente: " + ingrediente.get("nombre_ingrediente").asText()
@@ -64,14 +66,34 @@ public class ApiRestController {
             int numeroUtensilios = rootNode.get("numero_utensilios").asInt();
             PersonalDebug.imprimir("\nUtensilios: "+numeroPasos);
             JsonNode utensiliosNode = rootNode.get("utensilios");
-            for(int i = 1; i<=numeroPasos;++i){
+            for(int i = 1; i<=numeroUtensilios;++i){
                 JsonNode utensilio = utensiliosNode.get("utensilio-"+i);
                 PersonalDebug.imprimir("\nUtensilio: "+i
                         + "\n\tnombre_utensilio: " + utensilio.get("nombre_utensilio").asText()
                         + "\n\tnivel_de_dificultad: " + utensilio.get("nivel_de_dificultad").asText());
             }
 
-            return PDFCreator.createPDF(rootNode.get("nombre_receta").asText(), "Paso 1", "Paso 2");
+            List<String> createPDFArgs = new ArrayList<>(numeroUtensilios+numeroIngredientes+numeroPasos+5);
+            createPDFArgs.add(rootNode.get("nombre_receta").asText());
+            createPDFArgs.add(rootNode.get("tipo_plato").asText());
+            createPDFArgs.add(rootNode.get("duracion_total").asText());
+            createPDFArgs.add(creadorNode.get("nombre_usuario").asText());
+            createPDFArgs.add(numeroIngredientes+"");
+            createPDFArgs.add(numeroUtensilios+"");
+            createPDFArgs.add(numeroPasos+"");
+            for(int i = 1; i<=numeroIngredientes;++i) {
+                JsonNode ingrediente = ingredientesNode.get("ingrediente-" + i);
+                createPDFArgs.add(ingrediente.get("nombre_ingrediente").asText());
+            }
+            for(int i = 1; i<=numeroUtensilios;++i) {
+                JsonNode utensilio = utensiliosNode.get("utensilio-" + i);
+                createPDFArgs.add(utensilio.get("nombre_utensilio").asText());
+            }
+            for(int i = 1; i<=numeroPasos;++i) {
+                JsonNode paso = pasosNode.get("paso-" + i);
+                createPDFArgs.add(paso.get("descripcion").asText());
+            }
+            return PDFCreator.createPDF(createPDFArgs);
         } catch (Exception e) {
             return new byte[0];
         }
