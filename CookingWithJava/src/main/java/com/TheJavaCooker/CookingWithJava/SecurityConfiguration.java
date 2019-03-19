@@ -43,7 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(("/receta-{\\d+}")).permitAll();
         http.authorizeRequests().antMatchers(("/receta-completa-{\\d+}")).permitAll();
         http.authorizeRequests().antMatchers(("/recetaCompleta-{\\d+}")).permitAll();
-        http.authorizeRequests().antMatchers(("/formulario-crear-pdf")).permitAll();
 
         http.authorizeRequests().antMatchers(("/recetas")).permitAll();
         http.authorizeRequests().antMatchers(("/recetas-favoritas-{\\d+}")).permitAll();
@@ -51,6 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests().antMatchers(("/image/**")).permitAll();
+        http.authorizeRequests().antMatchers(("/pdf/**")).permitAll();
 
         http.authorizeRequests().antMatchers(("/css/**")).permitAll();
         http.authorizeRequests().antMatchers(("/fonts/**")).permitAll();

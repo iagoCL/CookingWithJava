@@ -9,19 +9,19 @@ CookingWithJava/.project
 CookingWithJava/.settings
 CookingWithJava/.springBeans
 CookingWithJava/.sts4-cache
-InternalService/.apt_generated
-InternalService/.classpath
-InternalService/.factorypath
-InternalService/.project
-InternalService/.settings
-InternalService/.springBeans
-InternalService/.sts4-cache
+CookingWithJavaInternalService/.apt_generated
+CookingWithJavaInternalService/.classpath
+CookingWithJavaInternalService/.factorypath
+CookingWithJavaInternalService/.project
+CookingWithJavaInternalService/.settings
+CookingWithJavaInternalService/.springBeans
+CookingWithJavaInternalService/.sts4-cache
 
 ### IntelliJ IDEA ###
 .idea
 */.idea
 CookingWithJava/.idea
-InternalService/.idea
+CookingWithJavaInternalService/.idea
 *.iws
 *.iml
 *.ipr
@@ -36,4 +36,5 @@ InternalService/.idea
 
 *metadata
 CookingWithJava/target/
-InternalService/target/
+CookingWithJavaInternalService/target/
+CookingWithJavaInternalService/out/

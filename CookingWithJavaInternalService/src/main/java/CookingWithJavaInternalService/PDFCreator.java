@@ -1,20 +1,16 @@
-import org.apache.pdfbox.exceptions.COSVisitorException;
+package CookingWithJavaInternalService;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.ByteArrayOutputStream;
+
 
 public class PDFCreator {
     // Método para crear el PDF
     public static byte[] createPDF(String nombreReceta, String paso1, String paso2) {
-
-        byte[] pdf = null;
-
         try {
             String fileName = nombreReceta + ".pdf";
 
@@ -44,17 +40,14 @@ public class PDFCreator {
             content.endText();
 
             content.close();
-            doc.save(fileName);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            doc.save(out);
             doc.close();
 
-            String location = System.getProperty("user.dir") + "\\" + nombreReceta + ".pdf";
-            Path pdfPath = Paths.get(location);
-            pdf = Files.readAllBytes(pdfPath);
-            System.out.println("File created in: " + location);
-        } catch(IOException | COSVisitorException e) {
-            System.out.println(e.getMessage());
+            return out.toByteArray();
+        } catch (Exception e) {
+            PersonalDebug.imprimir("ERROR creando PDF:" + e.toString());
+            return new byte[0];
         }
-
-        return pdf;
     }
 }

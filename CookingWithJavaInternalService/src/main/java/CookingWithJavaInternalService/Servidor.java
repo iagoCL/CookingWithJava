@@ -1,3 +1,8 @@
+package CookingWithJavaInternalService;
+
+import CookingWithJavaInternalService.PDFCreator;
+import CookingWithJavaInternalService.PersonalDebug;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -13,27 +18,30 @@ public class Servidor {
 
     // Métodos
     public void start() {
-        while(true) {
-            try {
-                serverSocket = new ServerSocket(puerto);
-                socket = new Socket();
+        try {
+            serverSocket = new ServerSocket(puerto);
+            while (true) {
                 socket = serverSocket.accept();
+                PersonalDebug.imprimir("Conexión aceptada");
 
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String mensaje = input.readLine();
 
+                PersonalDebug.imprimir("Generando PDF: " + mensaje);
                 byte[] pdf = PDFCreator.createPDF(mensaje, "Paso 1", "Paso 2");
-
+                PersonalDebug.imprimir("PDF Generado: " + mensaje);
                 output = new DataOutputStream(socket.getOutputStream());
                 output.writeInt(pdf.length);
                 output.write(pdf);
 
-                System.out.println("Conection ended");
+                PersonalDebug.imprimir("PDF Enviado");
 
                 socket.close();
-            } catch (Exception e) {
-
+                PersonalDebug.imprimir("Conexion cerrada");
             }
+        } catch (Exception e) {
+            PersonalDebug.imprimir("ERROR de socket:" + e.toString());
+
         }
     }
 }

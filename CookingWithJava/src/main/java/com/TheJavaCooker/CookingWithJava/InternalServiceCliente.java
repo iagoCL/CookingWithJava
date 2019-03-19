@@ -9,29 +9,29 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Set;
 
-public class Cliente {
+public class InternalServiceCliente {
 
-    Socket socket;
-    int puerto = 9000;
-    String ip = "127.0.0.1";
-    DataInputStream input;
-    PrintStream output;
+    private Socket socket;
+    private final static int puerto = 9000;
+    private final static String ip = "127.0.0.1";
+    private DataInputStream input;
+    private PrintStream output;
 
-    String nombre;
-    String tipo;
-    String duracion;
-    String nombre_creador;
-    Set<Ingrediente> ingredientes;
-    Set<Utensilio> utensilios;
-    Set<Paso> pasos;
+    private String nombre;
+    private String tipo;
+    private String duracion;
+    private String nombre_creador;
+    private Set<Ingrediente> ingredientes;
+    private Set<Utensilio> utensilios;
+    private Set<Paso> pasos;
 
-    public Cliente(String nombre,
-            String tipo,
-            String duracion,
-            String nombre_creador,
-            Set<Ingrediente> ingredientes,
-            Set<Utensilio> utensilios,
-            Set<Paso> pasos) {
+    public InternalServiceCliente(String nombre,
+                                  String tipo,
+                                  String duracion,
+                                  String nombre_creador,
+                                  Set<Ingrediente> ingredientes,
+                                  Set<Utensilio> utensilios,
+                                  Set<Paso> pasos) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.duracion = duracion;
@@ -41,7 +41,7 @@ public class Cliente {
         this.pasos = pasos;
     }
 
-    public void start() {
+    public byte[] obtenerPDF() {
         try {
             socket = new Socket(ip, puerto);
             input = new DataInputStream(socket.getInputStream());
@@ -60,8 +60,9 @@ public class Cliente {
             input.close();
             output.close();
             socket.close();
+            return pdf;
         } catch(Exception e) {
-
+            return null;
         }
     }
 }
