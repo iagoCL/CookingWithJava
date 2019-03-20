@@ -25,9 +25,6 @@ public class ApiRestController {
 
             JsonNode rootNode = objectMapper.readTree(recetaJSON);
 
-
-
-
             PersonalDebug.imprimir("\nreceta: "
                     + "\n\ttipo_plato: " + rootNode.get("tipo_plato").asText()
                     + "\n\tnombre_receta: " + rootNode.get("nombre_receta").asText()

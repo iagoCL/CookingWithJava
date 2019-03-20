@@ -28,17 +28,8 @@ import java.util.Set;
 public class InternalServiceCliente {
 
     private final static String uri = "http://127.0.0.1:9000/crearPDF";
-    private DataInputStream input;
-    private PrintStream output;
 
-    private String nombre;
     private Receta receta;
-    private String tipo;
-    private String duracion;
-    private String nombre_creador;
-    private Set<Ingrediente> ingredientes;
-    private Set<Utensilio> utensilios;
-    private Set<Paso> pasos;
 
     public InternalServiceCliente(Receta receta) {
         this.receta = receta;
@@ -46,9 +37,7 @@ public class InternalServiceCliente {
 
     public byte[] obtenerPDF() {
         try {
-
             Map<String,Object> mapa = this.receta.toJSON();
-
             RestTemplate rt = new RestTemplate();
             rt.getMessageConverters().add(new StringHttpMessageConverter());
             byte[] result = null;

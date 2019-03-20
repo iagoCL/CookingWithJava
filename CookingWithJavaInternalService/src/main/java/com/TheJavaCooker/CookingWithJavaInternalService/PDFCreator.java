@@ -1,8 +1,5 @@
 package com.TheJavaCooker.CookingWithJavaInternalService;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
@@ -20,8 +17,8 @@ public class PDFCreator {
     // Método para crear el PDF
     public static byte[] createPDF(List<String> args) {
         try {
+            // Lectura e interpretación de argumentos
             int pos = 0;
-
             String nombreReceta = args.get(pos++);
             String tipo = args.get(pos++);
             String duracion = args.get(pos++);
@@ -43,8 +40,10 @@ public class PDFCreator {
                 pasos.add(args.get(pos++));
             }
 
+            // Creación de documento
             Document document = new Document(50, 50, 60, 60);
 
+            // Cabecera
             Paragraph paragraph = new Paragraph();
             paragraph.addText(nombreReceta + "\n", 50, PDType1Font.HELVETICA_BOLD);
             paragraph.addText("Creado por " + nombre_creador + "\n", 30, PDType1Font.HELVETICA);
@@ -54,24 +53,27 @@ public class PDFCreator {
             paragraph.setAlignment(Alignment.Center);
             document.add(paragraph);
 
+            // Ingredientes en columna izquierda
             document.add(new ColumnLayout(2, 5));
             Paragraph left = new Paragraph();
             left.addText("Ingredientes:\n", 20, PDType1Font.HELVETICA_BOLD);
             document.add(left);
-            document.add(loopPrint(ingredientes, document));
+            document.add(loopPrint(ingredientes));
 
+            // Utensilios en columna derecha
             document.add(ColumnLayout.NEWCOLUMN);
             Paragraph right = new Paragraph();
             right.addText("Utensilios:\n", 20, PDType1Font.HELVETICA_BOLD);
             document.add(right);
-            document.add(loopPrint(utensilios, document));
+            document.add(loopPrint(utensilios));
 
             document.add(new VerticalLayout());
-
             paragraph = new Paragraph();
             paragraph.addText("\n--------------------------------------------------\n", 20, PDType1Font.HELVETICA);
             paragraph.setAlignment(Alignment.Center);
             document.add(paragraph);
+
+            // Lista de pasos
             paragraph = new Paragraph();
             paragraph.addText("\nPasos:\n", 20, PDType1Font.HELVETICA_BOLD);
             document.add(paragraph);
@@ -81,9 +83,9 @@ public class PDFCreator {
                 document.add(parrafoPaso);
             }
 
+            // Envía el PDF en un array de bytes
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             document.save(out);
-
             return out.toByteArray();
         } catch (Exception e) {
             PersonalDebug.imprimir("ERROR creando PDF:" + e.toString());
@@ -91,7 +93,8 @@ public class PDFCreator {
         }
     }
 
-    private static Paragraph loopPrint(List<String> lista, Document document) throws IOException {
+    // Imprime en el PDF una lista
+    private static Paragraph loopPrint(List<String> lista) throws IOException {
         Paragraph paragraph = new Paragraph();
         for (int i=0; i<lista.size(); i++) {
             paragraph.addText("- " + lista.get(i) + "\n", 13, PDType1Font.HELVETICA);
