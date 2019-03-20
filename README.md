@@ -90,13 +90,19 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 ### Página de incio
 
 
-![alt text](gddImages/index_1.JPG "Figura 1: Primera imagen de la página de inicio.")
+![alt text](gddImages/index.JPG "Figura 1: Primera imagen de la página de inicio sin logearse.")
 
-*Figura 1: Primera imagen de la página de inicio.*
+*Figura 1: Primera imagen de la página de inicio sin logearse.*
+
+
+![alt text](gddImages/index_logeado.JPG "Figura 1: Primera imagen de la página de inicio con el usuario logeado.")
+
+*Figura 2: Primera imagen de la página de inicio con el usuario logeado.*
+
 
 ![alt text](gddImages/index_2.JPG "Figura 1: Segunda imagen de la página de inicio.")
 
-*Figura 2: Segunda imagen de la página de inicio.*
+*Figura 3: Segunda imagen de la página de inicio.*
 
 * Está página actuará como inicio de la página web. Aquí, el usuario podrá acceder a las funciones principales tales como subir una nueva receta, logearse y registrarse, acceder a su perfil, ver todas las recetas y buscar recetas concretas.
 
@@ -106,15 +112,15 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 ![alt text](gddImages/register_1.JPG "Figura 3: Primera imagen de la página donde el usuario podrá logearse o registarse.")
 
-*Figura 3: Primera imagen de la página donde el usuario podrá logearse o registarse.*
+*Figura 4: Primera imagen de la página donde el usuario podrá logearse o registarse.*
 
 ![alt text](gddImages/register_2.JPG "Figura 4: Segunda imagen de la página donde el usuario podrá logearse o registarse.")
 
-*Figura 4: Segunda imagen de la página donde el usuario podrá logearse o registarse.*
+*Figura 5: Segunda imagen de la página donde el usuario podrá logearse o registarse.*
 
 ![alt text](gddImages/register_3.JPG "Figura 5: Tercera imagen de la página donde el usuario podrá logearse o registarse.")
 
-*Figura 5: Tercera imagen de la página donde el usuario podrá logearse o registarse.*
+*Figura 6: Tercera imagen de la página donde el usuario podrá logearse o registarse.*
 
 * En esta página el usuario podrá o bien registrarse como nuevo usuario, donde tendrá que rellenar los campos de nombre y apellidos, nickname, correo electrónico y contraseña; o bien logearse directamente si ya tiene cuenta, indicando su nick y su contraseña.
 
@@ -125,19 +131,19 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 ![alt text](gddImages/nuevareceta_1.JPG "Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.")
 
-*Figura 6: Primera imagen de la página que el usuario usará para subir recetas nuevas.*
+*Figura 7: Primera imagen de la página que el usuario usará para subir recetas nuevas.*
 
 ![alt text](gddImages/nuevareceta_2.JPG "Figura 7: Segunda imagen de la página que el usuario usará para subir recetas nuevas.")
 
-*Figura 7: Segunda imagen de la página que el usuario usará para subir recetas nuevas.*
+*Figura 8: Segunda imagen de la página que el usuario usará para subir recetas nuevas.*
 
 ![alt text](gddImages/nuevarectea_3.JPG "Figura 8: Tercera imagen de la página que el usuario usará para subir recetas nuevas.")
 
-*Figura 8: Tercera imagen de la página que el usuario usará para subir recetas nuevas.*
+*Figura 9: Tercera imagen de la página que el usuario usará para subir recetas nuevas.*
 
 ![alt text](gddImages/nuevareceta_4.JPG "Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.")
 
-*Figura 9: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.*
+*Figura 10: Cuarta imagen de la página que el usuario usará para subir recetas nuevas.*
 
 * En esta sección de la página, el usuario podrá crear y subir nuevas recetas. Para poder crear nuevas recetas, deberá rellenar una serie de campos en los que se incluyen: nombre de la receta, tipo de plato, nivel de dificultad,los nombres y las cantidades de  los diferentes ingredientes, los utensilios que se van a usar y los pasos a seguir para crear la receta.
 
@@ -146,11 +152,11 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 ![alt text](gddImages/buscarReceta_1.JPG "Figura 10: Primera imagen del buscador de recetas.")
 
-*Figura 10: Primera imagen del buscador de recetas.*
+*Figura 11: Primera imagen del buscador de recetas.*
 
 ![alt text](gddImages/buscarReceta_2.JPG "Figura 11: Segunda imagen del buscador de recetas.")
 
-*Figura 11: Segunda imagen del buscador de recetas.*
+*Figura 12: Segunda imagen del buscador de recetas.*
 
 * En esta página, el usuario podrá buscar recetas en función del nombre de la receta, el tipo de plato, el nivel de dificultad, el número de pasos, la duración y el número de comentarios o de favoritos que tiene.
 
@@ -159,16 +165,24 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 
 ![alt text](gddImages/recetas.JPG "Figura 12: Imagen de la página donde se muestran todas las recetas.")
 
-*Figura 12: Imagen de la página donde se muestran todas las recetas.*
+*Figura 13: Imagen de la página donde se muestran todas las recetas.*
 
 * En esta parte de la web se mostrarán todas las recetas subidas de todos los usuarios.
+
+![alt text](gddImages/receta.JPG "Figura 12: Ejemplo de receta.")
+
+*Figura 14: Ejemplo de receta.*
+
+
+
+
 
 
 ### Perfil
 
 ![alt text](gddImages/perfil.JPG "Figura 13: Página del perfil del usuario.")
 
-*Figura 13: Página del perfil del usuario.*
+*Figura 15: Página del perfil del usuario.*
 
 * Aquí se mostrará la información del usuario y dos links a sus recetas y su recetas favoritas.
 
@@ -189,9 +203,9 @@ Las principales funcionalidades de las que se ha pensado en dotar al servicio in
 A continuación, se muestra un diagrama simplificado de la navegación en la web.
 
 
-![alt text](gddImages/diagramaNavegacion.jpg "Figura 14: Diagrama de navegación.")
+![alt text](gddImages/paginas.jpg "Figura 14: Diagrama de navegación.")
 
-*Figura 14: Diagrama de navegación.*
+*Figura 16: Diagrama de navegación.*
 
 Se ha decidido usar este esquema más simplificado porque en la aplicación que se ha desarrollado, se puede acceder a cualquier página desde la página en la que esté el usuario y, por lo tanto, daría como resultado un diagrama de navegación casi ilegible, pues habría que unir cada página con el resto. Como resultado, se ha optado por definir este esquema en el que se explica que desde la barra de navegación, presente en todas las páginas, puedes acceder al resto.
 
@@ -200,11 +214,19 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 ### Modelo de datos de la aplicación
 #### Diagrama de clases UML
 <img src="gddImages/database-export.png">
+*Figura 17: Diagrama de clases UML.*
+
 
 #### Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional
 <img src="gddImages/entidadrelacion.jpg">
+*Figura 18: Diagrama entidad/relación.*
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
+### Diagrama de clases de la aplicación
+![alt text](gddImages/diagrama_clases.jpg "Figura 14: Diagrama de clases de la aplicación.")
+
+*Figura 19: Diagrama de clases de la aplicación.*
+
 ### Instrucciones de despliegue
 #### Instrucciones de despliegue windows
 Es necesario java-jre versión 9 o superior para ello se puede usar el gestor de paquetes [chocolatey](https://chocolatey.org/). Una vez instalado chocolatey se puede simplemente instalar con ejecutar como administrador:
