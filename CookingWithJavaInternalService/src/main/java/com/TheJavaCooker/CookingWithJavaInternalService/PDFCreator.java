@@ -6,6 +6,9 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
+import rst.pdfbox.layout.elements.render.ColumnLayout;
+import rst.pdfbox.layout.elements.render.VerticalLayout;
+import rst.pdfbox.layout.text.Alignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,27 +45,40 @@ public class PDFCreator {
 
             Document document = new Document(50, 50, 60, 60);
 
-            simplePrint(nombreReceta + "\n" + tipo + "\n" + duracion + "\n" + nombre_creador + "\n" , document);
+            Paragraph paragraph = new Paragraph();
+            paragraph.addText(nombreReceta + "\n", 50, PDType1Font.HELVETICA_BOLD);
+            paragraph.addText("Creado por " + nombre_creador + "\n", 30, PDType1Font.HELVETICA);
+            paragraph.addText(tipo + "\n", 20, PDType1Font.HELVETICA);
+            paragraph.addText(duracion + "\n", 20, PDType1Font.HELVETICA);
+            paragraph.addText("--------------------------------------------------\n", 20, PDType1Font.HELVETICA);
+            paragraph.setAlignment(Alignment.Center);
+            document.add(paragraph);
 
-            simplePrint("\n\nIngredientes:\n", document);
-            for (int i=0; i<nIngredientes; i++) {
-                Paragraph paragraph = new Paragraph();
-                paragraph.addText(ingredientes.get(i), 20, PDType1Font.HELVETICA);
-                document.add(paragraph);
-            }
+            document.add(new ColumnLayout(2, 5));
+            Paragraph left = new Paragraph();
+            left.addText("Ingredientes:\n", 20, PDType1Font.HELVETICA_BOLD);
+            document.add(left);
+            document.add(loopPrint(ingredientes, document));
 
-            simplePrint("\n\nUtensilios:\n", document);
-            for (int i=0; i<nUtensilios; i++) {
-                Paragraph paragraph = new Paragraph();
-                paragraph.addText(utensilios.get(i), 20, PDType1Font.HELVETICA);
-                document.add(paragraph);
-            }
+            document.add(ColumnLayout.NEWCOLUMN);
+            Paragraph right = new Paragraph();
+            right.addText("Utensilios:\n", 20, PDType1Font.HELVETICA_BOLD);
+            document.add(right);
+            document.add(loopPrint(utensilios, document));
 
-            simplePrint("\n\nPasos:\n", document);
+            document.add(new VerticalLayout());
+
+            paragraph = new Paragraph();
+            paragraph.addText("\n--------------------------------------------------\n", 20, PDType1Font.HELVETICA);
+            paragraph.setAlignment(Alignment.Center);
+            document.add(paragraph);
+            paragraph = new Paragraph();
+            paragraph.addText("\nPasos:\n", 20, PDType1Font.HELVETICA_BOLD);
+            document.add(paragraph);
             for (int i=0; i<nPasos; i++) {
-                Paragraph paragraph = new Paragraph();
-                paragraph.addText("\n" + i + ":\n" + pasos.get(i) + "\n", 20, PDType1Font.HELVETICA);
-                document.add(paragraph);
+                Paragraph parrafoPaso = new Paragraph();
+                parrafoPaso.addText("\n" + (i + 1) + ". " + pasos.get(i) + "\n", 13, PDType1Font.HELVETICA);
+                document.add(parrafoPaso);
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -75,9 +91,11 @@ public class PDFCreator {
         }
     }
 
-    private static void simplePrint(String text, Document document) throws IOException {
+    private static Paragraph loopPrint(List<String> lista, Document document) throws IOException {
         Paragraph paragraph = new Paragraph();
-        paragraph.addText(text, 20, PDType1Font.HELVETICA);
-        document.add(paragraph);
+        for (int i=0; i<lista.size(); i++) {
+            paragraph.addText("- " + lista.get(i) + "\n", 13, PDType1Font.HELVETICA);
+        }
+        return paragraph;
     }
 }
