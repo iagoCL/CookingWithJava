@@ -4,8 +4,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import rst.pdfbox.layout.elements.Document;
+import rst.pdfbox.layout.elements.Paragraph;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,40 +40,44 @@ public class PDFCreator {
                 pasos.add(args.get(pos++));
             }
 
-            PDDocument doc = new PDDocument();
-            PDPage page = new PDPage();
+            Document document = new Document(50, 50, 60, 60);
 
-            doc.addPage(page);
+            simplePrint(nombreReceta + "\n" + tipo + "\n" + duracion + "\n" + nombre_creador + "\n" , document);
 
-            PDPageContentStream content = new PDPageContentStream(doc, page);
+            simplePrint("\n\nIngredientes:\n", document);
+            for (int i=0; i<nIngredientes; i++) {
+                Paragraph paragraph = new Paragraph();
+                paragraph.addText(ingredientes.get(i), 20, PDType1Font.HELVETICA);
+                document.add(paragraph);
+            }
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 26);
-            content.moveTextPositionByAmount(250, 730);
-            content.drawString(nombreReceta);
-            content.endText();
+            simplePrint("\n\nUtensilios:\n", document);
+            for (int i=0; i<nUtensilios; i++) {
+                Paragraph paragraph = new Paragraph();
+                paragraph.addText(utensilios.get(i), 20, PDType1Font.HELVETICA);
+                document.add(paragraph);
+            }
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 16);
-            content.moveTextPositionByAmount(10, 675);
-            content.drawString("Paso 1: ");
-            content.endText();
+            simplePrint("\n\nPasos:\n", document);
+            for (int i=0; i<nPasos; i++) {
+                Paragraph paragraph = new Paragraph();
+                paragraph.addText("\n" + i + ":\n" + pasos.get(i) + "\n", 20, PDType1Font.HELVETICA);
+                document.add(paragraph);
+            }
 
-            content.beginText();
-            content.setFont(PDType1Font.HELVETICA, 16);
-            content.moveTextPositionByAmount(10, 650);
-            content.drawString("Paso 2: ");
-            content.endText();
-
-            content.close();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            doc.save(out);
-            doc.close();
+            document.save(out);
 
             return out.toByteArray();
         } catch (Exception e) {
             PersonalDebug.imprimir("ERROR creando PDF:" + e.toString());
             return new byte[0];
         }
+    }
+
+    private static void simplePrint(String text, Document document) throws IOException {
+        Paragraph paragraph = new Paragraph();
+        paragraph.addText(text, 20, PDType1Font.HELVETICA);
+        document.add(paragraph);
     }
 }
