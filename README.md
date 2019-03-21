@@ -17,6 +17,8 @@
       - [Diagrama de clases UML](#diagrama-de-clases-uml)
       - [Diagrama Entidad/Relación que muestre cómo se persisten dichos datos en la base de datos relacional](#diagrama-entidadrelaci%C3%B3n-que-muestre-c%C3%B3mo-se-persisten-dichos-datos-en-la-base-de-datos-relacional)
   - [FASE 3 - Inclusión de seguridad y servicio interno](#fase-3---inclusi%C3%B3n-de-seguridad-y-servicio-interno)
+    - [Interfaz de comunicación escogida](#interfaz-de-comunicaci%C3%B3n-escogida)
+    - [Diagrama de clases de la aplicación](#diagrama-de-clases-de-la-aplicaci%C3%B3n)
     - [Instrucciones de despliegue](#instrucciones-de-despliegue)
       - [Instrucciones de despliegue windows](#instrucciones-de-despliegue-windows)
       - [Intrucciones de despliegue en ubuntu 18.04 server](#intrucciones-de-despliegue-en-ubuntu-1804-server)
@@ -222,6 +224,9 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 *Figura 18: Diagrama entidad/relación.*
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
+### Interfaz de comunicación escogida
+Como método de comunicación con el servicio interno se  ha usado Api-rest, ya que facilitará la implementación del balanceo en la siguiente fase. La aplicación principal envia al servicio interno los datos de la receta que desea convertir en PDF por medio de un archivo JSON, el servicio interno procesa esa información y devuelve un array de bytes que corresponde al archivo PDF.
+
 ### Diagrama de clases de la aplicación
 ![alt text](gddImages/diagrama_clases.jpg "Figura 14: Diagrama de clases de la aplicación.")
 
