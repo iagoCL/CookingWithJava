@@ -44,19 +44,31 @@ public class RecetaController {
         Receta receta = recetaService.buscarPorId(recetaId);
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        String nombre = receta.getNombreReceta();
-        String tipo = receta.getTipoPlato();
-        String duracion = receta.getStringDuracionTotal();
-        String nombre_creador = receta.getCreadorDeLaReceta().getNombreUsuario();
-        Set<Ingrediente> ingredientes = receta.getIngredientes();
-        Set<Utensilio> utensilios = receta.getUtensilios();
-        Set<Paso> pasos = receta.getPasos();
 
         // Conexión por sockets con el servicio interno
         InternalServiceCliente cliente = new InternalServiceCliente(receta);
         byte[] u = cliente.obtenerPDF();
         if (u != null) {
             return new ResponseEntity<>(u, headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = {"/txt/{recetaId}",
+            "/txt/{recetaId}.txt"},
+            method = RequestMethod.GET,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> crearTXT(@PathVariable long recetaId) {
+        Receta receta = recetaService.buscarPorId(recetaId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        // Conexión por sockets con el servicio interno
+        InternalServiceCliente cliente = new InternalServiceCliente(receta);
+        String text = cliente.obtenerTXT();
+        if (text != null) {
+            return new ResponseEntity<>(text, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
         }

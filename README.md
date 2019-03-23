@@ -225,8 +225,84 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 
 ## FASE 3 - Inclusión de seguridad y servicio interno
 ### Interfaz de comunicación escogida
-Como método de comunicación con el servicio interno se  ha usado Api-rest, ya que facilitará la implementación del balanceo en la siguiente fase. La aplicación principal envia al servicio interno los datos de la receta que desea convertir en PDF por medio de un archivo JSON, el servicio interno procesa esa información y devuelve un array de bytes que corresponde al archivo PDF.
+Como método de comunicación con el servicio interno se  ha usado Api-rest, ya que facilitará la implementación del balanceo en la siguiente fase. La aplicación principal envia al servicio interno los datos de la receta que desea convertir en PDF por medio de un archivo JSON, el servicio interno procesa esa información y devuelve un array de bytes que bien corresponde al archivo PDF o a un archivo de texto.
 
+Para realizar una petición que nos devuelva un el archivo pdf se usara la URL *crearPDF*, mientras que para obtener un archivo de texto que resuma la receta se usara la URL: *crearTXT*; ambas url recibiran un pdf con los siguientes campos:
+* **nombre_receta**: Nombre de la receta.
+* **nivel_de_dificultad**: Nivel de dificultad de la receta como una cadena de texto, los valores estandar son *Indefinido*, *Facil*, *Medio*, *Dificil*, *Experto*, *Profesional*.
+* **tipo_plato**: Tipo de plato como string: (ej: postre, plato principal, etc.)
+* **numero_comentarios**: Número de comentarios en formato de numero entero.
+* **numero_favoritos**: Número de favoritos en formato de numero entero.
+* **creador**: Contiene la información del creador de la receta en los siguientes campos.
+  * **correo_electronico**: Dirreccion de correo electronico del creador de la receta.
+  * **nombre_apellidos**: Nombre y apellidos del creador de la receta.
+  * **nombre_usuario**: Nombre de usuario o nick del creador de la receta.
+* **numero_ingredientes**: Número de ingredientes en formato de numero entero.
+* **ingredientes**: Lista con todos los ingredientes que componen la receta.
+  * **ingrediente-Núm**: Contiene la información de un ingrediente de la receta con los siguientes campos. Se guarda como una lista ordenada empezando en 1 de la forma: *ingrediente-1*.
+    * **nombre_ingrediente**: Nombre del ingrediente.
+    * **cantidad_ingrediente**: Cantidad usada del ingrediente en formato texto (Ej: *206.59 mg*).
+* **numero_utensilios**: Número de utensilios en formato de numero entero.
+* **utensilios**:  Lista con todos los utensilios que componen la receta.
+  * **utensilio-Núm**: Contiene la información de un utensilio de la receta con los siguientes campos. Se guarda como una lista ordenada empezando en 1 de la forma: *utensilio-1*.
+    * **nombre_utensilio**: Nombre del utensilio.
+    * **nivel_de_dificultad**: Nivel de dificultad necesario para usar el utensilio.
+* **numero_pasos**: Número de pasos en formato de numero entero.
+* **duracion_total**: Duración total necesaria para realizar la receta en formato texto (Ej: 3 h 48 min).
+* **pasos**: Lista con todos los pasos que componen la receta.
+  * **paso-Núm**: Contiene la información de un paso de la receta con los siguientes campos. Se guarda como una lista ordenada empezando en 1 de la forma: *paso-1*.
+    * **descripcion**: Descripción del paso.
+    * **duracion**: Duración necesaria para realizar el paso en formato texto.
+
+Para facilitar su fúturo uso a continuación se muestra un ejemplo del json enviado a una petición, notese que aunque se genera un JSON completo de la receta cuando se crea un PDF muchos campos son obviados.
+```
+{
+  "nombre_receta": "Nombre Receta",
+  "nivel_de_dificultad": "Medio",
+  "tipo_plato": "postre",
+  "numero_comentarios": 2,
+  "numero_favoritos": 1,
+  "creador": {
+    "correo_electronico": "correo@example.com",
+    "nombre_apellidos": "Nombre Apellido1 Apellido2",
+    "nombre_usuario": "NickUsuario"
+  },
+  "numero_ingredientes": 2,
+  "ingredientes": {
+    "ingrediente-1": {
+      "nombre_ingrediente": "uranio",
+      "cantidad_ingrediente": "206.59 mg"
+    },
+    "ingrediente-2": {
+      "nombre_ingrediente": "patatas",
+      "cantidad_ingrediente": "medio vaso"
+    }
+  },
+  "numero_utensilios": 2,
+  "utensilios": {
+    "utensilio-1": {
+      "nombre_utensilio": "cuchillo",
+      "nivel_de_dificultad": "MEDIO"
+    },
+    "utensilio-2": {
+      "nombre_utensilio": "olla",
+      "nivel_de_dificultad": "DIFICIL"
+    }
+  },
+  "numero_pasos": 2,
+  "duracion_total": "3 h 48 min",
+  "pasos": {
+    "paso-1": {
+      "descripcion": "texto de ejemplo pharetra tation utamur suscipit idque posidonium",
+      "duracion": "25 min"
+    },
+    "paso-2": {
+      "descripcion": "lorem ipsum porta dicunt populo ne verear non convallis iriure netus his vocibus",
+      "duracion": "3 h 23 min"
+    }
+  }
+}
+```
 ### Diagrama de clases de la aplicación
 ![alt text](gddImages/diagrama_clases.jpg "Figura 14: Diagrama de clases de la aplicación.")
 
