@@ -227,7 +227,7 @@ Se ha decidido usar este esquema más simplificado porque en la aplicación que 
 ### Interfaz de comunicación escogida
 Como método de comunicación con el servicio interno se  ha usado Api-rest, ya que facilitará la implementación del balanceo en la siguiente fase. La aplicación principal envia al servicio interno los datos de la receta que desea convertir en PDF por medio de un archivo JSON, el servicio interno procesa esa información y devuelve un array de bytes que bien corresponde al archivo PDF o a un archivo de texto.
 
-Para realizar una petición que nos devuelva un el archivo pdf se usara la URL *crearPDF*, mientras que para obtener un archivo de texto que resuma la receta se usara la URL: *crearTXT*; ambas url recibiran un pdf con los siguientes campos:
+Para realizar una petición que nos devuelva un el archivo pdf se usara la URL del servicio interno acompañada de ***/crearPDF***, mientras que para obtener un archivo de texto que resuma la receta se usara la URL acompañada de ***crearTXT***; ambas url recibiran un JSON con los siguientes campos:
 * **nombre_receta**: Nombre de la receta.
 * **nivel_de_dificultad**: Nivel de dificultad de la receta como una cadena de texto, los valores estandar son *Indefinido*, *Facil*, *Medio*, *Dificil*, *Experto*, *Profesional*.
 * **tipo_plato**: Tipo de plato como string: (ej: postre, plato principal, etc.)
