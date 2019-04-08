@@ -115,14 +115,14 @@ public class DatabaseRandomData {
 
     private byte[] getImageFromPath(String rutaArchivo) {
         try {
-            /* Java 8*
+            /* Java 8*/
             URL resource = CookingWithJavaApplication.class.getResource(rutaArchivo);
             URI uri = resource.toURI();
             Path path = Paths.get(uri);
             return Files.readAllBytes(path);
 
-            //*/// Java 9 o superior
-            return getClass().getClassLoader().getResourceAsStream(rutaArchivo).readAllBytes();
+            /*/// Java 9 o superior
+            return getClass().getClassLoader().getResourceAsStream(rutaArchivo).readAllBytes();//*/
         } catch (Exception e) {
             PersonalDebug.imprimir("ERROR ABRIENDO IMAGEN ALETORIOA: " + e.toString());
             return null;

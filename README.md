@@ -22,6 +22,8 @@
     - [Instrucciones de despliegue](#instrucciones-de-despliegue)
       - [Instrucciones de despliegue windows](#instrucciones-de-despliegue-windows)
       - [Intrucciones de despliegue en ubuntu 18.04 server](#intrucciones-de-despliegue-en-ubuntu-1804-server)
+      - [Intrucciones de despliegue en ubuntu 18.04 server usando docker](#intrucciones-de-despliegue-en-ubuntu-1804-server-usando-docker)
+      - [Compilación](#compilaci%C3%B3n)
   - [FASE 4 - Incluir tolerancia a fallos en la aplicación](#fase-4---incluir-tolerancia-a-fallos-en-la-aplicaci%C3%B3n)
   - [FASE 5 - Automatizar el despliegue de la aplicación.](#fase-5---automatizar-el-despliegue-de-la-aplicaci%C3%B3n)
 
@@ -343,8 +345,11 @@ A continuacion se debe editar el archivo /etc/ssh/sshd_config para cambiar la li
 ```
 sudo nano /etc/ssh/sshd_config
 ```
-Cambie la linea y presione *ctrl+x*, a continuación presion *Y* y finalmente *enter*. A continuación ya podremos conectarnos desde nuestra máquina local.
-
+Cambie la linea y presione *ctrl+x*, a continuación presion *Y* y finalmente *enter*. A continuación ya podremos conectarnos desde nuestra máquina local una vez reiniciemos ssh.
+```
+sudo ufw allow 1337
+sudo service ssh restart
+```
 En caso de usar virtualbox se deberá poner como tipo de conexión y hacer un reenvio de puertos del 1337 al 1337.
 ```
 ssh username@ip -p1337
@@ -386,6 +391,59 @@ java -jar CookingWithJava.jar
 java -jar CookingWithJavaInternalService.jar
 ```
 Notose que si se usa virtualbox se debería hacer un reenvío de puertos del 9000 al 9000 (servicio interno) y otro para el 8443 (conexión https).
+#### Intrucciones de despliegue en ubuntu 18.04 server usando docker
+Primero installamos docker:
+```
+sudo apt update
+
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+
+sudo apt update
+
+apt-cache policy docker-ce
+
+sudo apt install docker-ce -y
+```
+Comprobamos que ejecuta con:
+```
+sudo systemctl status docker
+```
+Creamos una red para almacenar los docket
+```
+sudo docker network create cookingWithJava-Network
+```
+Creamos el docker de mysql
+```
+sudo docker run --rm -it --name=mysqlMaster --network=cookingWithJava-Network -e MYSQL_ROOT_PASSWORD=something -e MYSQL_DATABASE=db_cooking_with_java -e MYSQL_USER=cookingWithJavaDefaultUser -e MYSQL_PASSWORD=cookingWithJavaDefaultPass -d mysql/mysql-server:8.0.15
+```
+Compilamos la aplicación principal y el servicio interno:
+```
+sudo docker build ruta/carpeta/app/principal -t cookingwithjava-mainapp
+
+sudo docker build ruta/carpeta/servicio/interno -t cookingwithjava-internalservice
+```
+Los ejecutamos 
+```
+sudo docker run --rm -it --name=MainApp --network=cookingWithJava-Network -p 8443:8443 -d cookingwithjava-mainapp
+
+sudo docker run --rm -it --name=InternalService --network=cookingWithJava-Network -d cookingwithjava-internalservice
+```
+Podemos consultar su estado con:
+```
+sudo docker container ls --all
+
+sudo docket logs NameOfTheContainer
+```
+#### Compilación
+En caso de no usar los .jar ofrecidos y querer generarlos manulamente basta con ejecutar:
+```
+./mvnw -Dmaven.test.skip=true package 
+```
+
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 
 ## FASE 5 - Automatizar el despliegue de la aplicación.

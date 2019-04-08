@@ -8,8 +8,10 @@ import java.util.Map;
 
 public class InternalServiceCliente {
 
-    private final static String uriPDF = "http://127.0.0.1:9000/crearPDF";
-    private final static String uriTXT = "http://127.0.0.1:9000/crearTXT";
+    private final static String url = "http://InternalService:9000/";//Docker URL
+    //private final static String url = "http://127.0.0.1:9000/";//local host URL
+    private final static String uriPDF = url+"crearPDF";
+    private final static String uriTXT = url+"crearTXT";
 
     private Receta receta;
     Map<String,Object> mapaReceta;
