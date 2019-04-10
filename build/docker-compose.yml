@@ -1,0 +1,50 @@
+version: '3'
+services:
+  mysqlMaster:
+    image: mysql/mysql-server:8.0.15
+    container_name: mysqlMaster
+    restart: always
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=something
+      - MYSQL_DATABASE=db_cooking_with_java
+      - MYSQL_USER=cookingWithJavaDefaultUser
+      - MYSQL_PASSWORD=cookingWithJavaDefaultPass
+  MainProxy:
+    build: ./MainProxy
+    image: cookingwithjava-mainproxy
+    container_name: MainProxy
+    ports:
+     - "8443:8443"
+     - "1936:1936"
+  MainApp1:
+    build: ./MainApp
+    image: cookingwithjava-mainapp
+    container_name: MainApp1
+    environment:
+      - USED_PORT=9001
+  MainApp2:
+    build: ./MainApp
+    image: cookingwithjava-mainapp
+    container_name: MainApp2
+    environment:
+      - USED_PORT=9002
+  InternalService1:
+    build: ./InternalService
+    image: cookingwithjava-internalservice
+    container_name: InternalService1
+    environment:
+      - USED_PORT=7001
+  InternalService2:
+    build: ./InternalService
+    image: cookingwithjava-internalservice
+    container_name: InternalService2
+    environment:
+      - USED_PORT=7002
+  InternalServiceProxy:
+    build: ./InternalServiceProxy
+    image: cookingwithjava-internalproxy
+    container_name: InternalServiceProxy
+    ports:
+     - "1937:1937"

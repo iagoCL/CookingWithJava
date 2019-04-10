@@ -412,27 +412,26 @@ Comprobamos que ejecuta con:
 ```
 sudo systemctl status docker
 ```
-Creamos una red para almacenar los docket
+Installamos docker compose:
 ```
-sudo docker network create cookingWithJava-Network
-```
-Creamos el docker de mysql
-```
-sudo docker run --rm -it --name=mysqlMaster --network=cookingWithJava-Network -e MYSQL_ROOT_PASSWORD=something -e MYSQL_DATABASE=db_cooking_with_java -e MYSQL_USER=cookingWithJavaDefaultUser -e MYSQL_PASSWORD=cookingWithJavaDefaultPass -d mysql/mysql-server:8.0.15
-```
-Compilamos la aplicación principal y el servicio interno:
-```
-sudo docker build ruta/carpeta/app/principal -t cookingwithjava-mainapp
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
-sudo docker build ruta/carpeta/servicio/interno -t cookingwithjava-internalservice
+sudo chmod +x /usr/local/bin/docker-compose
 ```
-Los ejecutamos 
-```
-sudo docker run --rm -it --name=MainApp --network=cookingWithJava-Network -p 8443:8443 -d cookingwithjava-mainapp
 
-sudo docker run --rm -it --name=InternalService --network=cookingWithJava-Network -d cookingwithjava-internalservice
+Enviamos la carpeta build a la maquina virtual, por ejemplo:
+
 ```
-Podemos consultar su estado con:
+scp -P1337 -r ./build thejavacookers@127.0.0.1:/home/thejavacookers 
+```
+Realizamos docker compose en la maquina:
+```
+cd /home/thejavacookers/build
+
+sudo docker-compose up --detach --build  
+```
+
+Podemos consultar el estado de la aplicación con:
 ```
 sudo docker container ls --all
 

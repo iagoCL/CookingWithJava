@@ -1,7 +1,11 @@
 package com.TheJavaCooker.CookingWithJavaInternalService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PersonalDebug {
     private static boolean activarDebug;
+	private static Logger logger = LoggerFactory.getLogger(PersonalDebug.class);
 
     public static void setDebug(boolean activarDebug_) {
         PersonalDebug.activarDebug = activarDebug_;
@@ -9,7 +13,7 @@ public class PersonalDebug {
 
     public static void imprimir(String texto) {
         if (activarDebug) {
-            System.out.println(texto);
+            logger.warn(texto);
         }
     }
 }

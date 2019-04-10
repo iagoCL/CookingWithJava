@@ -19,6 +19,7 @@ public class CookingWithJavaApplication {
     private static int crearComentarios = 0;
     private static int crearRececetas = 0;
     private static int crearFavoritos = 0;
+    private static int puerto = 8080;
 
     public static void main(String[] args) {
         // Comprobación de argumentos
@@ -27,6 +28,8 @@ public class CookingWithJavaApplication {
                 activarDebug = true;
             } else if (args[i].equals("-c") || args[i].equals("--clear")) {
                 clearDatabase = true;
+            } else if (args[i].startsWith("-puertoWeb")) {				
+                puerto=Integer.parseInt(args[i].substring("-puertoWeb".length()));
             } else if (args[i].equals("-r") || args[i].equals("--randomData")) {
                 activarDebug = true;
                 clearDatabase = true;
@@ -47,11 +50,12 @@ public class CookingWithJavaApplication {
                         " [-t][--test] [-r][--randomData]" +
                         " [-c][--clear] [--usuariosRandomXX]" +
                         "[--recetasRandomXX] [--favoritosRandomXX]" +
-                        " [-comentariosRandomXX]");
+                        " [-comentariosRandomXX] [-puertoWeb]");
                 //System.exit(-1);
             }
         }
-
+        //Establecer el puerto
+        System.getProperties().put( "server.port", puerto );		
         // Inicio de aplicación Spring
         SpringApplication.run(CookingWithJavaApplication.class, args);
     }
@@ -64,7 +68,8 @@ public class CookingWithJavaApplication {
                 + "\ncrearUsuarios: " + crearUsuarios
                 + "\ncrearRecetas: " + crearRececetas
                 + "\ncrearFavoritos: " + crearFavoritos
-                + "\ncrearComentarios: " + crearComentarios);
+                + "\ncrearComentarios: " + crearComentarios
+				+ "\nPuerto: " + puerto);
         if (clearDatabase) {
             databaseService.eliminarTodos();
         }
@@ -85,7 +90,7 @@ public class CookingWithJavaApplication {
             databaseRandomData.crearFavoritosAleatorios(crearFavoritos);
             PersonalDebug.imprimir("NUEVOS FAVORITOS CREADOS");
         }
-        PersonalDebug.imprimir("APLICACION INICIADA.");
+        PersonalDebug.imprimir("APP INICIADA EN EL PUERTO: " + puerto);
     }
 }
 
