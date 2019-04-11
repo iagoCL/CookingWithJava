@@ -3,6 +3,7 @@ package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Objects;
                 @UniqueConstraint(columnNames = {"nombre_utensilio", "receta_id"}, name = Utensilio.constraintNombreUtensilio)
         }
 )
-public class Utensilio {
+public class Utensilio implements Serializable {
     public static final String constraintNombreUtensilio = "CONSTRAINT_NOMBRE_UTENSILIO_UNICO";
 
     @Id

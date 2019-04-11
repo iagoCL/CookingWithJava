@@ -46,7 +46,7 @@ public class ComentarioController {
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Al poner comentario.", pair.getFirst().name());
         }
-        return "redirect:/receta-" + commentRecetaId;
+        return "redirect:https://127.0.0.1:8443/receta-" + commentRecetaId;
     }
 
 }

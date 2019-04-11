@@ -48,6 +48,6 @@ public class FavoritosController {
                 webController.mostrarMensaje(model,principal,request,"Error:","Quitando Favorito.","El usuario actual no la ha marcado como favorita");
             }
         }
-        return "redirect:/receta-" + favoritoRecetaId;
+        return "redirect:https://127.0.0.1:8443/receta-" + favoritoRecetaId;
     }
 }

@@ -119,7 +119,7 @@ public class RecetaController {
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
             return webController.mostrarMensaje(model,principal,request, "ERROR:", "Creando Receta.", pair.getFirst().name());
         }
-        return "redirect:/receta-" + pair.getSecond().getId();
+        return "redirect:https://127.0.0.1:8443/receta-" + pair.getSecond().getId();
     }
 
 

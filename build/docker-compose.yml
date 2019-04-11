@@ -3,7 +3,6 @@ services:
   mysqlMaster:
     image: mysql/mysql-server:8.0.15
     container_name: mysqlMaster
-    restart: always
     expose:
       - "3306"
     environment:
@@ -22,6 +21,8 @@ services:
     build: ./MainApp
     image: cookingwithjava-mainapp
     container_name: MainApp1
+    ports:
+     - "9001:9001"
     environment:
       - USED_PORT=9001
   MainApp2:
@@ -30,10 +31,19 @@ services:
     container_name: MainApp2
     environment:
       - USED_PORT=9002
+  InternalServiceProxy:
+    build: ./InternalServiceProxy
+    image: cookingwithjava-internalproxy
+    container_name: InternalServiceProxy
+    ports:
+     - "1937:1937"
+     - "7000:7000"
   InternalService1:
     build: ./InternalService
     image: cookingwithjava-internalservice
     container_name: InternalService1
+    ports:
+     - "7001:7001"
     environment:
       - USED_PORT=7001
   InternalService2:
@@ -42,9 +52,3 @@ services:
     container_name: InternalService2
     environment:
       - USED_PORT=7002
-  InternalServiceProxy:
-    build: ./InternalServiceProxy
-    image: cookingwithjava-internalproxy
-    container_name: InternalServiceProxy
-    ports:
-     - "1937:1937"

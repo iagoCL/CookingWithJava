@@ -1,6 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
                 @UniqueConstraint(columnNames = {"nombre_ingrediente", "receta_id"}, name = Ingrediente.constraintNombreIngrediente)
         }
 )
-public class Ingrediente {
+public class Ingrediente implements Serializable {
     public static final String constraintNombreIngrediente = "CONSTRAINT_NOMBRE_INGREDIENTE_UNICO";
 
     @Id

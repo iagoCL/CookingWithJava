@@ -3,10 +3,11 @@ package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 import com.TheJavaCooker.CookingWithJava.DataBase.TipoDeImagen;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "Imagendb")
 @Table(name = "Imagendb")
-public class Imagendb {
+public class Imagendb implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

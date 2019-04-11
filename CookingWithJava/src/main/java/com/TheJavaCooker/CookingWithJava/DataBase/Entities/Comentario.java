@@ -1,6 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
         }
 )
 @Entity(name = "Comentario")
-public class Comentario implements Comparable<Comentario> {
+public class Comentario implements Comparable<Comentario>, Serializable {
     public static final String constraintComentarioUnico = "CONSTRAINT_COMENTARIO_UNICO";
     public static DateTimeFormatter formatoFechaHora = DateTimeFormatter.ofPattern("dd LLL yy - HH:MM");
 

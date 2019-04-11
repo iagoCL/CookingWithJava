@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,7 +15,7 @@ import java.util.Objects;
                 @UniqueConstraint(columnNames = {"numero_paso", "receta_id"}, name = Paso.constraintNombrePaso)
         }
 )
-public class Paso implements Comparable<Paso> {
+public class Paso  implements Serializable, Comparable<Paso> {
     public static final String constraintNombrePaso = "CONSTRAINT_NOMBRE_PASO_UNICO";
 
     @Id

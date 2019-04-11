@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -22,7 +23,7 @@ import java.util.*;
                 @UniqueConstraint(columnNames = {"nombre_receta"}, name = Receta.constraintNombreReceta)
         }
 )
-public class Receta {
+public class Receta implements Serializable {
     public static final String constraintNombreReceta = "CONSTRAINT_NOMBRE_RECETA_UNICA";
 
     @Id

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.*;
                 @UniqueConstraint(columnNames = {"correo_electronico"}, name = Usuario.constraintCorreoElectronico)
         }
 )
-public class Usuario {
+public class Usuario implements Serializable {
     public static final String constraintNombreUsuario = "CONSTRAINT_NOMBRE_USUARIO_UNICO";
     public static final String constraintCorreoElectronico = "CONSTRAINT_CORREO_ELECTRONICO_UNICO";
     public static DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd LLL yy");

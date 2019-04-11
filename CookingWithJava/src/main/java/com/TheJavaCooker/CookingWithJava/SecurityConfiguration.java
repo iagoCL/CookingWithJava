@@ -63,15 +63,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //Private pages
         http.authorizeRequests().anyRequest().authenticated();
 
-        http.formLogin().loginPage("/login").permitAll();
+        http.formLogin().loginPage("https://127.0.0.1:8443/login").permitAll();
         http.formLogin().loginProcessingUrl("/formulario-login").permitAll();
         http.formLogin().usernameParameter("nickLogin");
         http.formLogin().passwordParameter("contrasenaLogin");
-        http.formLogin().defaultSuccessUrl("/perfil");
-        http.formLogin().failureUrl("/loginError");
+        http.formLogin().defaultSuccessUrl("https://127.0.0.1:8443/");
+        http.formLogin().failureUrl("https://127.0.0.1:8443/loginError");
 
         http.logout().logoutUrl("/logout");
-        http.logout().logoutSuccessUrl("/logout-succes");
+        http.logout().logoutSuccessUrl("https://127.0.0.1:8443/logout-succes");
     }
 
     @Override
