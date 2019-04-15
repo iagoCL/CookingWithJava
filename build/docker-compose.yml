@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 services:
   mysqlMaster:
     image: mysql/mysql-server:8.0.15
@@ -10,45 +10,66 @@ services:
       - MYSQL_DATABASE=db_cooking_with_java
       - MYSQL_USER=cookingWithJavaDefaultUser
       - MYSQL_PASSWORD=cookingWithJavaDefaultPass
-  MainProxy:
-    build: ./MainProxy
-    image: cookingwithjava-mainproxy
-    container_name: MainProxy
-    ports:
-     - "8443:8443"
-     - "1936:1936"
   MainApp1:
     build: ./MainApp
     image: cookingwithjava-mainapp
     container_name: MainApp1
-    ports:
-     - "9001:9001"
+    depends_on:
+      - "mysqlMaster"
+      - "InternalServiceProxy"
     environment:
-      - USED_PORT=9001
+      - WAIT_HOSTS=mysqlMaster:3306
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlMaster:3306/db_cooking_with_java?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SERVER_PORT=9001
+      - HAZELCAST_URL1=MainApp1
+      - HAZELCAST_URL2=MainApp2
+      - INTERNAL_SERVICE_URL=http://InternalServiceProxy:7000
   MainApp2:
     build: ./MainApp
     image: cookingwithjava-mainapp
     container_name: MainApp2
+    depends_on:
+      - "mysqlMaster"
+      - "InternalServiceProxy"
     environment:
-      - USED_PORT=9002
-  InternalServiceProxy:
-    build: ./InternalServiceProxy
-    image: cookingwithjava-internalproxy
-    container_name: InternalServiceProxy
+      - MYSQL_URL_START=mysqlMaster:3306
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlMaster:3306/db_cooking_with_java?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SERVER_PORT=9002
+      - HAZELCAST_URL1=MainApp1
+      - HAZELCAST_URL2=MainApp2
+      - INTERNAL_SERVICE_URL=http://InternalServiceProxy:7000
+  MainProxy:
+    build: ./MainProxy
+    image: cookingwithjava-mainproxy
+    container_name: MainProxy
+    depends_on:
+      - "MainApp1"
+      - "MainApp2"
     ports:
-     - "1937:1937"
-     - "7000:7000"
+     - "8443:8443"
+     - "1936:1936"
+     - "8080:8080"
   InternalService1:
     build: ./InternalService
     image: cookingwithjava-internalservice
     container_name: InternalService1
-    ports:
-     - "7001:7001"
     environment:
-      - USED_PORT=7001
+      - SERVER_PORT=7001
   InternalService2:
     build: ./InternalService
     image: cookingwithjava-internalservice
     container_name: InternalService2
     environment:
-      - USED_PORT=7002
+      - SERVER_PORT=7002
+  InternalServiceProxy:
+    build: ./InternalServiceProxy
+    image: cookingwithjava-internalproxy
+    container_name: InternalServiceProxy
+    depends_on:
+      - "InternalService1"
+      - "InternalService2"
+    expose:
+      - "7000"
+    ports:
+     - "1937:1937"
+     - "7000:7000"

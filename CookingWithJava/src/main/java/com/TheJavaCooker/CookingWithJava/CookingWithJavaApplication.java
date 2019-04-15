@@ -19,7 +19,7 @@ public class CookingWithJavaApplication {
     private static int crearComentarios = 0;
     private static int crearRececetas = 0;
     private static int crearFavoritos = 0;
-    private static int puerto = 8080;
+    private static String servicioInterno = "http://127.0.0.1:7000";
 
     public static void main(String[] args) {
         // Comprobación de argumentos
@@ -28,8 +28,10 @@ public class CookingWithJavaApplication {
                 activarDebug = true;
             } else if (args[i].equals("-c") || args[i].equals("--clear")) {
                 clearDatabase = true;
-            } else if (args[i].startsWith("-puertoWeb")) {				
-                puerto=Integer.parseInt(args[i].substring("-puertoWeb".length()));
+            } else if (args[i].startsWith("-urlServicioInterno")) {
+                servicioInterno = args[i].substring("-urlServicioInterno".length());
+            } else if (args[i].startsWith("-urlHazelCast")) {
+                HazleCastConfiguration.addNode(args[i].substring("-urlHazelCast".length()));
             } else if (args[i].equals("-r") || args[i].equals("--randomData")) {
                 activarDebug = true;
                 clearDatabase = true;
@@ -50,12 +52,12 @@ public class CookingWithJavaApplication {
                         " [-t][--test] [-r][--randomData]" +
                         " [-c][--clear] [--usuariosRandomXX]" +
                         "[--recetasRandomXX] [--favoritosRandomXX]" +
-                        " [-comentariosRandomXX] [-puertoWeb]");
+                        " [-comentariosRandomXX] [-urlServicioInterno]" +
+                        " [-urlHazelCast]");
                 //System.exit(-1);
             }
         }
-        //Establecer el puerto
-        System.getProperties().put( "server.port", puerto );		
+        InternalServiceCliente.setURL(servicioInterno);
         // Inicio de aplicación Spring
         SpringApplication.run(CookingWithJavaApplication.class, args);
     }
@@ -68,8 +70,7 @@ public class CookingWithJavaApplication {
                 + "\ncrearUsuarios: " + crearUsuarios
                 + "\ncrearRecetas: " + crearRececetas
                 + "\ncrearFavoritos: " + crearFavoritos
-                + "\ncrearComentarios: " + crearComentarios
-				+ "\nPuerto: " + puerto);
+                + "\ncrearComentarios: " + crearComentarios);
         if (clearDatabase) {
             databaseService.eliminarTodos();
         }
@@ -90,7 +91,7 @@ public class CookingWithJavaApplication {
             databaseRandomData.crearFavoritosAleatorios(crearFavoritos);
             PersonalDebug.imprimir("NUEVOS FAVORITOS CREADOS");
         }
-        PersonalDebug.imprimir("APP INICIADA EN EL PUERTO: " + puerto);
+        PersonalDebug.imprimir("APP INICIADA");
     }
 }
 

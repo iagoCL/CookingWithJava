@@ -3,4 +3,4 @@ MAINTAINER TheJavaCookers
 ENV USED_PORT 7001
 RUN mkdir /opt/application
 COPY ./CookingWithJavaInternalService.jar /opt/application/CookingWithJavaInternalService.jar
-CMD java -jar /opt/application/CookingWithJavaInternalService.jar -d -puertoWeb$USED_PORT
+CMD java -jar /opt/application/CookingWithJavaInternalService.jar -d

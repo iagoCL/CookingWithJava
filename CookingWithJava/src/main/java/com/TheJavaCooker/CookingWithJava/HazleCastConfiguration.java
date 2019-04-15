@@ -16,15 +16,14 @@ import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 
 
-
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 
 @EnableHazelcastHttpSession
 @Configuration
 public class HazleCastConfiguration {
 
-    private String[] nodes = {"MainApp1", "MainApp2"};
+    static List<String> nodes = new ArrayList<>();
 
     @Bean
     public HazelcastInstance hazelcastInstance() {
@@ -36,7 +35,7 @@ public class HazleCastConfiguration {
 
         JoinConfig joinConfig = config.getNetworkConfig().getJoin();
         joinConfig.getMulticastConfig().setEnabled(false);
-        joinConfig.getTcpIpConfig().setEnabled(true).setMembers(Arrays.asList(nodes));
+        joinConfig.getTcpIpConfig().setEnabled(true).setMembers(nodes);
 
 
         config.getMapConfig(HazelcastSessionRepository.DEFAULT_SESSION_MAP_NAME)
@@ -47,26 +46,8 @@ public class HazleCastConfiguration {
         return Hazelcast.newHazelcastInstance(config);
     }
 
-    /*@Bean
-    public Config config() {
-
-        Config config = new Config();
-
-        JoinConfig joinConfig = config.getNetworkConfig().getJoin();
-
-        joinConfig.getMulticastConfig().setEnabled(false);
-        joinConfig.getTcpIpConfig().setEnabled(true).setMembers(Arrays.asList(nodes));
-
-        return config;
+    public static void addNode( String node)
+    {
+        nodes.add(node);
     }
-
-    @Bean
-    public WebFilter webFilter( HazelcastInstance hazelcastInstance) {
-
-        Properties properties = new Properties();
-        properties.put("instance-name", hazelcastInstance.getName());
-        properties.put("sticky-session", "false");
-
-        return new WebFilter(properties);
-    }*/
 }
