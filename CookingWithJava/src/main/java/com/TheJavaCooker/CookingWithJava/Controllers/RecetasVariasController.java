@@ -30,7 +30,7 @@ public class RecetasVariasController {
                                  Principal principal,
                                  HttpServletRequest request) {
         model.addAttribute("recetas", recetaRepository.findAll());
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "recetas";
     }
 
@@ -44,7 +44,7 @@ public class RecetasVariasController {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas favoritas.", "El Usuario actual: no se ha encontrado.");
         }
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
-        webController.anadirUsuarioActual(usuario, request, model);
+        webController.anadirHeader(usuario, request, model);
         return "recetas";
     }
 
@@ -55,7 +55,7 @@ public class RecetasVariasController {
                                           @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         model.addAttribute("recetas", usuario.getRecetasFavoritas());
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "recetas";
     }
 
@@ -68,7 +68,7 @@ public class RecetasVariasController {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas creadas.", "El Usuario actual: no se ha encontrado.");
         }
         model.addAttribute("recetas", usuario.getRecetasCreadas());
-        webController.anadirUsuarioActual(usuario, request, model);
+        webController.anadirHeader(usuario, request, model);
         return "recetas";
     }
 
@@ -79,7 +79,7 @@ public class RecetasVariasController {
                                         @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         model.addAttribute("recetas", usuario.getRecetasCreadas());
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "recetas";
     }
 

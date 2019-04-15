@@ -1,13 +1,11 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
-import com.TheJavaCooker.CookingWithJava.InternalServiceCliente;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.*;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 public class RecetaController {
@@ -32,46 +29,8 @@ public class RecetaController {
 
     @GetMapping(value = {"/crearReceta", "/crear-receta", "/subir-receta", "/subirReceta"})
     public String crearReceta(Model model, Principal principal, HttpServletRequest request ) {
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "crearReceta";
-    }
-
-    @RequestMapping(value = {"/pdf/{recetaId}",
-            "/pdf/{recetaId}.pdf"},
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> crearPDF(@PathVariable long recetaId) {
-        Receta receta = recetaService.buscarPorId(recetaId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-        // Conexión por sockets con el servicio interno
-        InternalServiceCliente cliente = new InternalServiceCliente(receta);
-        byte[] u = cliente.obtenerPDF();
-        if (u != null) {
-            return new ResponseEntity<>(u, headers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(value = {"/txt/{recetaId}",
-            "/txt/{recetaId}.txt"},
-            method = RequestMethod.GET,
-            produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> crearTXT(@PathVariable long recetaId) {
-        Receta receta = recetaService.buscarPorId(recetaId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-        // Conexión por sockets con el servicio interno
-        InternalServiceCliente cliente = new InternalServiceCliente(receta);
-        String text = cliente.obtenerTXT();
-        if (text != null) {
-            return new ResponseEntity<>(text, headers, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, headers, HttpStatus.BAD_REQUEST);
-        }
     }
 
     @PostMapping(value = {"/formulario-crear-receta"})
@@ -145,12 +104,15 @@ public class RecetaController {
         model.addAttribute("utensilios", receta.getUtensilios());
         model.addAttribute("ingredientes", receta.getIngredientes());
         boolean marcadaFavorita = false;
+        boolean recetaCreada = false;
         Usuario usuario = usuariosController.usuarioActivo(principal);
         if (usuario != null) {
             marcadaFavorita = receta.marcadaComoFavorita(usuario);
+            recetaCreada = creadorReceta.getId() == usuario.getId();
         }
         model.addAttribute("esFavorita", marcadaFavorita);
-        webController.anadirUsuarioActual(principal, request, model);
+        model.addAttribute("esCreador", recetaCreada);
+        webController.anadirHeader(principal, request, model);
         return "receta-completa";
     }
 }

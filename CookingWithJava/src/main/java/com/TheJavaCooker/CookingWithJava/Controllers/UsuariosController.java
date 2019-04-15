@@ -36,7 +36,7 @@ public class UsuariosController {
 
     @GetMapping(value = {"/login", "/register"})
     public String login(Model model, Principal principal, HttpServletRequest request) {
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "login";
 
     }
@@ -123,7 +123,7 @@ public class UsuariosController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("recetasCreadas", usuario.getRecetasCreadas());
         model.addAttribute("recetasFavoritas", usuario.getRecetasFavoritas());
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "perfil";
     }
 

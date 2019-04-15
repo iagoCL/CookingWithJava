@@ -25,7 +25,7 @@ public class BuscarRecetasController {
 
     @GetMapping(value = {"/busqueda", "/buscarReceta", "buscar-receta"})
     public String buscar(Model model, HttpServletRequest request, Principal principal) {
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "busqueda";
     }
 
@@ -59,7 +59,7 @@ public class BuscarRecetasController {
                 null,
                 null);
         model.addAttribute("recetas", recetasBuscadas);
-        webController.anadirUsuarioActual(principal, request, model);
+        webController.anadirHeader(principal, request, model);
         return "recetas";
     }
 }

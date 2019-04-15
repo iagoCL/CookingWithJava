@@ -8,10 +8,14 @@ import java.util.Map;
 
 public class InternalServiceCliente {
 
-    private final static String url = "http://InternalService:7000/";//Docker URL
-    //private final static String url = "http://127.0.0.1:9000/";//local host URL
-    private final static String uriPDF = url+"crearPDF";
-    private final static String uriTXT = url+"crearTXT";
+    private static String uriPDF;
+    private static String uriTXT;
+
+    public static void setURL( String url)
+    {
+        uriPDF = url+"/crearPDF";
+        uriTXT = url+"/crearTXT";
+    }
 
     private Receta receta;
     Map<String,Object> mapaReceta;
@@ -27,8 +31,10 @@ public class InternalServiceCliente {
             rt.getMessageConverters().add(new StringHttpMessageConverter());
             byte[] result = null;
             result = rt.postForObject(uriPDF, mapaReceta, byte[].class);
+            PersonalDebug.imprimir("PDF creado.");
             return result;
         } catch (Exception e) {
+            PersonalDebug.imprimir("Error creando PDF: "+e.toString()+" - URL: "+uriPDF);
             return null;
         }
     }
@@ -39,8 +45,10 @@ public class InternalServiceCliente {
             rt.getMessageConverters().add(new StringHttpMessageConverter());
             String result = null;
             result = rt.postForObject(uriTXT, mapaReceta, String.class);
+            PersonalDebug.imprimir("TXT creado.");
             return result;
         } catch (Exception e) {
+            PersonalDebug.imprimir("Error creando TXT: "+e.toString()+" - URL: "+uriPDF);
             return null;
         }
     }
