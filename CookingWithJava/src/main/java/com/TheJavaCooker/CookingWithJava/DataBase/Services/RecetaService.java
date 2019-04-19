@@ -10,6 +10,9 @@ import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@CacheConfig(cacheNames="recetasCache")
 public class RecetaService {
     @Autowired
     private RecetaRepository recetaRepository;
@@ -31,6 +35,7 @@ public class RecetaService {
     @Autowired
     private ImagenService imagenService;
 
+    @CacheEvict(allEntries = true)
     public Pair<DatabaseService.Errores, Receta> crearReceta(String nombreReceta_,
                                                              String tipoDePlato,
                                                              String nivelDeDificultad,
@@ -49,8 +54,8 @@ public class RecetaService {
                 listaDePasos_,
                 usuario_);
     }
-
-    Pair<DatabaseService.Errores, Receta> crearRecetaConFecha(String nombreReceta_,
+    @CacheEvict(allEntries = true)
+    public Pair<DatabaseService.Errores, Receta> crearRecetaConFecha(String nombreReceta_,
                                                               String tipoDePlato,
                                                               String nivelDeDificultad,
                                                               LocalDate localDate_,
@@ -131,7 +136,7 @@ public class RecetaService {
         return nuevoPairReceta;
 
     }
-
+    @CacheEvict(allEntries = true)
     public Pair<DatabaseService.Errores, Receta> actualizarReceta(Receta receta_) {
         if (receta_.getNombreReceta().isEmpty()) {
             PersonalDebug.imprimir("Nombre de receta nulo: " + receta_.getNombreReceta());
@@ -169,11 +174,12 @@ public class RecetaService {
             return Pair.of(DatabaseService.Errores.SIN_ERRORES, receta_);
         }
     }
-
+    @Cacheable
     public Receta buscarPorId(long id) {
         return recetaRepository.findById(id).orElse(null);
     }
 
+    @Cacheable
     public List<Receta> buscarReceta(int indicePagina_,
                                      int elementosPagina_,
                                      Integer duracionMaxima_,
@@ -229,19 +235,20 @@ public class RecetaService {
         it.forEach((e) -> recetas.add(e));
         return recetas;
     }
-
-    void eliminarTodos() {
+    @CacheEvict(allEntries = true)
+    public void eliminarTodos() {
         recetaRepository.deleteAll();
         ingredienteService.eliminarTodos();
         pasoService.eliminarTodos();
         utensilioService.eliminarTodos();
     }
-
-    List<Receta> todasLasRecetas() {
+    @Cacheable
+    public List<Receta> todasLasRecetas() {
         return recetaRepository.findAll();
     }
 
-    long getNumRecetas() {
+    @Cacheable
+    public long getNumRecetas() {
         return recetaRepository.count();
     }
 }
