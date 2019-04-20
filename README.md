@@ -25,7 +25,8 @@
       - [Intrucciones de despliegue en ubuntu 18.04 server usando docker](#intrucciones-de-despliegue-en-ubuntu-1804-server-usando-docker)
       - [Compilación](#compilaci%C3%B3n)
   - [FASE 4 - Incluir tolerancia a fallos en la aplicación](#fase-4---incluir-tolerancia-a-fallos-en-la-aplicaci%C3%B3n)
-  - [FASE 5 - Automatizar el despliegue de la aplicación.](#fase-5---automatizar-el-despliegue-de-la-aplicaci%C3%B3n)
+    - [Diagrama de despliegue en docker](#diagrama-de-despliegue-en-docker)
+    - [Video de demostración](#video-de-demostraci%C3%B3n)
 
 # CookingWithJava
 Este proyecto consiste en la práctica final de la asignatura de Desarrollo de Aplicaciones Distribuidas del grado de Ingeniería de Computadores de la URJC. Consistente en realizar una aplicación web de temática libre.
@@ -445,4 +446,13 @@ En caso de no usar los .jar ofrecidos y querer generarlos manulamente basta con 
 
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 
-## FASE 5 - Automatizar el despliegue de la aplicación.
+### Diagrama de despliegue en docker
+![alt text](gddImages/diagrama_docker.jpg "Figura 14: Diagrama de despliegue de docker de la aplicación.")
+
+*Figura 19: Diagrama de despliegue en docker de la aplicación.*
+
+### Video de demostración
+<!--cambiar el video cambiando VIDIDHERE-->
+[![Alt text](https://img.youtube.com/vi/VIDIDHERE/0.jpg)](https://www.youtube.com/watch?v=VIDIDHERE)
+
+<https://youtu.be/VIDIDHERE>
