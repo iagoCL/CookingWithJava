@@ -1,5 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -27,10 +29,12 @@ public class Comentario implements Comparable<Comentario>, Serializable {
     @Column(nullable = false, name = "fecha_comentario")
     private LocalDateTime fecha_comentario;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
     private Receta receta_id;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario_id;

@@ -2,6 +2,7 @@ package com.TheJavaCooker.CookingWithJava.Controllers;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Repository.RecetaRepository;
+import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,8 @@ public class RecetasVariasController {
     @Autowired
     private RecetaRepository recetaRepository;
     @Autowired
+    private RecetaService recetaService;
+    @Autowired
     private UsuariosController usuariosController;
     @Autowired
     private UsuarioService usuarioService;
@@ -29,7 +32,7 @@ public class RecetasVariasController {
     public String mostrarRecetas(Model model,
                                  Principal principal,
                                  HttpServletRequest request) {
-        model.addAttribute("recetas", recetaRepository.findAll());
+        model.addAttribute("recetas", recetaService.todasLasRecetas( ));
         webController.anadirHeader(principal, request, model);
         return "recetas";
     }

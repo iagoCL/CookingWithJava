@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hibernate.Hibernate;
@@ -40,10 +41,12 @@ public class Usuario implements Serializable {
     @Column(nullable = false, name = "fecha_creacion")
     private LocalDate fecha_creacion;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "imagendb_id")
     private Imagendb imagendb_id;
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "creador_de_la_receta",
             cascade = CascadeType.ALL,
@@ -52,6 +55,7 @@ public class Usuario implements Serializable {
     )
     private Set<Receta> recetas_creadas = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,
             mappedBy = "favoritos")
     private List<Receta> recetas_favoritas = new ArrayList<>();

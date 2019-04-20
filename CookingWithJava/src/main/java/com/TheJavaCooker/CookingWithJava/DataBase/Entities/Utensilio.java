@@ -1,6 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,6 +27,7 @@ public class Utensilio implements Serializable {
     @Column(nullable = false, name = "nivel_de_dificultad")
     private NivelDeDificultad nivel_de_dificultad;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
     private Receta receta_id;

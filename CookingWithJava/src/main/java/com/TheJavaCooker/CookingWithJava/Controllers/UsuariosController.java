@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Repository.UsuarioRepository;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
@@ -88,7 +89,7 @@ public class UsuariosController {
         sc.setAuthentication(auth);
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-        return "redirect:https://127.0.0.1:8443/usuario-" + usuario.getId();
+        return "redirect:"+ CookingWithJavaApplication.getAppURL()+"/usuario-" + usuario.getId();
     }
 
     @GetMapping(value = {"/usuario-{usuarioId}", "/perfil-{usuarioId}"})

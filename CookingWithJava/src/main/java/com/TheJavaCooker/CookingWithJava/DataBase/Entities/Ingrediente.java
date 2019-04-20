@@ -1,5 +1,7 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ public class Ingrediente implements Serializable {
     @Column(nullable = false, name = "cantidad_ingrediente")
     private String cantidad_ingrediente;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
     private Receta receta_id;

@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class Paso  implements Serializable, Comparable<Paso> {
     @Column(nullable = false, name = "duracion")
     private int duracion;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id")
     private Receta receta_id;

@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.*;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
@@ -78,7 +79,7 @@ public class RecetaController {
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
             return webController.mostrarMensaje(model,principal,request, "ERROR:", "Creando Receta.", pair.getFirst().name());
         }
-        return "redirect:https://127.0.0.1:8443/receta-" + pair.getSecond().getId();
+        return "redirect:"+ CookingWithJavaApplication.getAppURL()+"/receta-" + pair.getSecond().getId();
     }
 
 

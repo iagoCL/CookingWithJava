@@ -23,6 +23,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/").permitAll();
         http.authorizeRequests().antMatchers(("/index")).permitAll();
 
+        http.authorizeRequests().antMatchers(("/cache")).permitAll();
+
         http.authorizeRequests().antMatchers(("/login")).permitAll();
         http.authorizeRequests().antMatchers(("/formulario-login")).permitAll();
         http.authorizeRequests().antMatchers(("/formulario-registro")).permitAll();
@@ -63,15 +65,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         //Private pages
         http.authorizeRequests().anyRequest().authenticated();
 
-        http.formLogin().loginPage("https://127.0.0.1:8443/login").permitAll();
+        http.formLogin().loginPage(CookingWithJavaApplication.getAppURL()+"/login").permitAll();
         http.formLogin().loginProcessingUrl("/formulario-login").permitAll();
         http.formLogin().usernameParameter("nickLogin");
         http.formLogin().passwordParameter("contrasenaLogin");
-        http.formLogin().defaultSuccessUrl("https://127.0.0.1:8443/");
-        http.formLogin().failureUrl("https://127.0.0.1:8443/loginError");
+        http.formLogin().defaultSuccessUrl(CookingWithJavaApplication.getAppURL());
+        http.formLogin().failureUrl(CookingWithJavaApplication.getAppURL()+"/loginError");
 
         http.logout().logoutUrl("/logout");
-        http.logout().logoutSuccessUrl("https://127.0.0.1:8443/logout-succes");
+        http.logout().logoutSuccessUrl(CookingWithJavaApplication.getAppURL()+"/logout-succes");
     }
 
     @Override

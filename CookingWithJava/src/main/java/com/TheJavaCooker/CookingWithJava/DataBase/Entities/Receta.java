@@ -2,6 +2,7 @@ package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,6 +81,7 @@ public class Receta implements Serializable {
     )
     private Set<Comentario> comentarios = new TreeSet<>();
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST

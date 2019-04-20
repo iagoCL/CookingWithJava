@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 
@@ -48,6 +49,6 @@ public class FavoritosController {
                 webController.mostrarMensaje(model,principal,request,"Error:","Quitando Favorito.","El usuario actual no la ha marcado como favorita");
             }
         }
-        return "redirect:https://127.0.0.1:8443/receta-" + favoritoRecetaId;
+        return "redirect:"+ CookingWithJavaApplication.getAppURL()+"/receta-" + favoritoRecetaId;
     }
 }

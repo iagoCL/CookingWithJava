@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
@@ -25,7 +26,7 @@ public class editarRecetaController {
     private WebController webController;
 
     @PostMapping(value = {"/formulario-editar-receta"})
-    public String formularioCrearReceta(Model model,
+    public String formularioEditarReceta(Model model,
                                         @RequestParam Map<String, String> allRequestParams,
                                         Principal principal,
                                         HttpServletRequest request) {
@@ -56,7 +57,7 @@ public class editarRecetaController {
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
             return webController.mostrarMensaje(model,principal,request, "ERROR:", "Editando Receta.", pair.getFirst().name());
         }
-        return "redirect:https://127.0.0.1:8443/receta-" + pair.getSecond().getId();
+        return "redirect:"+ CookingWithJavaApplication.getAppURL()+"/receta-" + pair.getSecond().getId();
     }
 
 

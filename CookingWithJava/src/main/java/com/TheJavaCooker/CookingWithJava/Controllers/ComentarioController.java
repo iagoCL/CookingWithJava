@@ -1,5 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.Controllers;
 
+import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Comentario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
@@ -46,7 +47,7 @@ public class ComentarioController {
         if (pair.getFirst() != DatabaseService.Errores.SIN_ERRORES) {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Al poner comentario.", pair.getFirst().name());
         }
-        return "redirect:https://127.0.0.1:8443/receta-" + commentRecetaId;
+        return "redirect:"+ CookingWithJavaApplication.getAppURL()+"/receta-" + commentRecetaId;
     }
 
 }

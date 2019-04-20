@@ -136,7 +136,7 @@ public class RecetaService {
         return nuevoPairReceta;
 
     }
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value="recetasCache",allEntries = false)
     public Pair<DatabaseService.Errores, Receta> actualizarReceta(Receta receta_) {
         if (receta_.getNombreReceta().isEmpty()) {
             PersonalDebug.imprimir("Nombre de receta nulo: " + receta_.getNombreReceta());
@@ -174,12 +174,12 @@ public class RecetaService {
             return Pair.of(DatabaseService.Errores.SIN_ERRORES, receta_);
         }
     }
-    @Cacheable
+    @Cacheable(value="recetasCache")
     public Receta buscarPorId(long id) {
         return recetaRepository.findById(id).orElse(null);
     }
 
-    @Cacheable
+    @Cacheable(value="recetasCache")
     public List<Receta> buscarReceta(int indicePagina_,
                                      int elementosPagina_,
                                      Integer duracionMaxima_,
@@ -242,12 +242,12 @@ public class RecetaService {
         pasoService.eliminarTodos();
         utensilioService.eliminarTodos();
     }
-    @Cacheable
+    @Cacheable(value="recetasCache")
     public List<Receta> todasLasRecetas() {
         return recetaRepository.findAll();
     }
 
-    @Cacheable
+    @Cacheable(value="recetasCache")
     public long getNumRecetas() {
         return recetaRepository.count();
     }

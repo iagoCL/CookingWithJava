@@ -26,6 +26,7 @@ public class CookingWithJavaApplication {
     private static int crearRececetas = 0;
     private static int crearFavoritos = 0;
     private static String servicioInterno = "http://127.0.0.1:7000";
+    private static String appURL = "https://127.0.0.1:8443";
 
     public static void main(String[] args) {
         // Comprobación de argumentos
@@ -36,6 +37,8 @@ public class CookingWithJavaApplication {
                 clearDatabase = true;
             } else if (args[i].startsWith("-urlServicioInterno")) {
                 servicioInterno = args[i].substring("-urlServicioInterno".length());
+            } else if (args[i].startsWith("-urlAplicaciónPrincipal")) {
+                appURL = args[i].substring("-urlAplicaciónPrincipal".length());
             } else if (args[i].startsWith("-urlHazelCast")) {
                 HazleCastConfiguration.addNode(args[i].substring("-urlHazelCast".length()));
             } else if (args[i].equals("-r") || args[i].equals("--randomData")) {
@@ -66,6 +69,10 @@ public class CookingWithJavaApplication {
         InternalServiceCliente.setURL(servicioInterno);
         // Inicio de aplicación Spring
         SpringApplication.run(CookingWithJavaApplication.class, args);
+    }
+
+    public static String getAppURL() {
+        return appURL;
     }
 
     @PostConstruct
@@ -102,7 +109,7 @@ public class CookingWithJavaApplication {
 
     @Bean
     public CacheManager CacheManager(){
-        return new ConcurrentMapCacheManager("recetasCache");
+        return new ConcurrentMapCacheManager("recetasCache","usuariosCache");
 
     }
 }

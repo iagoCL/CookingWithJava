@@ -6,6 +6,8 @@ import com.TheJavaCooker.CookingWithJava.DataBase.TipoDeImagen;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,7 @@ public class UsuarioService {
     @Autowired
     private ImagenService imagenService;
 
+    @CacheEvict(value="usuario",allEntries = false)
     public Pair<DatabaseService.Errores, Usuario> crearUsuario(String nombreUsuario_,
                                                                String contrasena_,
                                                                String correo_,
@@ -32,6 +35,7 @@ public class UsuarioService {
         }
     }
 
+    @CacheEvict(value="usuario",allEntries = false)
     public Pair<DatabaseService.Errores, Usuario> actualizarUsuario(Usuario usuario_) {
         if (usuario_.getNombreUsuario().isEmpty()) {
             PersonalDebug.imprimir("Nombre de usuario nulo: " + usuario_.getNombreUsuario());
@@ -72,19 +76,23 @@ public class UsuarioService {
         }
     }
 
+    @Cacheable(value="usuariosCache")
     public Usuario buscarPorId(long id) {
         return usuarioRepository.findById(id).orElse(null);
     }
 
-    List<Usuario> todosLosUsuarios() {
+    @Cacheable(value="usuariosCache")
+    public List<Usuario> todosLosUsuarios() {
         return usuarioRepository.findAll();
     }
 
-    void eliminarTodos() {
+    @CacheEvict(allEntries = true)
+    public void eliminarTodos() {
         usuarioRepository.deleteAll();
     }
 
-    long getNumUsuarios() {
+    @Cacheable(value="usuariosCache")
+    public long getNumUsuarios() {
         return usuarioRepository.count();
     }
 }
