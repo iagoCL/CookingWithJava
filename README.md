@@ -462,7 +462,13 @@ cat exampleBackup.sql | sudo docker exec -i mysqlMaster /usr/bin/mysql -u cookin
 *Figura 19: Diagrama de despliegue en docker de la aplicación.*
 
 ### Video de demostración
-<!--cambiar el video cambiando VIDIDHERE-->
-[![Alt text](https://img.youtube.com/vi/VIDIDHERE/0.jpg)](https://www.youtube.com/watch?v=VIDIDHERE)
+#### Parte 1: Demostracion
+[![Alt text](https://img.youtube.com/vi/pKB_k0TEpAE/0.jpg)](https://www.youtube.com/watch?v=pKB_k0TEpAE)
 
-<https://youtu.be/VIDIDHERE>
+<https://youtu.be/pKB_k0TEpAE>
+
+#### Parte 2: Recuperación de errores
+
+[![Alt text](https://img.youtube.com/vi/E4aezxOi0P4/0.jpg)](https://www.youtube.com/watch?v=E4aezxOi0P4)
+
+<https://youtu.be/E4aezxOi0P4>

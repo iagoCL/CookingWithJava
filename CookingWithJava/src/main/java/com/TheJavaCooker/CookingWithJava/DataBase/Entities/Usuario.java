@@ -1,8 +1,6 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -159,11 +157,11 @@ public class Usuario implements Serializable {
                 '}';
     }
 
-    @Transactional
+    /*@Transactional
     public Set<Receta> getRecetasCreadas() {
         Hibernate.initialize(this.recetas_creadas);
         return recetas_creadas;
-    }
+    }*/
 
     public int getNumComentariosUsuario() {
         return num_comentarios_usuario;
@@ -177,7 +175,7 @@ public class Usuario implements Serializable {
         --num_comentarios_usuario;
     }
 
-    @Transactional
+    /*@Transactional
     public int getNumRecetasFavoritas() {
         return recetas_favoritas.size();
     }
@@ -191,7 +189,7 @@ public class Usuario implements Serializable {
     @Transactional
     public int getNumRecetasCreadas() {
         return recetas_creadas.size();
-    }
+    }*/
 
     public Usuario() {
     }

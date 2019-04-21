@@ -30,7 +30,7 @@ public class ImagenService {
     private static final int recetaX = 577;
     private static final int recetaY = 576;
 
-    @CacheEvict(value = "imagenCache", allEntries = false)
+    @CacheEvict(value = "imagenCache", allEntries = true)
     public Pair<DatabaseService.Errores, Imagendb> crearImagenDB(byte[] imgUsuario_, TipoDeImagen tipoDeImagen) {
         try {
             switch (tipoDeImagen) {
@@ -58,7 +58,7 @@ public class ImagenService {
         return imagendbRepository.findById(id).orElse(null);
     }
 
-    @CacheEvict(value = "imagenCache", allEntries = false)
+    @CacheEvict(value = "imagenCache", allEntries = true)
     public void eliminarTodos() {
         imagendbRepository.deleteAll();
     }

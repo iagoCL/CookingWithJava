@@ -4,6 +4,7 @@ import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
 import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
 import com.TheJavaCooker.CookingWithJava.DataBase.Repository.UsuarioRepository;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.DatabaseService;
+import com.TheJavaCooker.CookingWithJava.DataBase.Services.RecetaService;
 import com.TheJavaCooker.CookingWithJava.DataBase.Services.UsuarioService;
 import com.TheJavaCooker.CookingWithJava.UserRepositoryAuthenticationProvider;
 
@@ -30,6 +31,8 @@ public class UsuariosController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private RecetaService recetaService;
     @Autowired
     private UserRepositoryAuthenticationProvider userAuthentication;
     @Autowired
@@ -119,11 +122,9 @@ public class UsuariosController {
         if (usuario == null) {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Buscando Usuario.", "El Usuario: no se ha encontrado.");
         }
-        model.addAttribute("num_recetas_subidas", usuario.getNumRecetasCreadas());
-        model.addAttribute("num_recetas_favoritas", usuario.getNumRecetasFavoritas());
+        model.addAttribute("num_recetas_subidas", recetaService.recetasCreadas(usuario.getId()).size());
+        model.addAttribute("num_recetas_favoritas", recetaService.recetasFavoritas(usuario).size());
         model.addAttribute("usuario", usuario);
-        model.addAttribute("recetasCreadas", usuario.getRecetasCreadas());
-        model.addAttribute("recetasFavoritas", usuario.getRecetasFavoritas());
         webController.anadirHeader(principal, request, model);
         return "perfil";
     }

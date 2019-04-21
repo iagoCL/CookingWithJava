@@ -177,7 +177,7 @@ public class RecetaService {
         }
     }
 
-    @Cacheable(value = "recetasCache")
+    //@Cacheable(value = "recetasCache")
     public Receta buscarPorId(long id) {
         return recetaRepository.findById(id).orElse(null);
     }
@@ -235,6 +235,30 @@ public class RecetaService {
 
         List<Receta> recetas = new ArrayList<>();
         Iterable<Receta> it = recetaRepository.findAll(predicate, PageRequest.of(indicePagina_, elementosPagina_));
+        it.forEach((e) -> recetas.add(e));
+        return recetas;
+    }
+
+    @Cacheable(value = "recetasCache")
+    public List<Receta> recetasCreadas(long idCreadorDeLaReceta )
+    {
+        QReceta recetaDsl = QReceta.receta;
+        BooleanExpression predicate =
+                recetaDsl.creador_de_la_receta.id.eq(idCreadorDeLaReceta);
+        List<Receta> recetas = new ArrayList<>();
+        Iterable<Receta> it = recetaRepository.findAll(predicate, PageRequest.of(0, 15));
+        it.forEach((e) -> recetas.add(e));
+        return recetas;
+    }
+
+    @Cacheable(value = "recetasCache")
+    public List<Receta> recetasFavoritas(Usuario usuario )
+    {
+        QReceta recetaDsl = QReceta.receta;
+        BooleanExpression predicate =
+                recetaDsl.favoritos.contains(usuario);
+        List<Receta> recetas = new ArrayList<>();
+        Iterable<Receta> it = recetaRepository.findAll(predicate, PageRequest.of(0, 15));
         it.forEach((e) -> recetas.add(e));
         return recetas;
     }

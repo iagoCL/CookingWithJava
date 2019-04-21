@@ -22,7 +22,7 @@ public class UsuarioService {
     @Autowired
     private ImagenService imagenService;
 
-    @CacheEvict(value = "usuariosCache", allEntries = false)
+    @CacheEvict(value = "usuariosCache", allEntries = true)
     public Pair<DatabaseService.Errores, Usuario> crearUsuario(String nombreUsuario_,
                                                                String contrasena_,
                                                                String correo_,
@@ -37,7 +37,7 @@ public class UsuarioService {
         }
     }
 
-    @CacheEvict(value = "usuariosCache", allEntries = false)
+    @CacheEvict(value = "usuariosCache", allEntries = true)
     public Pair<DatabaseService.Errores, Usuario> actualizarUsuario(Usuario usuario_) {
         if (usuario_.getNombreUsuario().isEmpty()) {
             PersonalDebug.imprimir("Nombre de usuario nulo: " + usuario_.getNombreUsuario());

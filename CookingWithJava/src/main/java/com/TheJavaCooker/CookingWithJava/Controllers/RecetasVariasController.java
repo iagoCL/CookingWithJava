@@ -46,7 +46,7 @@ public class RecetasVariasController {
         if (usuario == null) {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas favoritas.", "El Usuario actual: no se ha encontrado.");
         }
-        model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        model.addAttribute("recetas", recetaService.recetasFavoritas(usuario));
         webController.anadirHeader(usuario, request, model);
         return "recetas";
     }
@@ -57,7 +57,7 @@ public class RecetasVariasController {
                                           HttpServletRequest request,
                                           @PathVariable long usuarioId) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
-        model.addAttribute("recetas", usuario.getRecetasFavoritas());
+        model.addAttribute("recetas", recetaService.recetasFavoritas(usuario));
         webController.anadirHeader(principal, request, model);
         return "recetas";
     }
@@ -70,7 +70,7 @@ public class RecetasVariasController {
         if (usuario == null) {
             return webController.mostrarMensaje(model, principal, request, "ERROR:", "Mostrando recetas creadas.", "El Usuario actual: no se ha encontrado.");
         }
-        model.addAttribute("recetas", usuario.getRecetasCreadas());
+        model.addAttribute("recetas", recetaService.recetasCreadas(usuario.getId()));
         webController.anadirHeader(usuario, request, model);
         return "recetas";
     }
@@ -80,8 +80,7 @@ public class RecetasVariasController {
                                         Principal principal,
                                         HttpServletRequest request,
                                         @PathVariable long usuarioId) {
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
-        model.addAttribute("recetas", usuario.getRecetasCreadas());
+        model.addAttribute("recetas", recetaService.recetasCreadas(usuarioId));
         webController.anadirHeader(principal, request, model);
         return "recetas";
     }
