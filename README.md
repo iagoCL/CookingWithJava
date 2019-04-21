@@ -24,6 +24,7 @@
       - [Intrucciones de despliegue en ubuntu 18.04 server](#intrucciones-de-despliegue-en-ubuntu-1804-server)
       - [Intrucciones de despliegue en ubuntu 18.04 server usando docker](#intrucciones-de-despliegue-en-ubuntu-1804-server-usando-docker)
       - [Compilación](#compilaci%C3%B3n)
+      - [Backup](#backup)
   - [FASE 4 - Incluir tolerancia a fallos en la aplicación](#fase-4---incluir-tolerancia-a-fallos-en-la-aplicaci%C3%B3n)
     - [Diagrama de despliegue en docker](#diagrama-de-despliegue-en-docker)
     - [Video de demostración](#video-de-demostraci%C3%B3n)
@@ -444,6 +445,15 @@ En caso de no usar los .jar ofrecidos y querer generarlos manulamente basta con 
 ./mvnw -Dmaven.test.skip=true package 
 ```
 
+#### Backup
+La base de datos puede ser exportada con:
+```
+sudo docker exec mysqlMaster /usr/bin/mysqldump -u cookingWithJavaDefaultUser --password=cookingWithJavaDefaultPass db_cooking_with_java > exampleBackup.sql
+```
+Luego puede ser restaurada con el siguiente comando, se incluye una base de datos con datos de ejemplo en el archivo build/exampleBackup.sql
+```
+cat exampleBackup.sql | sudo docker exec -i mysqlMaster /usr/bin/mysql -u cookingWithJavaDefaultUser --password=cookingWithJavaDefaultPass db_cooking_with_java
+```
 ## FASE 4 - Incluir tolerancia a fallos en la aplicación
 
 ### Diagrama de despliegue en docker

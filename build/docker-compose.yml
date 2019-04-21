@@ -6,7 +6,7 @@ services:
     expose:
       - "3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=something
+      - MYSQL_ROOT_PASSWORD=rootPass
       - MYSQL_DATABASE=db_cooking_with_java
       - MYSQL_USER=cookingWithJavaDefaultUser
       - MYSQL_PASSWORD=cookingWithJavaDefaultPass
@@ -74,4 +74,3 @@ services:
       - "7000"
     ports:
      - "1937:1937"
-     - "7000:7000"
