@@ -3,6 +3,9 @@ package com.TheJavaCooker.CookingWithJava;
 import com.hazelcast.config.MapAttributeConfig;
 import com.hazelcast.config.MapIndexConfig;
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,6 +47,12 @@ public class HazleCastConfiguration {
                         HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
 
         return Hazelcast.newHazelcastInstance(config);
+    }
+
+    @Bean
+    public CacheManager CacheManager(){
+        return new HazelcastCacheManager(hazelcastInstance());
+
     }
 
     public static void addNode( String node)

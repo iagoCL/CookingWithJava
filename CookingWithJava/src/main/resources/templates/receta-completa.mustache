@@ -51,7 +51,7 @@
                 <span>{{receta.nivel_de_dificultad.text}}</span>
             </div>
             <h2>{{receta.nombre_receta}}</h2>
-            <div class="recipe-date">{{fechaDeCreacion}} - <a href="">{{creadorRecetaNombre}}</a></div>
+            <div class="recipe-date">{{fechaDeCreacion}} - <a href="usuario-{{creadorRecetaId}}">{{creadorRecetaNombre}}</a></div>
             <!-- Crear PDF -->
             {{#esCreador}}
                 <a href="/editarReceta-{{receta.id}}">Editar receta</a> -

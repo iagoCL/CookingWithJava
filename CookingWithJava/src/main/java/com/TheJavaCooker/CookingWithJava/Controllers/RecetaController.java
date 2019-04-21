@@ -100,6 +100,7 @@ public class RecetaController {
         model.addAttribute("duracionTotal", receta.getStringDuracionTotal());
         Usuario creadorReceta = receta.getCreadorDeLaReceta();
         model.addAttribute("creadorRecetaNombre", creadorReceta.getNombreUsuario());
+        model.addAttribute("creadorRecetaId", creadorReceta.getId());
         model.addAttribute("pasos", receta.getPasos());
         model.addAttribute("comentarios", receta.getComentarios());
         model.addAttribute("utensilios", receta.getUtensilios());

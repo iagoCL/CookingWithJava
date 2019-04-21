@@ -24,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(("/index")).permitAll();
 
         http.authorizeRequests().antMatchers(("/cache")).permitAll();
+        http.authorizeRequests().antMatchers(("/cache/**")).permitAll();
 
         http.authorizeRequests().antMatchers(("/login")).permitAll();
         http.authorizeRequests().antMatchers(("/formulario-login")).permitAll();
