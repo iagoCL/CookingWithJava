@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@CacheConfig(cacheNames="recetasCache")
+@CacheConfig(cacheNames = "recetasCache")
 public class RecetaService {
     @Autowired
     private RecetaRepository recetaRepository;
@@ -35,7 +35,7 @@ public class RecetaService {
     @Autowired
     private ImagenService imagenService;
 
-    @CacheEvict(allEntries = true)
+    @CacheEvict(value = {"usuariosCache","recetasCache"},allEntries = true)
     public Pair<DatabaseService.Errores, Receta> crearReceta(String nombreReceta_,
                                                              String tipoDePlato,
                                                              String nivelDeDificultad,
@@ -54,16 +54,17 @@ public class RecetaService {
                 listaDePasos_,
                 usuario_);
     }
-    @CacheEvict(allEntries = true)
+
+    @CacheEvict(value = {"usuariosCache","recetasCache"}, allEntries = true)
     public Pair<DatabaseService.Errores, Receta> crearRecetaConFecha(String nombreReceta_,
-                                                              String tipoDePlato,
-                                                              String nivelDeDificultad,
-                                                              LocalDate localDate_,
-                                                              byte[] imagenDeReceta_,
-                                                              List<Pair<String, String>> listaDeIngredientes_,
-                                                              List<Pair<String, String>> listaDeUtensilios_,
-                                                              List<Pair<Integer, String>> listaDePasos_,
-                                                              Usuario usuario_) {
+                                                                     String tipoDePlato,
+                                                                     String nivelDeDificultad,
+                                                                     LocalDate localDate_,
+                                                                     byte[] imagenDeReceta_,
+                                                                     List<Pair<String, String>> listaDeIngredientes_,
+                                                                     List<Pair<String, String>> listaDeUtensilios_,
+                                                                     List<Pair<Integer, String>> listaDePasos_,
+                                                                     Usuario usuario_) {
 
         if (listaDeIngredientes_.isEmpty()) {
             PersonalDebug.imprimir("WARNING: Creando una receta sin ingredientes.");
@@ -136,7 +137,8 @@ public class RecetaService {
         return nuevoPairReceta;
 
     }
-    @CacheEvict(value="recetasCache",allEntries = false)
+
+    @CacheEvict(value = "recetasCache", allEntries = false)
     public Pair<DatabaseService.Errores, Receta> actualizarReceta(Receta receta_) {
         if (receta_.getNombreReceta().isEmpty()) {
             PersonalDebug.imprimir("Nombre de receta nulo: " + receta_.getNombreReceta());
@@ -174,12 +176,13 @@ public class RecetaService {
             return Pair.of(DatabaseService.Errores.SIN_ERRORES, receta_);
         }
     }
-    @Cacheable(value="recetasCache")
+
+    @Cacheable(value = "recetasCache")
     public Receta buscarPorId(long id) {
         return recetaRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(value="recetasCache")
+    @Cacheable(value = "recetasCache")
     public List<Receta> buscarReceta(int indicePagina_,
                                      int elementosPagina_,
                                      Integer duracionMaxima_,
@@ -235,19 +238,21 @@ public class RecetaService {
         it.forEach((e) -> recetas.add(e));
         return recetas;
     }
-    @CacheEvict(allEntries = true)
+
+    @CacheEvict(value = {"usuariosCache","recetasCache"}, allEntries = true)
     public void eliminarTodos() {
         recetaRepository.deleteAll();
         ingredienteService.eliminarTodos();
         pasoService.eliminarTodos();
         utensilioService.eliminarTodos();
     }
-    @Cacheable(value="recetasCache")
+
+    @Cacheable(value = "recetasCache")
     public List<Receta> todasLasRecetas() {
         return recetaRepository.findAll();
     }
 
-    @Cacheable(value="recetasCache")
+    @Cacheable(value = "recetasCache")
     public long getNumRecetas() {
         return recetaRepository.count();
     }

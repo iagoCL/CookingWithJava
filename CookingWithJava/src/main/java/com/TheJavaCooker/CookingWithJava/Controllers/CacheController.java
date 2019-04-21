@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentMap;
 public class CacheController {
     @Autowired
     private CacheManager cacheManager;
+
     @RequestMapping(value = "/cache",
-            method= RequestMethod.GET,
+            method = RequestMethod.GET,
             produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> getCacheContent()
-    {
+    public ResponseEntity<String> getCacheContent() {
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
@@ -31,6 +31,10 @@ public class CacheController {
         cache = (ConcurrentMapCache) cacheMgr.getCache("usuariosCache");
 
         text += "\n\nUSUARIOS:\n" + cache.getNativeCache().toString();
+
+        cache = (ConcurrentMapCache) cacheMgr.getCache("imagenCache");
+
+        text += "\n\nIMAGENES:\n" + cache.getNativeCache().toString();
 
         return new ResponseEntity<>(text, headers, HttpStatus.OK);
     }

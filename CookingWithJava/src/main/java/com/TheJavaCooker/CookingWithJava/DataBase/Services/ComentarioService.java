@@ -5,6 +5,8 @@ import com.TheJavaCooker.CookingWithJava.DataBase.Repository.*;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Component
+@CacheConfig(cacheNames = {"recetasCache","usuariosCache"})
 public class ComentarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -20,6 +23,7 @@ public class ComentarioService {
     @Autowired
     private ComentarioRepository comentarioRepository;
 
+    @CacheEvict(allEntries = true)
     @Transactional
     public Pair<DatabaseService.Errores, Comentario> crearComentario(String descripcionComentario_,
                                                                      String tituloComentario_,
@@ -29,8 +33,9 @@ public class ComentarioService {
                 LocalDateTime.now(), recetaId_, usuarioId_);
     }
 
+    @CacheEvict(allEntries = true)
     @Transactional
-    Pair<DatabaseService.Errores, Comentario> crearComentarioConFecha(String descripcionComentario_,
+    public Pair<DatabaseService.Errores, Comentario> crearComentarioConFecha(String descripcionComentario_,
                                                                       String tituloComentario_,
                                                                       LocalDateTime fechaComentario_,
                                                                       Receta recetaId_,
@@ -76,7 +81,8 @@ public class ComentarioService {
         }
     }
 
-    void eliminarTodos() {
+    @CacheEvict(allEntries = true)
+    public void eliminarTodos() {
         comentarioRepository.deleteAll();
     }
 

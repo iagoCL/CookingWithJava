@@ -6,6 +6,9 @@ import com.TheJavaCooker.CookingWithJava.DataBase.TipoDeImagen;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Component
+@CacheConfig(cacheNames = "imagenCache")
 public class ImagenService {
     @Autowired
     ImagendbRepository imagendbRepository;
@@ -26,6 +30,7 @@ public class ImagenService {
     private static final int recetaX = 577;
     private static final int recetaY = 576;
 
+    @CacheEvict(value = "imagenCache", allEntries = false)
     public Pair<DatabaseService.Errores, Imagendb> crearImagenDB(byte[] imgUsuario_, TipoDeImagen tipoDeImagen) {
         try {
             switch (tipoDeImagen) {
@@ -48,11 +53,13 @@ public class ImagenService {
         }
     }
 
+    @Cacheable(value = "imagenCache")
     public Imagendb buscarPorId(long id) {
         return imagendbRepository.findById(id).orElse(null);
     }
 
-    void eliminarTodos() {
+    @CacheEvict(value = "imagenCache", allEntries = false)
+    public void eliminarTodos() {
         imagendbRepository.deleteAll();
     }
 

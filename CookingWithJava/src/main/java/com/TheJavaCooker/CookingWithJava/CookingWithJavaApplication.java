@@ -109,7 +109,7 @@ public class CookingWithJavaApplication {
 
     @Bean
     public CacheManager CacheManager(){
-        return new ConcurrentMapCacheManager("recetasCache","usuariosCache");
+        return new ConcurrentMapCacheManager("recetasCache","imagenCache","usuariosCache");
 
     }
 }
