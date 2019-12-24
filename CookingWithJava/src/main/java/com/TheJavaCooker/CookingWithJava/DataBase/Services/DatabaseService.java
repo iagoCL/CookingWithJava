@@ -6,68 +6,48 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseService {
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService userService;
     @Autowired
-    private RecetaService recetaService;
+    private RecipeService recipeService;
     @Autowired
-    private ComentarioService comentarioService;
+    private CommentService CommentService;
     @Autowired
-    private FavoritoService favoritoService;
+    private FavoriteService FavoriteService;
     @Autowired
-    private ImagenService imagenService;
+    private ImageService imageService;
 
-
-    public enum Errores {
-        SIN_ERRORES,
-        NOMBRE_USUARIO_REPETIDO,
-        CORREO_ELECTRONICO_REPETIDO,
-        NOMBRE_USUARIO_NULO,
-        CONTRASENA_NULA,
-        CORREO_ELECTRONICO_NULO,
-        NOMBRE_APELLIDOS_NULOS,
-        NOMBRE_RECETA_NULO,
-        NOMBRE_RECETA_REPETIDO,
-        TIPO_PLATO_RECETA_NULO,
-        NOMBRE_DE_INGREDIENTE_REPETIDO,
-        NOMBRE_DE_INGREDIENTE_NULO,
-        CANTIDAD_DE_INGREDIENTE_NULA,
-        NOMBRE_DE_UTENSILIO_NULO,
-        NOMBRE_DE_UTENSILIO_REPETIDO,
-        DESCRIPCION_DE_PASO_NULA,
-        TIEMPO_DE_PASO_INCORRECTO,
-        DESCRIPCION_DE_COMENTARIO_NULA,
-        TITULO_DE_COMENTARIO_NULO,
-        COMENTARIO_REPETIDO,
-        NUMERO_DE_PASO_INCORRECTO,
-        NUMERO_DE_PASO_REPETIDO,
-        IMAGEN_ERRONEA,
-        ERRROR_DESCONOCIDO
+    public enum Errors {
+        REPEATED_COMMENT, REPEATED_INGREDIENT_NAME, REPEATED_STEP_NUMBER, REPEATED_TOOL_NAME, REPEATED_USER_NAME,
+        REPEATED_USER_MAIL, REPEATED_RECIPE_NAME, NULL_COMMENT_DESCRIPTION, NULL_COMMENT_TITLE, NULL_FOOD_TYPE,
+        NULL_INGREDIENT_AMOUNT, NULL_INGREDIENT_NAME, NULL_MAIL, NULL_NAME_SURNAME, NULL_PASSWORD,
+        NULL_STEP_DESCRIPTION, NULL_RECIPE_NAME, NULL_TOOL_NAME, NULL_USER_NAME, INCORRECT_STEP_TIME,
+        INCORRECT_STEP_NUMBER, INCORRECT_IMAGE, WITHOUT_ERRORS, UNKNOWN_ERROR
     }
 
-    public UsuarioService getUsuarioService() {
-        return usuarioService;
+    public UserService getUserService() {
+        return userService;
     }
 
-    public RecetaService getRecetaService() {
-        return recetaService;
+    public RecipeService getRecipeService() {
+        return recipeService;
     }
 
-    public ComentarioService getComentarioService() {
-        return comentarioService;
+    public CommentService getCommentService() {
+        return CommentService;
     }
 
-    public FavoritoService getFavoritoService() {
-        return favoritoService;
+    public FavoriteService getFavoriteService() {
+        return FavoriteService;
     }
 
-    public ImagenService getImagenService() {
-        return imagenService;
+    public ImageService getImageService() {
+        return imageService;
     }
 
-    public void eliminarTodos() {
-        comentarioService.eliminarTodos();
-        recetaService.eliminarTodos();
-        usuarioService.eliminarTodos();
-        imagenService.eliminarTodos();
+    public void deleteAll() {
+        CommentService.deleteAll();
+        recipeService.deleteAll();
+        userService.deleteAll();
+        imageService.deleteAll();
     }
 }

@@ -1,0 +1,11 @@
+FROM openjdk:8-jdk-alpine
+MAINTAINER TheJavaCookers 
+ENV INTERNAL_SERVICE_URL http://InternalServiceProxy:7000
+ENV HAZELCAST_URL1 MainApp1
+ENV HAZELCAST_URL2 MainApp2
+ENV URL_APP_PRINCIPAL https://127.0.0.1:8443
+RUN mkdir /opt/application
+COPY ./CookingWithJava.jar /opt/application/CookingWithJava.jar
+COPY ./wait /wait
+RUN chmod +x /wait
+CMD /wait && java -jar /opt/application/CookingWithJava.jar -d -urlInternalService$INTERNAL_SERVICE_URL -urlHazelCast$HAZELCAST_URL1 -urlHazelCast$HAZELCAST_URL2 -urlMainApp$URL_APP_PRINCIPAL

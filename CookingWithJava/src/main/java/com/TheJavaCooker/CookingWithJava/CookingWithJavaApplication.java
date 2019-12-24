@@ -9,61 +9,54 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import javax.annotation.PostConstruct;
 
-
 @EnableCaching
 @SpringBootApplication
 public class CookingWithJavaApplication {
     @Autowired
     private DatabaseService databaseService;
-    private static boolean activarDebug = false;
+    private static boolean enableDebug = false;
     private static boolean clearDatabase = false;
-    private static int crearUsuarios = 0;
-    private static int crearComentarios = 0;
-    private static int crearRececetas = 0;
-    private static int crearFavoritos = 0;
-    private static String servicioInterno = "http://127.0.0.1:7000";
+    private static int createUsers = 0;
+    private static int createComments = 0;
+    private static int createRecipes = 0;
+    private static int createFavorites = 0;
+    private static String internalService = "http://127.0.0.1:7000";
     private static String appURL = "https://127.0.0.1:8443";
 
     public static void main(String[] args) {
-        // Comprobación de argumentos
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-d") || args[i].equals("--debug")) {
-                activarDebug = true;
+                enableDebug = true;
             } else if (args[i].equals("-c") || args[i].equals("--clear")) {
                 clearDatabase = true;
-            } else if (args[i].startsWith("-urlServicioInterno")) {
-                servicioInterno = args[i].substring("-urlServicioInterno".length());
-            } else if (args[i].startsWith("-urlAplicaciónPrincipal")) {
-                appURL = args[i].substring("-urlAplicaciónPrincipal".length());
+            } else if (args[i].startsWith("-urlInternalService")) {
+                internalService = args[i].substring("-urlInternalService".length());
+            } else if (args[i].startsWith("-urlMainApp")) {
+                appURL = args[i].substring("-urlMainApp".length());
             } else if (args[i].startsWith("-urlHazelCast")) {
                 HazleCastConfiguration.addNode(args[i].substring("-urlHazelCast".length()));
             } else if (args[i].equals("-r") || args[i].equals("--randomData")) {
-                activarDebug = true;
+                enableDebug = true;
                 clearDatabase = true;
-                crearUsuarios += 3;
-                crearRececetas += 10;
-                crearComentarios += 8;
-                crearFavoritos += 8;
-            } else if (args[i].startsWith("--usuariosRandom")) {
-                crearUsuarios += Integer.parseInt(args[i].substring("--usuariosRandom".length()));
-            } else if (args[i].startsWith("--recetasRandom")) {
-                crearRececetas += Integer.parseInt(args[i].substring("--recetasRandom".length()));
-            } else if (args[i].startsWith("--favoritosRandom")) {
-                crearFavoritos += Integer.parseInt(args[i].substring("--favoritosRandom".length()));
-            } else if (args[i].startsWith("--comentariosRandom")) {
-                crearComentarios += Integer.parseInt(args[i].substring("--comentariosRandom".length()));
+                createUsers += 3;
+                createRecipes += 10;
+                createComments += 8;
+                createFavorites += 8;
+            } else if (args[i].startsWith("--usersRandom")) {
+                createUsers += Integer.parseInt(args[i].substring("--usersRandom".length()));
+            } else if (args[i].startsWith("--recipesRandom")) {
+                createRecipes += Integer.parseInt(args[i].substring("--recipesRandom".length()));
+            } else if (args[i].startsWith("--favoritesRandom")) {
+                createFavorites += Integer.parseInt(args[i].substring("--favoritesRandom".length()));
+            } else if (args[i].startsWith("--commentsRandom")) {
+                createComments += Integer.parseInt(args[i].substring("--commentsRandom".length()));
             } else {
-                System.out.println("ERROR: [-d][--debug]" +
-                        " [-t][--test] [-r][--randomData]" +
-                        " [-c][--clear] [--usuariosRandomXX]" +
-                        "[--recetasRandomXX] [--favoritosRandomXX]" +
-                        " [-comentariosRandomXX] [-urlServicioInterno]" +
-                        " [-urlHazelCast]");
-                //System.exit(-1);
+                System.out.println("ERROR: [-d][--debug]" + " [-t][--test] [-r][--randomData]"
+                        + " [-c][--clear] [--usersRandomXX]" + "[--recipesRandomXX] [--favoritesRandomXX]"
+                        + " [-commentsRandomXX] [-urlInternalService]" + " [-urlHazelCast]");
             }
         }
-        InternalServiceCliente.setURL(servicioInterno);
-        // Inicio de aplicación Spring
+        InternalServiceClient.setURL(internalService);
         SpringApplication.run(CookingWithJavaApplication.class, args);
     }
 
@@ -73,36 +66,30 @@ public class CookingWithJavaApplication {
 
     @PostConstruct
     public void init() {
-        PersonalDebug.setDebug(activarDebug);
-        PersonalDebug.imprimir("Ejecución con:\nDebug: " + activarDebug
-                + "\nclearDatabase: " + clearDatabase
-                + "\ncrearUsuarios: " + crearUsuarios
-                + "\ncrearRecetas: " + crearRececetas
-                + "\ncrearFavoritos: " + crearFavoritos
-                + "\ncrearComentarios: " + crearComentarios);
+        PersonalDebug.setDebug(enableDebug);
+        PersonalDebug.printMsg("Execution with:\nDebug: " + enableDebug + "\nclearDatabase: " + clearDatabase
+                + "\ncreateUsers: " + createUsers + "\ncreateRecipes: " + createRecipes + "\ncreateFavorites: "
+                + createFavorites + "\ncreateComments: " + createComments);
         if (clearDatabase) {
-            databaseService.eliminarTodos();
+            databaseService.deleteAll();
         }
         DatabaseRandomData databaseRandomData = new DatabaseRandomData(databaseService);
-        if (crearUsuarios > 0) {
-            databaseRandomData.crearUsuariosEjemplo(crearUsuarios);
-            PersonalDebug.imprimir("NUEVOS USUARIOS CREADOS");
+        if (createUsers > 0) {
+            databaseRandomData.createExampleUsers(createUsers);
+            PersonalDebug.printMsg("NEW USERS CREATED");
         }
-        if (crearRececetas > 0) {
-            databaseRandomData.crearRecetasEjemplo(crearRececetas);
-            PersonalDebug.imprimir("NUEVAS RECETAS CREADAS");
+        if (createRecipes > 0) {
+            databaseRandomData.createExampleRecipes(createRecipes);
+            PersonalDebug.printMsg("NEW RECIPES CREATED");
         }
-        if (crearComentarios > 0) {
-            databaseRandomData.crearComentariosEjemplo(crearComentarios);
-            PersonalDebug.imprimir("NUEVOS COMENTARIOS CREADOS");
+        if (createComments > 0) {
+            databaseRandomData.createExampleComments(createComments);
+            PersonalDebug.printMsg("NEW COMMENTS CREATED");
         }
-        if (crearFavoritos > 0) {
-            databaseRandomData.crearFavoritosAleatorios(crearFavoritos);
-            PersonalDebug.imprimir("NUEVOS FAVORITOS CREADOS");
+        if (createFavorites > 0) {
+            databaseRandomData.createExampleFavorites(createFavorites);
+            PersonalDebug.printMsg("NEW FAVORITES CREATED");
         }
-        PersonalDebug.imprimir("APP INICIADA");
+        PersonalDebug.printMsg("APP STARTED");
     }
-
-
 }
-

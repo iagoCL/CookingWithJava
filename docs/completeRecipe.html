@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{recipe.recipe_name}}</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Food Blog Web Template">
+    <meta name="keywords" content="food, unique, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="shortcut icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,400i,500,500i,600,600i,700" rel="stylesheet">
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/owl.carousel.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header section -->
+    <header class="header-section">
+        <div class="header-top">
+            <div class="container">
+                <div class="user-panel">
+                    <a href="user.html"><i class="fa fa-user"></i> User: iago </a>
+                    <a href="createRecipe.html"><i class="fa fa-upload"></i> Upload recipe</a>
+                    <form action="login.html" style=" display: inline;">
+                        <input type="hidden" name="_csrf" value="cbd2e34c-7cf1-44e3-8543-ebbccf1e6a21">
+                        <button class="logout-button" type="submit"><i class="fa fa-unlock"></i> Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="container">
+                <a href="index.html" class="site-logo">
+                    <img src="img/logo.png" alt="">
+                </a>
+                <ul class="main-menu">
+                    <li><a href="searchRecipe.html"><i class="fa fa-search"></i> Search</a></li>
+                    <li><a href="index.html"><i class="fa fa-home"></i> Start</a></li>
+                    <li><a href="recipes.html"><i class="fa fa-book"></i> Recipes</a></li>
+                    <li><a href="user.html"><i class="fa fa-user"></i> Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Header section end -->
+
+
+    <!-- Hero section -->
+    <section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
+        <h2>Recipe</h2>
+        </div>
+    </section>
+    <!-- Hero section end -->
+    <section class="recipe-details-section">
+        <div class="container">
+            <div class="recipe-meta">
+                <div class="recipe-cata">
+                    <span>Professional</span>
+                </div>
+                <h2>Recipe Name2</h2>
+                <div class="recipe-date">27 2 18 - <a href="user.html">Bryant1</a>
+                </div>
+                <!-- Create PDF -->
+                <a href="pdf-recipe.pdf">Create PDF</a> - <a href="txt-recipe.txt">Create TXT</a>
+
+                <div class="rating">
+                    <i class="fa fa-star is-fade"></i>0
+                    <form action="completeRecipe.html">
+                        <input type="hidden" name="_csrf" value="cbd2e34c-7cf1-44e3-8543-ebbccf1e6a21">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" name="markAsFavorite" value="true">
+                                <input type="hidden" name="favoriteRecipeId" value="42">
+                                <button class="site-btn" type="submit">Mark as Favorite</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipe big view -->
+    <div class="recipe-view-section">
+        <div class="rv-warp set-bg" data-setbg="img/low-bar/1.jpg"></div>
+    </div>
+
+    <!-- Recipe details section -->
+    <section class="recipe-details-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="recipe-filter-warp">
+                        <div class="filter-top">
+                            <div class="filter-top-text">
+                                <p>Time of preparation: 2 h 18 min</p>
+                                <p>Food Type: soup</p>
+                            </div>
+                        </div>
+                        <!-- recipe filter form -->
+                        <div class="filter-form-warp">
+                            <h2>Ingredients</h2>
+                            <form class="filter-form">
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">lamb - the entire package</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">chocolate - 535.78 mL</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">salmon - 5.61 L</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">apple - 357.0 g</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">carrots - 467.31 mL</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">potatoes - 5.74 kg</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">onion - 13.52 kg</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="one">
+                                    <label for="one">pepper - a bit</label>
+                                </div>
+                            </form>
+                            <h2>Tools</h2>
+                            <form class="filter-form">
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">ray laser - Intermediate</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">flame thrower - Intermediate</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">cooker - Professional</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">spoon - Undefined</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">knife - Difficult</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">plate - Difficult</label>
+                                </div>
+                                <div class="check-warp">
+                                    <input type="checkbox" id="onef">
+                                    <label for="onef">fork - Difficult</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <ul class="recipe-info-list">
+                        <li>
+                            <h2>1.</h2>
+                            <p>idque errem accumsan ante scripta quisque legere vero nominavi arcu ornatus ponderum qui
+                                putent suscipiantur solet at definitionem</p>
+                            <p><strong>58 min</strong></p>
+                        </li>
+                        <li>
+                            <h2>2.</h2>
+                            <p>vel cras repudiare cu expetendis varius gloriatur detraxit legere reprehendunt lectus sem
+                                dolore molestie repudiare atomorum nonumy porttitor</p>
+                            <p><strong>1 h 20 min</strong></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- Recipe details section end -->
+
+    <!-- New Comment section -->
+    <section class="comment-section spad pt-0">
+        <div class="container">
+            <h4>Deja un comment</h4>
+            <form class="comment-form" action="completeRecipe.html">
+                <input type="hidden" name="_csrf" value="cbd2e34c-7cf1-44e3-8543-ebbccf1e6a21">
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="text" name="commentSubject" placeholder="Title">
+                        <textarea placeholder="Message" name="commentMessage"></textarea>
+                        <input type="hidden" name="commentRecipeId" value="42">
+                        <button class="site-btn" type="submit">SEND</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Comment section -->
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="img/user.jpg" class="img img-rounded img-fluid" />
+                        <p class="text-secondary text-center">
+                            <a class="text-secondary text-center" href="user.html"><strong>Bryant1</strong></a>
+                        </p>
+                        <p class="text-secondary text-center">2018-05-23T19:18:40</p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="clearfix"></div>
+                        <h4>Comment title 2</h4>
+                        <p>sed ornare voluptaria libris ea facilisis lacus aptent ignota conclusionemque fastidii novum
+                            recteque urna libris at adversarium alia numquam definitionem nascetur legere ac amet per
+                            maecenas animal suas ridens dolorum referrentur feugait adipiscing disputationi has</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Comment section -->
+
+
+    <!-- Gallery section -->
+    <div class="gallery">
+        <div class="gallery-slider owl-carousel">
+            <div class="gs-item set-bg" data-setbg="img/low-bar/1.jpg"></div>
+            <div class="gs-item set-bg" data-setbg="img/low-bar/2.jpg"></div>
+            <div class="gs-item set-bg" data-setbg="img/low-bar/3.jpg"></div>
+            <div class="gs-item set-bg" data-setbg="img/low-bar/4.jpg"></div>
+            <div class="gs-item set-bg" data-setbg="img/low-bar/5.jpg"></div>
+            <div class="gs-item set-bg" data-setbg="img/low-bar/6.jpg"></div>
+        </div>
+    </div>
+    <!-- Gallery section end -->
+
+
+    <!-- Footer section  -->
+    <footer class="footer-section set-bg" data-setbg="img/footer-bg.jpg">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 text-lg-right">
+                    <p class="copyright">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright ©
+                        <script>document.write(new Date().getFullYear());</script>2019
+                        All rights reserved | This template is made with <i class="fa fa-heart-o"
+                            aria-hidden="true"></i> by
+                        <a href="https://colorlib.com/" target="_blank">Colorlib</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                    <p class="copyright"> The Java Cookers: A small web project form URJC students.</p>
+                    <p class="copyright"> Iago Calvo Lista. Javier Martinez Pablo. Juan Jimenez Galvez.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer section end -->
+
+
+    <!--====== Javascripts & Jquery ======-->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+Recipe: 
+Recipe Name: Recipe Name1
+Food Type: dessert
+Difficulty Level: Difficult
+Number of comments: 0
+Number of favorites: 3
+Total Duration: 11 h 1 min
+
+Creator: 
+	User Name: Casandra2
+	Complete Name: Darrell Fry Holcomb
+	mail: mail2@example.com
+
+ Number of Steps: 7:
+Step - 1:
+	Duration: 23 min
+	Description: homero laoreet falli veri invidunt gubergren graeco sale aliquet graeco accusata viderer velit necessitatibus dolore harum mea periculis minim antiopam penatibus sea viverra delenit nam rutrum lorem doming adversarium periculis nisl
+Step - 2:
+	Duration: 1 h 44 min
+	Description: eius detracto postea consequat iaculis intellegebat congue fabellas eripuit platea persius feugait invidunt lectus sociosqu quaeque euripidis vituperata vocibus sed auctor habemus viverra deserunt per parturient vocibus lobortis aeque
+Step - 3:
+	Duration: 3 h 20 min
+	Description: urbanitas agam persius te montes atqui praesent sollicitudin singulis pertinacia deserunt dicta aeque ea natum repudiandae potenti possim tritani discere dicant altera mazim fusce urna vestibulum fermentum necessitatibus has integer verear maluisset vix ornare mollis eum oratio
+Step - 4:
+	Duration: 3 min
+	Description: lectus adolescens feugait iaculis fuisset sociis fugit idque quam petentium hac massa aenean maiorum constituto dolor errem pulvinar appetere potenti maiestatis magnis aliquip
+Step - 5:
+	Duration: 34 min
+	Description: viris placerat veri pharetra morbi voluptatum invidunt taciti mauris ipsum assueverit efficitur ridens appareat moderatius mandamus esse blandit mnesarchum regione recteque curabitur elit populo eleifend sollicitudin elit harum
+Step - 6:
+	Duration: 3 h 24 min
+	Description: indoctum quis audire pro malorum melius posse duo suscipiantur reprimique splendide sale vivamus malorum maiorum aliquip mucius dictas verterem omittam nonumes
+Step - 7:
+	Duration: 1 h 33 min
+	Description: persecuti solum an mnesarchum nostrum mucius nonumes saepe diam egestas aliquip esse veri cubilia reprehendunt voluptaria massa dicant eleifend ac a persecuti alterum mel agam elit omnesque nostrum idque tortor signiferumque purus nobis et reque
+
+numIngredients: 19:
+Ingredient-1:
+	Ingredient Name: pork
+	Ingredient Amount: 207.7 g
+Ingredient-2:
+	Ingredient Name: sugar
+	Ingredient Amount: 97.26 g
+Ingredient-3:
+	Ingredient Name: love
+	Ingredient Amount: 337.78 mg
+Ingredient-4:
+	Ingredient Name: flour
+	Ingredient Amount: the entire package
+Ingredient-5:
+	Ingredient Name: blood
+	Ingredient Amount: 9.19 mg
+Ingredient-6:
+	Ingredient Name: pepper
+	Ingredient Amount: 104.44 mL
+Ingredient-7:
+	Ingredient Name: carrots
+	Ingredient Amount: 10.19 kg
+Ingredient-8:
+	Ingredient Name: dragon
+	Ingredient Amount: 21.22 mg
+Ingredient-9:
+	Ingredient Name: chicken
+	Ingredient Amount: the entire package
+Ingredient-10:
+	Ingredient Name: spider
+	Ingredient Amount: half cup
+Ingredient-11:
+	Ingredient Name: xxx xxx xxx
+	Ingredient Amount: 681.68 mL
+Ingredient-12:
+	Ingredient Name: chocolate
+	Ingredient Amount: 8.43 kg
+Ingredient-13:
+	Ingredient Name: pretty things
+	Ingredient Amount: the entire package
+Ingredient-14:
+	Ingredient Name: lamb
+	Ingredient Amount: a bit
+Ingredient-15:
+	Ingredient Name: salmon
+	Ingredient Amount: half cup
+Ingredient-16:
+	Ingredient Name: garlic
+	Ingredient Amount: 183.59 mL
+Ingredient-17:
+	Ingredient Name: eggs
+	Ingredient Amount: 9.66 kg
+Ingredient-18:
+	Ingredient Name: onion
+	Ingredient Amount: the entire package
+Ingredient-19:
+	Ingredient Name: potatoes
+	Ingredient Amount: 0.20 L
+
+num Tools: 7:
+Tool-1:
+	Tool Name: spoon
+	Difficulty Level: EXPERT
+Tool-2:
+	Tool Name: ray laser
+	Difficulty Level: EXPERT
+Tool-3:
+	Tool Name: flame thrower
+	Difficulty Level: UNDEFINED
+Tool-4:
+	Tool Name: knife
+	Difficulty Level: EXPERT
+Tool-5:
+	Tool Name: oven
+	Difficulty Level: EASY
+Tool-6:
+	Tool Name: fork
+	Difficulty Level: INTERMEDIATE

@@ -5,19 +5,15 @@ import com.hazelcast.config.MapIndexConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.spring.cache.HazelcastCacheManager;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.JoinConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.web.WebFilter;
 import org.springframework.session.hazelcast.HazelcastSessionRepository;
 import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +36,19 @@ public class HazleCastConfiguration {
         joinConfig.getMulticastConfig().setEnabled(false);
         joinConfig.getTcpIpConfig().setEnabled(true).setMembers(nodes);
 
-
-        config.getMapConfig(HazelcastSessionRepository.DEFAULT_SESSION_MAP_NAME)
-                .addMapAttributeConfig(attributeConfig)
-                .addMapIndexConfig(new MapIndexConfig(
-                        HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
+        config.getMapConfig(HazelcastSessionRepository.DEFAULT_SESSION_MAP_NAME).addMapAttributeConfig(attributeConfig)
+                .addMapIndexConfig(new MapIndexConfig(HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
 
         return Hazelcast.newHazelcastInstance(config);
     }
 
     @Bean
-    public CacheManager CacheManager(){
+    public CacheManager CacheManager() {
         return new HazelcastCacheManager(hazelcastInstance());
 
     }
 
-    public static void addNode( String node)
-    {
+    public static void addNode(String node) {
         nodes.add(node);
     }
 }

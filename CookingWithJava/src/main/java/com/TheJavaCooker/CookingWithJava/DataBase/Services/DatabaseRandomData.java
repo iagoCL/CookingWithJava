@@ -1,10 +1,9 @@
 package com.TheJavaCooker.CookingWithJava.DataBase.Services;
 
 import com.TheJavaCooker.CookingWithJava.CookingWithJavaApplication;
-import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Comentario;
-import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Receta;
-import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Usuario;
-import com.TheJavaCooker.CookingWithJava.DataBase.NivelDeDificultad;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.Recipe;
+import com.TheJavaCooker.CookingWithJava.DataBase.Entities.User;
+import com.TheJavaCooker.CookingWithJava.DataBase.DifficultyLevel;
 import com.TheJavaCooker.CookingWithJava.PersonalDebug;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
@@ -23,288 +22,217 @@ import java.util.List;
 import java.util.Random;
 
 public class DatabaseRandomData {
-    private UsuarioService usuarioService;
-    private RecetaService recetaService;
-    private ComentarioService comentarioService;
-    private FavoritoService favoritoService;
+    private UserService userService;
+    private RecipeService recipeService;
+    private CommentService CommentService;
+    private FavoriteService FavoriteService;
 
-    private final static String[] rutasImagenesRecetaAleatorias = {
-            "/randomRecipes/1.jpg",
-            "/randomRecipes/2.jpg",
-            "/randomRecipes/3.jpg",
-            "/randomRecipes/4.jpg",
-            "/randomRecipes/5.jpg",
-            "/randomRecipes/6.jpg",
-            "/randomRecipes/7.jpg",
-            "/randomRecipes/8.jpg",
-            "/randomRecipes/9.jpg",
-            "/randomRecipes/10.jpg",
-            "/randomRecipes/11.jpg",
-            "/randomRecipes/12.jpg"
-    };
-    private final static String[] rutasImagenesUsuarioAleatorias = {
-            "/randomUsers/1.jpg",
-            "/randomUsers/2.jpg",
-            "/randomUsers/3.jpg",
-            "/randomUsers/4.jpg",
-            "/randomUsers/5.jpg"
-    };
+    private final static String[] randomRecipeImgPath = { "/randomRecipes/1.jpg", "/randomRecipes/2.jpg",
+            "/randomRecipes/3.jpg", "/randomRecipes/4.jpg", "/randomRecipes/5.jpg", "/randomRecipes/6.jpg",
+            "/randomRecipes/7.jpg", "/randomRecipes/8.jpg", "/randomRecipes/9.jpg", "/randomRecipes/10.jpg",
+            "/randomRecipes/11.jpg", "/randomRecipes/12.jpg" };
+    private final static String[] randomUserImgPath = { "/randomUsers/1.jpg", "/randomUsers/2.jpg",
+            "/randomUsers/3.jpg", "/randomUsers/4.jpg", "/randomUsers/5.jpg" };
 
-    private final static String[] nombresUtensiliosAleatorios = {
-            "centrifugadora",
-            "cuchillo",
-            "horno",
-            "batidora",
-            "cuchara",
-            "olla",
-            "rayo laser",
-            "lanzallamas"
-    };
-    private final static String[] nombresIngredientesAleatorios = {
-            "chocolate",
-            "harina",
-            "lubina",
-            "especias",
-            "azucar",
-            "muchas cosas bonitas",
-            "sustancia x",
-            "ternera",
-            "patatas",
-            "zanahoria",
-            "cebolla",
-            "ajos",
-            "cordero",
-            "pollo",
-            "manzana",
-            "sangre",
-            "ojos",
-            "araña",
-            "uranio",
-            "madera"
-    };
+    private final static String[] randomToolName = { "fork", "plate", "oven", "knife", "spoon", "cooker", "ray laser",
+            "flame thrower" };
+    private final static String[] randomIngredientName = { "chocolate", "flour", "salmon", "pepper", "sugar",
+            "pretty things", "xXx XxX xXx", "pork", "potatoes", "carrots", "onion", "garlic", "lamb", "chicken",
+            "apple", "blood", "love", "spider", "dragon", "eggs" };
 
-    private final static String[] tiposDePlatoAleatorios = {
-            "pescado",
-            "carne",
-            "postre",
-            "plato principal",
-            "sopa",
-            "aperitivo"
-    };
+    private final static String[] randomFoodTypeName = { "fish", "meat", "dessert", "Main dish", "soup", "start" };
 
     private static Random random = new Random();
     private static Lorem lorem = LoremIpsum.getInstance();
 
     public DatabaseRandomData(DatabaseService databaseService) {
-        this.usuarioService = databaseService.getUsuarioService();
-        this.recetaService = databaseService.getRecetaService();
-        this.comentarioService = databaseService.getComentarioService();
-        this.favoritoService = databaseService.getFavoritoService();
+        this.userService = databaseService.getUserService();
+        this.recipeService = databaseService.getRecipeService();
+        this.CommentService = databaseService.getCommentService();
+        this.FavoriteService = databaseService.getFavoriteService();
     }
 
     public byte[] getRandomUserImage() {
 
-        String rutaArchivo = rutasImagenesUsuarioAleatorias[random.nextInt(rutasImagenesUsuarioAleatorias.length)];
-        return getImageFromPath(rutaArchivo);
+        String pathToFile = randomUserImgPath[random.nextInt(randomUserImgPath.length)];
+        return getImageFromPath(pathToFile);
     }
 
     public byte[] getRandomRecipeImage() {
-        String rutaArchivo = rutasImagenesRecetaAleatorias[random.nextInt(rutasImagenesRecetaAleatorias.length)];
-        return getImageFromPath(rutaArchivo);
+        String pathToFile = randomRecipeImgPath[random.nextInt(randomRecipeImgPath.length)];
+        return getImageFromPath(pathToFile);
     }
 
-    private byte[] getImageFromPath(String rutaArchivo) {
+    private byte[] getImageFromPath(String pathToFile) {
         try {
-            /* Java 8*/
-            URL resource = CookingWithJavaApplication.class.getResource(rutaArchivo);
+            /* Java <=8 */
+            URL resource = CookingWithJavaApplication.class.getResource(pathToFile);
             URI uri = resource.toURI();
             Path path = Paths.get(uri);
             return Files.readAllBytes(path);
 
-            /*/// Java 9 o superior
-            return getClass().getClassLoader().getResourceAsStream(rutaArchivo).readAllBytes();//*/
-        } catch (Exception e) {
-            PersonalDebug.imprimir("ERROR ABRIENDO IMAGEN ALETORIOA: " + e.toString());
+             /* Java >=9 *
+             return getClass().getClassLoader().getResourceAsStream(pathToFile).readAllBytes();//
+             //*/
+        } catch (Exception exception) {
+            PersonalDebug.printMsg("ERROR OPENING IMAGE: " + exception.toString());
             return null;
         }
     }
 
-    public Receta getRecetaAletoria() {
-        List<Receta> recetas = recetaService.todasLasRecetas();
-        return recetas.get(random.nextInt(recetas.size()));
+    public Recipe getRandomRecipe() {
+        List<Recipe> recipes = recipeService.allRecipes();
+        return recipes.get(random.nextInt(recipes.size()));
     }
 
-    public Usuario getUsuarioAletorio() {
-        List<Usuario> usuarios = usuarioService.todosLosUsuarios();
-        return usuarios.get(random.nextInt(usuarios.size()));
+    public User getRandomUser() {
+        List<User> users = userService.allUsers();
+        return users.get(random.nextInt(users.size()));
     }
 
     public static LocalDate getRandomDate() {
-        return LocalDate.of(
-                2014 + random.nextInt(5),
-                1 + random.nextInt(11),
-                1 + random.nextInt(26));
+        return LocalDate.of(2014 + random.nextInt(5), 1 + random.nextInt(11), 1 + random.nextInt(26));
     }
 
     public static LocalDateTime getRandomDateTime() {
-        return LocalDateTime.of(
-                2014 + random.nextInt(5),
-                1 + random.nextInt(11),
-                1 + random.nextInt(26),
-                5 + random.nextInt(18),
-                5 + random.nextInt(48),
-                5 + random.nextInt(48),
-                50 + random.nextInt(488));
+        return LocalDateTime.of(2014 + random.nextInt(5), 1 + random.nextInt(11), 1 + random.nextInt(26),
+                5 + random.nextInt(18), 5 + random.nextInt(48), 5 + random.nextInt(48), 50 + random.nextInt(488));
     }
 
-    public static String getNivelDeDificultadAleatorio() {
-        NivelDeDificultad[] niveles = NivelDeDificultad.values();
-        return (niveles[random.nextInt(niveles.length)]).toString();
+    public static String getRandomDifficultyLevel() {
+        DifficultyLevel[] levels = DifficultyLevel.values();
+        return (levels[random.nextInt(levels.length)]).toString();
     }
 
-    public static String getCantidadIngredienteAleatoria() {
+    public static String getRandomIngredientAmount() {
         switch (random.nextInt(8)) {
-            case 0:
-                return random.nextInt(400) + "." + random.nextInt(85) + " mg";
-            case 1:
-                return random.nextInt(400) + "." + random.nextInt(85) + " g";
-            case 2:
-                return random.nextInt(15) + "." + random.nextInt(85) + " kg";
-            case 3:
-                return random.nextInt(700) + "." + random.nextInt(85) + " mL";
-            case 4:
-                return random.nextInt(25) + "." + random.nextInt(85) + " L";
-            case 5:
-                return "un poco";
-            case 6:
-                return "medio vaso";
-            case 7:
-                return "una pizca";
-            default:
-                return "undefined";
-        }
-    }
-
-    public static String getNombreIngredienteAleatorio() {
-        return getNombreIngredienteAleatorio(random.nextInt(nombresIngredientesAleatorios.length));
-    }
-
-    public static String getNombreIngredienteAleatorio(int index) {
-        try {
-            return nombresIngredientesAleatorios[index];
-        } catch (Exception e) {
+        case 0:
+            return random.nextInt(400) + "." + random.nextInt(85) + " mg";
+        case 1:
+            return random.nextInt(400) + "." + random.nextInt(85) + " g";
+        case 2:
+            return random.nextInt(15) + "." + random.nextInt(85) + " kg";
+        case 3:
+            return random.nextInt(700) + "." + random.nextInt(85) + " mL";
+        case 4:
+            return random.nextInt(25) + "." + random.nextInt(85) + " L";
+        case 5:
+            return "a bit";
+        case 6:
+            return "half cup";
+        case 7:
+            return "the entire package";
+        default:
             return "undefined";
         }
     }
 
-    public static String getNombreUtensilioAleatorio() {
-        return getNombreUtensilioAleatorio(random.nextInt(nombresUtensiliosAleatorios.length));
+    public static String getRandomIngredientName() {
+        return getRandomIngredientName(random.nextInt(randomIngredientName.length));
     }
 
-    public static String getNombreUtensilioAleatorio(int index) {
+    public static String getRandomIngredientName(int index) {
         try {
-            return nombresUtensiliosAleatorios[index];
-        } catch (Exception e) {
+            return randomIngredientName[index];
+        } catch (Exception exception) {
             return "undefined";
         }
     }
 
-    public static String getDescripcionAleatoria() {
+    public static String getRandomToolName() {
+        return getRandomToolName(random.nextInt(randomToolName.length));
+    }
+
+    public static String getRandomToolName(int index) {
+        try {
+            return randomToolName[index];
+        } catch (Exception exception) {
+            return "undefined";
+        }
+    }
+
+    public static String getRandomDescription() {
         return lorem.getWords(15, 40);
     }
 
-    public static List<Pair<String, String>> getListaDeUtensiliosAleatorios() {
-        List<Pair<String, String>> listaDeUtensiliosAleatorios;
-        int[] randomInts = random.ints(0, nombresUtensiliosAleatorios.length).distinct()
-                .limit(random.nextInt(nombresUtensiliosAleatorios.length)).toArray();
+    public static List<Pair<String, String>> getRandomToolList() {
+        List<Pair<String, String>> toolsList;
+        int[] randomInts = random.ints(0, randomToolName.length).distinct().limit(random.nextInt(randomToolName.length))
+                .toArray();
         if (randomInts.length == 0) {
-            listaDeUtensiliosAleatorios = new ArrayList<Pair<String, String>>(1);
-            listaDeUtensiliosAleatorios.add(Pair.of(getNombreUtensilioAleatorio(), getNivelDeDificultadAleatorio()));
+            toolsList = new ArrayList<Pair<String, String>>(1);
+            toolsList.add(Pair.of(getRandomToolName(), getRandomDifficultyLevel()));
         } else {
-            listaDeUtensiliosAleatorios = new ArrayList<Pair<String, String>>(randomInts.length);
+            toolsList = new ArrayList<Pair<String, String>>(randomInts.length);
             for (int randomIndex : randomInts) {
-                listaDeUtensiliosAleatorios.add(Pair.of(getNombreUtensilioAleatorio(randomIndex), getNivelDeDificultadAleatorio()));
+                toolsList.add(Pair.of(getRandomToolName(randomIndex), getRandomDifficultyLevel()));
             }
         }
-        return listaDeUtensiliosAleatorios;
+        return toolsList;
     }
 
-    public static List<Pair<Integer, String>> getListaDePasosAleatorios() {
-        int numero_pasos = random.nextInt(12);
-        List<Pair<Integer, String>> listaPasos = new ArrayList<>(numero_pasos);
-        for (int i = 0; i < numero_pasos; ++i) {
-            listaPasos.add(Pair.of(1 + random.nextInt(240), getDescripcionAleatoria()));
+    public static List<Pair<Integer, String>> getRandomStepsList() {
+        int steps_number = random.nextInt(12);
+        List<Pair<Integer, String>> stepsList = new ArrayList<>(steps_number);
+        for (int i = 0; i < steps_number; ++i) {
+            stepsList.add(Pair.of(1 + random.nextInt(240), getRandomDescription()));
         }
-        return listaPasos;
+        return stepsList;
     }
 
-    public static List<Pair<String, String>> getListaDeIngredientesAleatorios() {
-        List<Pair<String, String>> listaDeIngredientesAleatorios;
-        int[] randomInts = random.ints(0, nombresIngredientesAleatorios.length).distinct()
-                .limit(random.nextInt(nombresIngredientesAleatorios.length)).toArray();
+    public static List<Pair<String, String>> getRandomIngredientsList() {
+        List<Pair<String, String>> ingredientsList;
+        int[] randomInts = random.ints(0, randomIngredientName.length).distinct()
+                .limit(random.nextInt(randomIngredientName.length)).toArray();
         if (randomInts.length == 0) {
-            listaDeIngredientesAleatorios = new ArrayList<Pair<String, String>>(1);
-            listaDeIngredientesAleatorios.add(Pair.of(getNombreIngredienteAleatorio(), getCantidadIngredienteAleatoria()));
+            ingredientsList = new ArrayList<Pair<String, String>>(1);
+            ingredientsList.add(Pair.of(getRandomIngredientName(), getRandomIngredientAmount()));
         } else {
-            listaDeIngredientesAleatorios = new ArrayList<Pair<String, String>>(randomInts.length);
+            ingredientsList = new ArrayList<Pair<String, String>>(randomInts.length);
             for (int randomIndex : randomInts) {
-                listaDeIngredientesAleatorios.add(Pair.of(getNombreIngredienteAleatorio(randomIndex), getCantidadIngredienteAleatoria()));
+                ingredientsList.add(Pair.of(getRandomIngredientName(randomIndex), getRandomIngredientAmount()));
             }
         }
-        return listaDeIngredientesAleatorios;
+        return ingredientsList;
     }
 
-    public static String getTipoDePlatoAleatorio() {
-        return getTipoDePlatoAleatorio(random.nextInt(tiposDePlatoAleatorios.length));
+    public static String getRandomFoodType() {
+        return getRandomFoodType(random.nextInt(randomFoodTypeName.length));
     }
 
-    public static String getTipoDePlatoAleatorio(int index) {
+    public static String getRandomFoodType(int index) {
         try {
-            return tiposDePlatoAleatorios[index];
-        } catch (Exception e) {
+            return randomFoodTypeName[index];
+        } catch (Exception exception) {
             return "undefined";
         }
     }
 
-    public void crearFavoritosAleatorios(int numFavoritos_) {
-        for (int i = 0; i < numFavoritos_; ++i) {
-            favoritoService.marcarFavorito(getUsuarioAletorio(), getRecetaAletoria());
+    public void createExampleFavorites(int numFavorites_) {
+        for (int i = 0; i < numFavorites_; ++i) {
+            FavoriteService.markAsFavorite(getRandomUser(), getRandomRecipe());
         }
     }
 
-    public void crearUsuariosEjemplo(int numUsuarios_) {
-        for (long i = 1 + usuarioService.getNumUsuarios(), l = i + numUsuarios_; i < l; ++i) {
-            usuarioService.crearUsuario(lorem.getFirstName() + i,
-                    "contasena" + i,
-                    "correo" + i + "@example.com",
-                    lorem.getFirstName() + " " + lorem.getLastName() + " " + lorem.getLastName(),
-                    getRandomUserImage());
+    public void createExampleUsers(int numUsers_) {
+        for (long i = 1 + userService.getNumUsers(), l = i + numUsers_; i < l; ++i) {
+            userService.createUser(lorem.getFirstName() + i, "password" + i, "mail" + i + "@example.com",
+                    lorem.getFirstName() + " " + lorem.getLastName() + " " + lorem.getLastName(), getRandomUserImage());
         }
     }
 
-    public void crearRecetasEjemplo(int numRecetas) {
-        for (long i = 1 + recetaService.getNumRecetas(), l = i + numRecetas; i < l; ++i) {
-            Pair<DatabaseService.Errores, Receta> p = recetaService.crearRecetaConFecha(
-                    "Nombre Receta " + i,
-                    getTipoDePlatoAleatorio(),
-                    getNivelDeDificultadAleatorio(),
-                    getRandomDate(),
-                    getRandomRecipeImage(),
-                    getListaDeIngredientesAleatorios(),
-                    getListaDeUtensiliosAleatorios(),
-                    getListaDePasosAleatorios(),
-                    getUsuarioAletorio());
+    public void createExampleRecipes(int numRecipes) {
+        for (long i = 1 + recipeService.getNumRecipes(), l = i + numRecipes; i < l; ++i) {
+            recipeService.createRecipeWithDate("Recipe Name" + i, getRandomFoodType(), getRandomDifficultyLevel(),
+                    getRandomDate(), getRandomRecipeImage(), getRandomIngredientsList(), getRandomToolList(),
+                    getRandomStepsList(), getRandomUser());
         }
     }
 
-    public void crearComentariosEjemplo(int numComentarios) {
-        for (int i = 1; i < numComentarios; ++i) {
-            Pair<DatabaseService.Errores, Comentario> p = comentarioService.crearComentarioConFecha(
-                    getDescripcionAleatoria(),
-                    "Titulo de comentario " + i,
-                    getRandomDateTime(),
-                    getRecetaAletoria(),
-                    getUsuarioAletorio());
+    public void createExampleComments(int numComments) {
+        for (int i = 1; i < numComments; ++i) {
+            CommentService.createCommentWithDate(getRandomDescription(), "Comment title " + i, getRandomDateTime(),
+                    getRandomRecipe(), getRandomUser());
         }
     }
 }
